@@ -2,7 +2,7 @@ import dpkt
 import datetime
 import socket
 
-f = open('anon_196.21.146.cap', 'rb')
+f = open('data/CaptureOne.pcap', 'rb')
 pcap = dpkt.pcap.Reader(f)
 
 
