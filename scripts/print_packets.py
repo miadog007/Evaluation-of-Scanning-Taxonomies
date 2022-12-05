@@ -1,6 +1,7 @@
 import dpkt
 import datetime
 import socket
+from functools import reduce
 
 f = open('data/CaptureOne.pcap', 'rb')
 pcap = dpkt.pcap.Reader(f)
@@ -11,13 +12,6 @@ def inet_to_str(inet):
         return socket.inet_ntop(socket.AF_INET, inet)
     except ValueError:
         return socket.inet_ntop(socket.AF_INET6, inet)
-
-
-def top_src(): #Not done
-    for buf in pcap:
-        eth = dpkt.ethernet.Ethernet(buf)
-        ip = eth.data
-        print(ip.src)
 
 
 for ts, buf in pcap:
@@ -51,3 +45,4 @@ for ts, buf in pcap:
         print('Packet: %s:%s-> %s:%s (len=%d ttl=%d DF=%d MF=%d offset=%d)\n' % \
                   (inet_to_str(ip.src), eth.data.data.sport, inet_to_str(ip.dst),
                    eth.data.data.dport, ip.len, ip.ttl, do_not_fragment, more_fragments, fragment_offset))
+
