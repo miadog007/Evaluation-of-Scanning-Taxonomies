@@ -1,6 +1,5 @@
 import dpkt
 import socket
-from functools import reduce
 
 # Ask user for number of sources to show
 n_sources = input("Enter number of sources to show: ")
