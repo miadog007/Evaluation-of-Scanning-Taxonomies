@@ -17,7 +17,7 @@ def dumpFlow(flows, flow):
     print(f"\tTotal Duration: {duration}")
 
 
-for ts,pkt in dpkt.pcap.Reader(open('anon_196.21.146.cap','rb')):
+for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     eth=dpkt.ethernet.Ethernet(pkt)
     ip = eth.data
 
