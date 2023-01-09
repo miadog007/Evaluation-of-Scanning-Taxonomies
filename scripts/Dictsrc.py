@@ -50,12 +50,12 @@ for ts, buf in pcap:
 
 
     # Printing Ip addresses and count in decending order.
-    for ip, count in sorted(ip_counts.items(), key=lambda item: item[1], reverse=True):
+for ip, count in sorted(ip_counts.items(), key=lambda item: item[1], reverse=True):
         # adds ip: IP_ADDRESS, count,: COUNT
-        print(f"ip: {ip}, count: {count}")
+    print(f"ip: {ip}, count: {count}")
 
-        counter += 1
+    counter += 1
 
         # if counter equals number of sources specified, break loop
-        if counter == n_sources:
-            break
+    if counter == n_sources:
+        break
