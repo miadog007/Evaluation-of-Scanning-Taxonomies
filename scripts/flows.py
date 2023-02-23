@@ -15,6 +15,10 @@ def dumpFlow(flows, flow):
     print(f"\tTotal Bytes: {bytes}")
     print(f"\tAverage Bytes: {bytes / len(flows[flow])}")
     print(f"\tTotal Duration: {duration}")
+    print("\tPackets:")
+    for packet in flows[flow]:
+        hex_packet = ' '.join([f'\\x{byte:02x}' for byte in packet['raw']])
+        print(f"\t\t{hex_packet}")
 
 
 for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
@@ -48,13 +52,16 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
         flow = (flow[0], flow[1])
         flow_data = {
             'byte_count': len(eth),
-            'ts': ts
+            'ts': ts,
+            'raw': pkt,
         }
 
         if flows.get(flow):
             flows[flow].append(flow_data)
         else:
             flows[flow] = [flow_data]
+
+
 
 
 print(f'Total TCP flows: {len(tflows.keys())}')
