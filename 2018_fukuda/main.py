@@ -19,7 +19,7 @@ udp_srcs = {}
 udp_one_flows = {}
 udp_backscatters = {}
 small_udps = {}
-other_udp = {}
+other_udp = 0
 
 # dicts for ICMP traffic
 icmp_flows = {}
