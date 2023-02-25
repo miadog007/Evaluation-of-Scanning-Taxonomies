@@ -11,6 +11,23 @@ tcp_srcs = {}
 tcp_one_flows = {}
 tcp_backscatters = {}
 small_syns = {}
+other_tcp = 0
+
+# dict for UDP traffic
+udp_flows = {}
+udp_srcs = {}
+udp_one_flows = {}
+udp_backscatters = {}
+small_udp = {}
+other_udp = {}
+
+# dicts for ICMP traffic
+icmp_flows = {}
+icmp_srcs = {}
+icmp_backscatters = {}
+small_ping = {}
+other_icmp = 0
+
 
 for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     eth = dpkt.ethernet.Ethernet(pkt)
@@ -41,13 +58,15 @@ for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
 
             # Send to tcp_backscatter
             tcp_backscatter = tcp_traffic.tcp_backscatter_check(pkt, src_ip, tcp_backscatters)
-            #if tcp_backscatter is not None:
-             #   tcp_backscatters[(src_ip)] = tcp_backscatter
+            if tcp_backscatter is not None:
+               tcp_backscatters[(src_ip)] = tcp_backscatter
 
             # Send to small_syn
             small_syn = tcp_traffic.small_syn_check(pkt, src_ip, small_syns)
             if small_syn is not None:
                 small_syns[(src_ip)] = small_syn
+        else:
+            other_tcp += 1
 
         # Find UDP
     elif isinstance(ip, dpkt.ip.IP):
@@ -64,9 +83,16 @@ for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     else:
         other += 1
 
-        
+print("---------------------")
+print("TCP info:")
 tcp_analysis.tcp_port_scan(tcp_flows)
 tcp_analysis.tcp_network_scan(tcp_srcs)
 tcp_analysis.one_flow(tcp_one_flows)
 tcp_analysis.tcp_backscatter(tcp_backscatters)
 tcp_analysis.small_syn(small_syns)
+print("Other TCP: {}".format(int(other_tcp)))
+print("---------------------")
+print("UDP info:")
+print("---------------------")
+print("ICMP info:")
+print("---------------------")

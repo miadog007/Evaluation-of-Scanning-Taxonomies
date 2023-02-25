@@ -200,11 +200,11 @@ def tcp_backscatter_check(packet_data, src_ip, tcp_backscatters):
             flow = {
             'num_packets': 1
         }
-            tcp_backscatters[flow_key] = flow
+        tcp_backscatters[flow_key] = flow
     else:
         return None
     
-    return tcp_backscatters   
+    return flow  
 
 def small_syn_check(packet_data, src_ip, small_syns):
     '''
