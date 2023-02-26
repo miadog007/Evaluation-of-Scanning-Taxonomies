@@ -106,15 +106,10 @@ for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
 
-            # send to udp_sinle_flow
-            icmp_flow = icmp_traffic.tcp_single_flow(pkt, src_ip, dst_ip, icmp_flows)
-            if icmp_flow is not None:
-                icmp_flows[(src_ip, dst_ip)] = icmp_flow
-
             # Send to tcp_single_src
-            icmp_src = icmp_traffic.udp_single_src(pkt, src_ip, dst_port, icmp_srcs)
+            icmp_src = icmp_traffic.udp_single_src(pkt, src_ip, icmp_srcs)
             if icmp_src is not None:
-               icmp_srcs[(src_ip, dst_port)] = icmp_src
+               icmp_srcs[(src_ip)] = icmp_src
 
             # Send to tcp_backscatter
             icmp_backscatter = icmp_traffic.tcp_backscatter_check(pkt, src_ip, icmp_backscatters)
@@ -122,9 +117,9 @@ for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
                icmp_backscatters[(src_ip)] = icmp_backscatter
 
             # Send to small_syn
-            small_icmp = icmp_traffic.small_ping_check(pkt, src_ip, small_pings)
-            if small_icmp is not None:
-                small_icmps[(src_ip)] = small_icmp
+            small_ping = icmp_traffic.small_ping_check(pkt, src_ip, small_pings)
+            if small_ping is not None:
+                small_pings[(src_ip)] = small_ping
 
     else:
         print("hello")
@@ -139,6 +134,12 @@ tcp_analysis.small_syn(small_syns)
 print("Other TCP: {}".format(int(other_tcp))) #Does not work. Will not recive anything
 print("---------------------")
 print("UDP info:")
+udp_analysis.udp_port_scan(udp_flows)
+udp_analysis.udp_network_scan(udp_srcs)
+udp_analysis.one_flow(udp_one_flows)
+udp_analysis.udp_backscatter(udp_backscatters)
+udp_analysis.small_udp(small_udps)
 print("---------------------")
 print("ICMP info:")
+#icmp_analysis
 print("---------------------")
