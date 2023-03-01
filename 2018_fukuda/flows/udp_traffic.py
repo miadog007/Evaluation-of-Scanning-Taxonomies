@@ -55,7 +55,7 @@ def udp_single_src(packet_data, src_ip, dst_port, udp_src):
     '''
     eth_packet = dpkt.ethernet.Ethernet(packet_data)
 
-    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.udp):
+    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.UDP):
         # Skip non-udp packets
         return None
 
@@ -86,7 +86,7 @@ def udp_single_src(packet_data, src_ip, dst_port, udp_src):
         udp_src[flow_key] = flow
 
         # Check for fragmented packets
-    if ip_packet.data.off & dpkt.ip.IP_OFFMASK != 0:
+    if ip_packet.off and dpkt.ip.IP_OFFMASK != 0:
        flow['frag_packets'] += 1
 
     #  average packets per dst ip
@@ -140,7 +140,7 @@ def udp_backscatter_check(packet_data, src_ip, udp_backscatters):
 
     eth_packet = dpkt.ethernet.Ethernet(packet_data)
 
-    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.udp):
+    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.UDP):
         # Skip non-udp packets
         return None
     
@@ -178,7 +178,7 @@ def small_udp_check(packet_data, src_ip, small_udps):
     '''
     eth_packet = dpkt.ethernet.Ethernet(packet_data)
 
-    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.udp):
+    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.UDP):
         # Skip non-udp packets
         return None
 
