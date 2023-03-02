@@ -5,7 +5,9 @@ import dpkt
 def tcp_single_flow(packet_data, src_ip, dst_ip, tcp_flows):
     '''
     Getting reqired information for tcp_single_flow. 
-    This is for TCP Port scan, TCP One flow, TCP Backscatter, IP fragment and Other TCP
+    This is for TCP Port scan
+        Returns:
+        List of possible port scans ready for analyzing
     '''
     eth_packet = dpkt.ethernet.Ethernet(packet_data)
 
@@ -70,6 +72,8 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
     '''
     Getting reqired information for tcp_single_src. 
     This is for Network Scan
+        Returns:
+        List of possible network scans ready for analyzing
     '''
     eth_packet = dpkt.ethernet.Ethernet(packet_data)
 
@@ -117,8 +121,8 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
     # Check for fragmented packets
     if ip_packet.data.off & dpkt.ip.IP_OFFMASK != 0:
        flow['frag_packets'] += 1
-
-        # Calculate percentages
+    
+    # Calculate percentages
     total_packets = flow['num_packets']
     if total_packets > 0:
         flow['scan_percent'] = 100 * flow['scan_packets'] / total_packets
@@ -131,7 +135,7 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
         flow['avg_packets_per_dst_ip'] = total_packets / num_dst_ips
     else:
         flow['avg_packets_per_dst_ip'] = 0
-
+    
     return flow
 
 def tcp_one_flow(packet_data, src_ip, dst_ip, dst_port, one_flows):
