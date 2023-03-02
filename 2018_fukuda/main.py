@@ -32,8 +32,8 @@ small_pings = {}
 other_icmp = set()
 
 # Main functions for finding TCP, UDP or ICMP packets
-for ts, pkt in dpkt.pcap.Reader(open('data/anon_196-21-146/test/output_file_00000_20191203121948.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/anon_196-21-146/test/output_file_00000_20191203121948.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     
     # open packet with dpkt
