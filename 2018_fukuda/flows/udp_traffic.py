@@ -9,7 +9,7 @@ def udp_single_flow(packet_data, src_ip, dst_ip, udp_flows):
     '''
     eth_packet = dpkt.ethernet.Ethernet(packet_data)
 
-    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.udp):
+    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.UDP):
         # Skip non-udp packets
         return None
 
@@ -106,7 +106,7 @@ def udp_one_flow(packet_data, src_ip, dst_ip, dst_port, one_flows):
     '''
     eth_packet = dpkt.ethernet.Ethernet(packet_data)
 
-    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.udp):
+    if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.udp.UDP):
         # Skip non-udp packets
         return None
 

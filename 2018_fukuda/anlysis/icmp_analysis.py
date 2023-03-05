@@ -15,27 +15,31 @@ def icmp_network_scan(icmp_srcs, icmp_other):
         flow = flows[flow_key]
         dst_ips_count = len(flow['dst_ips'])
         avg_packet_ip = flow['avg_packets_per_dst_ip']
-        src_ip = flow_key[0]
+        packets = flow['num_packets']
 
         # Check if icmp Port Scan Heavy/Light
         if dst_ips_count >= N1 and avg_packet_ip > M:
-            heavy_network_scan += 1
+            heavy_network_scan += packets
         elif dst_ips_count > N1 and avg_packet_ip <= M:
-            light_network_scan += 1
+            light_network_scan += packets
         else:
-            icmp_other.add(src_ip)
+            icmp_other_add(flow_key, flow, icmp_other)
 
 
     print(f"Heavy network scans: {heavy_network_scan}")
     print(f"Light network scans: {light_network_scan}")
 
-def icmp_backscatter(icmp_backscatters):
+def icmp_backscatter(tcp_backscatters):
     '''
     Check number of backscatter
     '''
+    total_packets = 0
+    for flow_key in tcp_backscatters:
+        flow = tcp_backscatters[flow_key]
+        total_packets += flow['num_packets']
 
-    num_ips = len(icmp_backscatters)
-    print(f"icmp backscatter connections: {num_ips}")
+
+    print(f"ICMP backscatter connections: {total_packets}")
 
 def icmp_fragment(icmp_srcs, icmp_other):
     flows = icmp_srcs
@@ -44,14 +48,12 @@ def icmp_fragment(icmp_srcs, icmp_other):
     for flow_key in flows:
         flow = flows[flow_key]
         frag_packet = flow['frag_packets']
-        src_ip = flow_key[0]
 
         if frag_packet >= 1:
-            frag_connections += 1
-            if src_ip in icmp_other:
-                icmp_other.remove(src_ip)
+            frag_connections += frag_packet
+            icmp_other_remove(flow_key, flow, icmp_other)
         else:
-            icmp_other.add(src_ip)
+            icmp_other_add(flow_key, flow, icmp_other)
 
     print(f"IP Fragement: {frag_connections}")
     return icmp_other
@@ -72,14 +74,43 @@ def small_ping(small_pings, icmp_other):
         flow = flows[flow_key]  
         dst_ips_count = len(flow['dst_ips'])
         packets = flow['num_packets']
-        src_ip = flow_key[0]
     
         if dst_ips_count < N1 and packets <= N3:
-            Small_ping += 1
-            if src_ip in icmp_other:
-                icmp_other.remove(src_ip)
+            Small_ping += packets
+            icmp_other_remove(flow_key, flow, icmp_other)
         else:
-            icmp_other.add(src_ip)
+            icmp_other_add(flow_key, flow, icmp_other)
 
     print(f"Small icmp: {Small_ping}")
     return icmp_other 
+
+def icmp_other_add(flow_key, flow, icmp_other):
+    '''
+    Add to icmp_other
+    '''
+
+    src_ip = flow_key[0]
+    packets = flow['num_packets']
+
+    if src_ip in icmp_other:
+        icmp_other[src_ip] += packets
+    else:
+        icmp_other[src_ip] = packets
+
+    return icmp_other
+
+def icmp_other_remove(flow_key, flow, icmp_other):
+    '''
+    Remove from icmp_other
+    '''
+    src_ip = flow_key[0]
+    packets = flow['num_packets']
+
+    if src_ip in icmp_other:
+        icmp_other[src_ip] -= packets
+        if icmp_other[src_ip] <= 0:
+            del icmp_other[src_ip]
+    else:
+        return None
+    
+    return icmp_other
