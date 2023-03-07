@@ -34,6 +34,10 @@ for key in tcp_streams:
 for key, packets in tcp_streams.items():
     flags = set()
     times = []
+    avg_time = 0
+    num_packets = len(packets)
+    first_packet_time = None
+    last_packet_time = None
 
     # Calculate the average and median time between packets
     for i in range(1, len(packets)):
@@ -47,6 +51,12 @@ for key, packets in tcp_streams.items():
             if tcp.flags & flag_value:
                 flags.add(flag_name)
 
+        if last_packet_time is None:
+            firs_packet_time = ts
+        else:
+            times.append(ts - last_packet_time)
+        last_packet_time = ts
+
     if len(times) > 0:
         avg_time = sum(times) / len(times)
         median_time = sorted(times)[len(times) // 2]
@@ -59,3 +69,6 @@ for key, packets in tcp_streams.items():
     print(f"Flags: {flags}")
     print(f"Average time between packets: {avg_time:.3f} seconds")
     print(f"Median time between packets: {median_time:.3f} seconds")
+    print(f"number of packet {num_packets}")
+    print(f"first packet {first_packet_time}")
+    print(f"last packet: {last_packet_time}")

@@ -2,8 +2,9 @@ import dpkt
 from functools import reduce
 import socket
 
-tflows = {}
-uflows = {}
+tcp_flows = {}
+udp_flows = {}
+icmp_flows = {}
 ips = set()
 
 def dumpFlow(flows, flow):
@@ -32,10 +33,12 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
 
 
         # determine transport layer type
-        if ip.p==dpkt.ip.IP_PROTO_TCP:
-            flows = tflows
-        elif ip.p==dpkt.ip.IP_PROTO_UDP:
-            flows = uflows
+        if ip.p == dpkt.ip.IP_PROTO_TCP:
+            flows = tcp_flows
+        elif ip.p == dpkt.ip.IP_PROTO_UDP:
+            flows = udp_flows
+        elif ip.p == dpkt.ip.IP_PROTO_ICMP:
+            flows = icmp_flows
 
         # extract IP and transport layer data
         src_ip = socket.inet_ntoa(ip.src)
@@ -51,9 +54,8 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
         flow = sorted([(src_ip, src_port), (dst_ip, dst_port)])
         flow = (flow[0], flow[1])
         flow_data = {
-            'byte_count': len(eth),
             'ts': ts,
-            'raw': pkt,
+            'data': pkt,
         }
 
         if flows.get(flow):
@@ -64,11 +66,12 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
 
 
 
-print(f'Total TCP flows: {len(tflows.keys())}')
-print(f'Total UDP flows: {len(uflows.keys())}')
+print(f'Total TCP flows: {len(tcp_flows.keys())}')
+print(f'Total UDP flows: {len(udp_flows.keys())}')
+print(f'Total ICMP flows: {len(icmp_flows.keys())}')
 print(f'Total IPs: {len(ips)}')
 
-for k in tflows.keys():
-    dumpFlow(tflows, k)
-for k in uflows.keys():
-    dumpFlow(uflows, k)
+#for k in tcp_flows.keys():
+ #   dumpFlow(tcp_flows, k)
+#for k in udp_flows.keys():
+ #   dumpFlow(udp_flows, k)
