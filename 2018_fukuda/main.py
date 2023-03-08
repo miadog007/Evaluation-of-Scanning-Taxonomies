@@ -35,17 +35,16 @@ other_icmp = {}
 
 
 # Main functions for finding TCP, UDP or ICMP packets
-#for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
     # open packet with dpkt
     eth = dpkt.ethernet.Ethernet(pkt)
     ip = eth.data
 
-    # not working. still gets 1, 6 and 2 in other tcp
-    if ip.p == 1 or 4 or 6 or 2:
-        pass
+    # 
+    if eth.type==dpkt.ethernet.ETH_TYPE_IP: 
         # Find TCP
         if ip.p == dpkt.ip.IP_PROTO_TCP:
             src_ip = socket.inet_ntoa(ip.src)
@@ -80,7 +79,7 @@ for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
                     small_syns[(src_ip)] = small_syn
 
         # Find UDP
-        if ip.p == dpkt.ip.IP_PROTO_UDP:
+        elif ip.p == dpkt.ip.IP_PROTO_UDP:
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
             dst_port = ip.data.dport
@@ -110,9 +109,10 @@ for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
                 small_udps[(src_ip)] = small_udp
 
     # Find ICMP
-        if ip.p == dpkt.ip.IP_PROTO_ICMP:
+        elif ip.p == dpkt.ip.IP_PROTO_ICMP:
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
+            print('icmp')
 
             # Send to icmp_single_src
             icmp_src = icmp_traffic.icmp_single_src(pkt, src_ip, icmp_srcs)
@@ -128,7 +128,8 @@ for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
             small_ping = icmp_traffic.small_ping_check(pkt, src_ip, small_pings)
             if small_ping is not None:
                 small_pings[(src_ip)] = small_ping
-
+        else:
+            print('hello')
 
     # Counter of packets each minute
     elapsed_time = time.time() - start_time
