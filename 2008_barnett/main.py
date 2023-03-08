@@ -16,8 +16,8 @@ icmp_flows = {}
 ips = set()
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00006_20191206233948.pcap', 'rb')):
-#for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00006_20191206233948.pcap', 'rb')):
+for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
     total_packets += 1 
     eth=dpkt.ethernet.Ethernet(pkt)

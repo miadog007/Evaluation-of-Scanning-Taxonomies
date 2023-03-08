@@ -18,6 +18,8 @@ def tcp_speed(tcp_flows):
             tcp_rapid[flow] = packets
 
     #print(tcp_slow)
+    tcp_compare_src(tcp_slow)
+    tcp_compare_src(tcp_medium)
     tcp_compare_src(tcp_rapid)
 
 def tcp_compare_src(speed_list):
@@ -40,6 +42,8 @@ def tcp_compare_src(speed_list):
         ack_count = value[0]['ACK_count']
         fin_count = value[0]['FIN_count']
 
+        time = value[0]['avg_time_between_packets']
+        print(time)
         # determine the flags for this flow
         if syn_count > 0 and ack_count == 0 and fin_count == 0:
             flags = 'SYN'
@@ -69,8 +73,8 @@ def tcp_compare_src(speed_list):
             flow['FIN_count'] += fin_count
             #flow['timestamps'].extend(value[0]['timestamps'])
             avg_time = flow['avg_time_between_packets']
-            new_avg_time = value[0]['avg_time_between_packets']
-            if avg_time is None:
+            new_avg_time = time
+            if avg_time <= 0:
                 flow['avg_time_between_packets'] = new_avg_time
             elif new_avg_time !=0:
                 flow['avg_time_between_packets'] = (avg_time + new_avg_time) / 2
@@ -99,6 +103,8 @@ def tcp_compare_src(speed_list):
 
     print(tcp_compare_flows)
 
+
+#def find_dist(tcp_compare_flows):
 
 
 # 159.203.201.179
