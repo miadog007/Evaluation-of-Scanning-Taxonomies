@@ -1,12 +1,8 @@
-def udp_speed(udp_flows):
+def udp_speed(udp_flows, udp_slow, udp_medium, udp_rapid):
     '''
     Compare streams to find: 
         Ports + distrubution
     '''
-    
-    udp_slow = {}
-    udp_medium = {}
-    udp_rapid = {}
 
     for flow, packets in udp_flows.items():
         avg_time = packets[0]['avg_time_between_packets']
@@ -16,3 +12,111 @@ def udp_speed(udp_flows):
             udp_medium[flow] = packets
         else:
             udp_rapid[flow] = packets
+
+    #print(udp_slow)
+    return udp_slow, udp_medium, udp_rapid
+
+def udp_compare_src(speed_list, udp_compare_flows):
+    '''
+    Function to compare ip src to put togheter scan flows from different ports
+    '''
+
+    # iterate through the udp_slow dictionary
+    for key, value in speed_list.items():
+        # extract the source IP address, destination IP address, and destination port
+        src_ip = key[0][0]
+        dst_ip = key[1][0]
+        dst_port = key[1][1]
+
+        time = value[0]['avg_time_between_packets']
+
+        # create a tuple to represent the flow key
+        flow_key = (src_ip)
+
+        # check if this flow key already exists in the udp_compare_flows
+        if flow_key in udp_compare_flows:
+            # if it does, update the existing flow
+            flow = udp_compare_flows[flow_key]
+            flow['packet_count'] += value[0]['packet_count']
+            #flow['timestamps'].extend(value[0]['timestamps'])
+            avg_time = flow['avg_time_between_packets']
+            new_avg_time = time
+            if avg_time <= 0:
+                flow['avg_time_between_packets'] = new_avg_time
+            elif new_avg_time !=0:
+                flow['avg_time_between_packets'] = (avg_time + new_avg_time) / 2
+            if value[0]['first_packet'] < flow['first_packet']:
+                flow['first_packet'] = value[0]['first_packet']
+            if value[0]['last_packet'] > flow['last_packet']:
+                flow['last_packet'] = value[0]['last_packet']
+            if dst_ip not in flow['ip_dst']:
+                flow['ip_dst'].append(dst_ip)
+            if dst_port not in flow['dst_ports']:
+                flow['dst_ports'].append(dst_port)
+        else:
+            # if it doesn't, create a new flow
+            udp_compare_flows[flow_key] = {
+                'ip_dst': [dst_ip],
+                'dst_ports': [dst_port],
+                'packet_count': value[0]['packet_count'],
+                'first_packet': value[0]['first_packet'],
+                'last_packet': value[0]['last_packet'],
+                #'timestamps': value[0]['timestamps'],
+                'avg_time_between_packets': value[0]['avg_time_between_packets']
+            }
+
+    return udp_compare_flows
+    
+
+
+def find_dist(udp_compare_flows, final_dist):
+    '''
+    Find final dist
+    '''
+    # iterate through the udp_slow dictionary
+    for key, value in udp_compare_flows.items():
+        # extract the source IP address, destination IP address, and destination port
+        src_ip = key
+        dst_ips = value['ip_dst']
+        dst_port = value['dst_ports']
+
+        time = value['avg_time_between_packets']
+        # create a tuple to represent the flow key
+        flow_key = (tuple(dst_ips))
+
+        # check if this flow key already exists in the final_dist
+        if flow_key in final_dist:
+            # if it does, update the existing flow
+            flow = final_dist[flow_key]
+            flow['packet_count'] += value['packet_count']
+            flow['ip_src_count'] += 1
+            #flow['timestamps'].extend(value[0]['timestamps'])
+            avg_time = flow['avg_time_between_packets']
+            new_avg_time = time
+            if avg_time <= 0:
+                flow['avg_time_between_packets'] = new_avg_time
+            elif new_avg_time !=0:
+                flow['avg_time_between_packets'] = (avg_time + new_avg_time) / 2
+            if value['first_packet'] < flow['first_packet']:
+                flow['first_packet'] = value['first_packet']
+            if value['last_packet'] > flow['last_packet']:
+                flow['last_packet'] = value['last_packet']
+            if src_ip not in flow['src_ips']:
+                flow['src_ips'].append(src_ip)
+            if dst_port not in flow['dst_ports']:
+                flow['dst_ports'].append(dst_port)
+        else:
+            # if it doesn't, create a new flow
+            final_dist[flow_key] = {
+                'dst_ports': [dst_port],
+                'src_ips': [src_ip],
+                'ip_src_count': 1,
+                'packet_count': value['packet_count'],
+                'first_packet': value['first_packet'],
+                'last_packet': value['last_packet'],
+                #'timestamps': value[0]['timestamps'],
+                'avg_time_between_packets': value['avg_time_between_packets']
+            }
+
+    return final_dist
+
