@@ -72,7 +72,7 @@ def find_dist(icmp_compare_flows, final_dist):
     '''
     # iterate through the icmp_slow dictionary
     for key, value in icmp_compare_flows.items():
-        # extract the source IP address, destination IP address, and destination port]
+        # extract the source IP address and destination IP address
         src_ip = key
         dst_ips = value['ip_dst']
 
