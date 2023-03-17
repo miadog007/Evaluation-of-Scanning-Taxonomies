@@ -1,0 +1,128 @@
+Day 2021-03-01:
+  Packets: 816076
+  Unique IP addresses: 33645
+
+Day 2021-03-02:
+  Packets: 962163
+  Unique IP addresses: 42810
+
+Day 2021-03-03:
+  Packets: 951261
+  Unique IP addresses: 41669
+
+Day 2021-03-04:
+  Packets: 1070818
+  Unique IP addresses: 41539
+
+Day 2021-03-05:
+  Packets: 962011
+  Unique IP addresses: 41274
+
+Day 2021-03-06:
+  Packets: 917256
+  Unique IP addresses: 40200
+
+Day 2021-03-07:
+  Packets: 1026734
+  Unique IP addresses: 40418
+
+Day 2021-03-08:
+  Packets: 1029422
+  Unique IP addresses: 45142
+
+Day 2021-03-09:
+  Packets: 1001127
+  Unique IP addresses: 45766
+
+Day 2021-03-10:
+  Packets: 875494
+  Unique IP addresses: 46332
+
+Day 2021-03-11:
+  Packets: 942368
+  Unique IP addresses: 45852
+
+Day 2021-03-12:
+  Packets: 926574
+  Unique IP addresses: 48349
+
+Day 2021-03-13:
+  Packets: 887933
+  Unique IP addresses: 45631
+
+Day 2021-03-14:
+  Packets: 1806264
+  Unique IP addresses: 41357
+
+Day 2021-03-15:
+  Packets: 2012862
+  Unique IP addresses: 44990
+
+Day 2021-03-16:
+  Packets: 2010410
+  Unique IP addresses: 44134
+
+Day 2021-03-17:
+  Packets: 1128782
+  Unique IP addresses: 41617
+
+Day 2021-03-18:
+  Packets: 922843
+  Unique IP addresses: 41933
+
+Day 2021-03-19:
+  Packets: 940979
+  Unique IP addresses: 43598
+
+Day 2021-03-20:
+  Packets: 900766
+  Unique IP addresses: 43910
+
+Day 2021-03-21:
+  Packets: 1027401
+  Unique IP addresses: 42226
+
+Day 2021-03-22:
+  Packets: 1138106
+  Unique IP addresses: 42157
+
+Day 2021-03-23:
+  Packets: 1163879
+  Unique IP addresses: 41991
+
+Day 2021-03-24:
+  Packets: 1050915
+  Unique IP addresses: 43974
+
+Day 2021-03-25:
+  Packets: 1236611
+  Unique IP addresses: 43549
+
+Day 2021-03-26:
+  Packets: 1477014
+  Unique IP addresses: 43723
+
+Day 2021-03-27:
+  Packets: 1903873
+  Unique IP addresses: 43482
+
+Day 2021-03-28:
+  Packets: 1683178
+  Unique IP addresses: 42206
+
+Day 2021-03-29:
+  Packets: 1519389
+  Unique IP addresses: 43600
+
+Day 2021-03-30:
+  Packets: 1539258
+  Unique IP addresses: 44556
+
+Day 2021-03-31:
+  Packets: 1437759
+  Unique IP addresses: 44572
+
+Day 2021-04-01:
+  Packets: 530587
+  Unique IP addresses: 22405
+

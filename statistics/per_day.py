@@ -3,7 +3,7 @@ import socket
 from datetime import datetime
 
 # Replace "example.pcap" with the name of your pcap file
-with open('data/?', 'rb') as f, open("per_day_feb.txt", 'w') as outfile:
+with open('data/?', 'rb') as f, open("per_day_mar.txt", 'w') as outfile:
     pcap = dpkt.pcap.Reader(f)
 
     # Initialize variables to store daily packet and IP address counts
