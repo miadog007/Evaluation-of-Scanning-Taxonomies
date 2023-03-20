@@ -19,9 +19,9 @@ def icmp_network_scan(icmp_srcs, icmp_other):
 
         # Check if icmp Port Scan Heavy/Light
         if dst_ips_count >= N1 and avg_packet_ip > M:
-            heavy_network_scan += packets
+            heavy_network_scan += 1
         elif dst_ips_count > N1 and avg_packet_ip <= M:
-            light_network_scan += packets
+            light_network_scan += 1
         else:
             icmp_other_add(flow_key, flow, icmp_other)
 
@@ -36,7 +36,7 @@ def icmp_backscatter(tcp_backscatters):
     total_packets = 0
     for flow_key in tcp_backscatters:
         flow = tcp_backscatters[flow_key]
-        total_packets += flow['num_packets']
+        total_packets += 1
 
 
     print(f"ICMP backscatter connections: {total_packets}")
@@ -50,7 +50,7 @@ def icmp_fragment(icmp_srcs, icmp_other):
         frag_packet = flow['frag_packets']
 
         if frag_packet >= 1:
-            frag_connections += frag_packet
+            frag_connections += 1
             icmp_other_remove(flow_key, flow, icmp_other)
         else:
             icmp_other_add(flow_key, flow, icmp_other)
@@ -76,7 +76,7 @@ def small_ping(small_pings, icmp_other):
         packets = flow['num_packets']
     
         if dst_ips_count < N1 and packets <= N3:
-            Small_ping += packets
+            Small_ping += 1
             icmp_other_remove(flow_key, flow, icmp_other)
         else:
             icmp_other_add(flow_key, flow, icmp_other)
@@ -93,9 +93,9 @@ def icmp_other_add(flow_key, flow, icmp_other):
     packets = flow['num_packets']
 
     if src_ip in icmp_other:
-        icmp_other[src_ip] += packets
+        icmp_other[src_ip] += 1
     else:
-        icmp_other[src_ip] = packets
+        icmp_other[src_ip] = 1
 
     return icmp_other
 
@@ -107,7 +107,7 @@ def icmp_other_remove(flow_key, flow, icmp_other):
     packets = flow['num_packets']
 
     if src_ip in icmp_other:
-        icmp_other[src_ip] -= packets
+        icmp_other[src_ip] -= 1
         if icmp_other[src_ip] <= 0:
             del icmp_other[src_ip]
     else:

@@ -57,7 +57,7 @@ icmp_dist_medium = {}
 icmp_dist_rapid = {}
 
 # set of ip's
-ips = set()
+ip_src = set()
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap', 'rb')):
 for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 'rb')):
@@ -68,15 +68,14 @@ for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 
     ip = eth.data
 
     if eth.type==dpkt.ethernet.ETH_TYPE_IP:   
-
+        if socket.inet_ntoa(ip.src) not in ip_src:
+            ip_src.add(socket.inet_ntoa(ip.src))
         # determine transport layer type
         if ip.p == dpkt.ip.IP_PROTO_TCP:
             # extract IP and transport layer data
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
 
-            ips.add(src_ip)
-            ips.add(dst_ip)
 
             if isinstance(ip.data, dpkt.tcp.TCP):
                 src_port = ip.data.sport

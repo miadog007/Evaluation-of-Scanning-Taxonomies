@@ -3,6 +3,7 @@ import socket
 from flows import tcp_traffic, udp_traffic, icmp_traffic
 from anlysis import tcp_analysis, udp_analysis, icmp_analysis
 import time
+import ipaddress
 
 packets = 0
 minutes = 0
@@ -33,9 +34,11 @@ icmp_backscatters = {}
 small_pings = {}
 other_icmp = {}
 
+# set of ips
+ip_src = set()
 
 # Main functions for finding TCP, UDP or ICMP packets
-for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
@@ -43,8 +46,10 @@ for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap
     eth = dpkt.ethernet.Ethernet(pkt)
     ip = eth.data
 
-    # 
+    
     if eth.type==dpkt.ethernet.ETH_TYPE_IP: 
+        if socket.inet_ntoa(ip.src) not in ip_src:
+            ip_src.add(socket.inet_ntoa(ip.src))
         # Find TCP
         if ip.p == dpkt.ip.IP_PROTO_TCP:
             src_ip = socket.inet_ntoa(ip.src)
@@ -82,7 +87,7 @@ for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap
         elif ip.p == dpkt.ip.IP_PROTO_UDP:
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
-            dst_port = ip.data.dport
+            dst_port = ip.data.dport    
 
             # send to tcp_sinle_flow
             udp_flow = udp_traffic.udp_single_flow(pkt, src_ip, dst_ip, udp_flows)
@@ -112,7 +117,7 @@ for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap
         elif ip.p == dpkt.ip.IP_PROTO_ICMP:
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
-            print('icmp')
+     
 
             # Send to icmp_single_src
             icmp_src = icmp_traffic.icmp_single_src(pkt, src_ip, icmp_srcs)
@@ -147,10 +152,35 @@ for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap
         start_time = time.time()
 
 
+def is_valid_ip(address):
+    '''
+    Check if a given string is a valid IP address
+    '''
+    try:
+        ipaddress.ip_address(address)
+        return True
+    except ValueError:
+        return False
+
+def validate_dict_ip(dict):
+    '''
+    Check if all values in a dictionary are valid IP addresses
+    Remove invalid key-value pairs from the dictionary
+    '''
+    keys_to_remove = []
+    for key in dict:
+        if not is_valid_ip(dict[key]):
+            print(f'Removing invalid IP address: {dict[key]}')
+            keys_to_remove.append(key)
+    for key in keys_to_remove:
+        del dict[key]
+
+
 # Printing out result of each category in fukuda 2018
 print("---------------------")
 print('PCAP info:')
 print(f'Number of packets: {total_packets}')
+print(f'Number of src ips: {(len(ip_src))}')
 print("---------------------")
 print("TCP info:")
 tcp_analysis.tcp_port_scan(tcp_flows, other_tcp)
@@ -159,9 +189,7 @@ tcp_analysis.one_flow(tcp_one_flows, other_tcp)
 tcp_analysis.tcp_backscatter(tcp_backscatters)
 tcp_analysis.tcp_fragment(tcp_srcs, other_tcp)
 tcp_analysis.small_syn(small_syns, other_tcp)
-print(other_tcp)
-tcp_other_packet = sum(other_tcp.values())
-print(f"TCP other: {tcp_other_packet}")
+print(f"TCP other: {len(other_tcp)}")
 print("---------------------")
 print("UDP info:")
 udp_analysis.udp_port_scan(udp_flows, other_udp)
@@ -170,14 +198,13 @@ udp_analysis.one_flow(udp_one_flows, other_udp)
 udp_analysis.udp_backscatter(udp_backscatters)
 udp_analysis.udp_fragment(udp_srcs, other_udp)
 udp_analysis.small_udp(small_udps, other_udp)
-udp_other_packet = sum(other_udp.values())
-print(f"UDP other: {udp_other_packet}")
+print(f"UDP other: {len(other_udp)}")
 print("---------------------")
 print("ICMP info:")
 icmp_analysis.icmp_network_scan(icmp_srcs, other_icmp)
 icmp_analysis.icmp_backscatter(icmp_backscatters)
 icmp_analysis.icmp_fragment(icmp_srcs, other_icmp)
 icmp_analysis.small_ping(small_pings, other_icmp)
-icmp_other_packet = sum(other_icmp.values())
-print(f"ICMP other: {icmp_other_packet}")
+print(f"ICMP other: {len(other_icmp)}")
+print(other_icmp)
 print("---------------------")

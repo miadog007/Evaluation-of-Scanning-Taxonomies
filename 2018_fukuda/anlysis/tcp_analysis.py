@@ -21,9 +21,9 @@ def tcp_port_scan(tcp_flows, tcp_other):
 
         # Check if TCP Port Scan Heavy/Light
         if dst_ports_count >= N2 and scan_percent >= R and avg_packet_port > M:
-            heavy_port_scan += packets
+            heavy_port_scan += 1
         elif dst_ports_count > N2 and scan_percent >= R and avg_packet_port <= M:
-            light_port_scan += packets
+            light_port_scan += 1
         else:
             tcp_other_add(flow_key, flow, tcp_other)
 
@@ -54,11 +54,11 @@ def tcp_network_scan(tcp_srcs, tcp_other):
 
         # Check if TCP Port Scan Heavy/Light
         if dst_ips_count >= N1 and scan_percent >= R and avg_packet_ip > M:
-            heavy_network_scan += packets
+            heavy_network_scan += 1
             if src_ip in tcp_other:
                 tcp_other_remove(flow_key, flow, tcp_other)
         elif dst_ips_count > N1 and scan_percent >= R and avg_packet_ip <= M:
-            light_network_scan += packets
+            light_network_scan += 1
             if src_ip in tcp_other:
                 tcp_other_remove(flow_key, flow, tcp_other)
         else:
@@ -84,7 +84,7 @@ def one_flow(tcp_one_flows, tcp_other):
         src_ip = flow_key[0]
     
         if packets >= N3:
-            tcp_one_flow += packets
+            tcp_one_flow += 1
             if src_ip in tcp_other:
                 tcp_other_remove(flow_key, flow, tcp_other)
         else:
@@ -100,7 +100,7 @@ def tcp_backscatter(tcp_backscatters):
     total_packets = 0
     for flow_key in tcp_backscatters:
         flow = tcp_backscatters[flow_key]
-        total_packets += flow['num_packets']
+        total_packets += 1
 
 
     print(f"TCP backscatter connections: {total_packets}")
@@ -116,7 +116,7 @@ def tcp_fragment(tcp_srcs, tcp_other):
         packets = flow['num_packets']
 
         if frag_packet >= 1:
-            frag_connections += packets
+            frag_connections += 1
             if src_ip in tcp_other:
                 tcp_other_remove(flow_key, flow, tcp_other)
         else:
@@ -145,7 +145,7 @@ def small_syn(small_syns, tcp_other):
         src_ip = flow_key[0]
     
         if dst_ips_count < N1 and dst_ports_count < N2 and packets <= N3:
-            Small_SYN += packets
+            Small_SYN += 1
             if src_ip in tcp_other:
                 tcp_other_remove(flow_key, flow, tcp_other)
         else:
@@ -163,9 +163,9 @@ def tcp_other_add(flow_key, flow, tcp_other):
     packets = flow['num_packets']
 
     if src_ip in tcp_other:
-        tcp_other[src_ip] += packets
+        tcp_other[src_ip] += 1
     else:
-        tcp_other[src_ip] = packets
+        tcp_other[src_ip] = 1
 
     return tcp_other
 
@@ -177,7 +177,7 @@ def tcp_other_remove(flow_key, flow, tcp_other):
     packets = flow['num_packets']
 
     if src_ip in tcp_other:
-        tcp_other[src_ip] -= packets
+        tcp_other[src_ip] -= 1
         if tcp_other[src_ip] <= 0:
             del tcp_other[src_ip]
     else:
