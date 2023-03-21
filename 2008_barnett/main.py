@@ -24,7 +24,83 @@ tcp_compare_rapid = {}
 tcp_dist_slow = {}
 tcp_dist_medium = {}
 tcp_dist_rapid = {}
+# tcp final stats
+#Slow
+tcp_onetoone_slow = {}
+tcp_onetomany_slow = {}
+tcp_manytoone_slow = {}
+tcp_manytomany_slow = {}
+#Medium
+tcp_onetoone_medium = {}
+tcp_onetomany_medium = {}
+tcp_manytoone_medium = {}
+tcp_manytomany_medium = {}
+#rapid
+tcp_onetoone_rapid = {}
+tcp_onetomany_rapid = {}
+tcp_manytoone_rapid = {}
+tcp_manytomany_rapid = {}
+# tcp special
+# slow
+tcp_oto_slow = {}
+tcp_oto_slow_syn = {}
+tcp_oto_slow_ack = {}
+tcp_oto_slow_fin = {}
 
+tcp_otm_slow = {}
+tcp_otm_slow_syn = {}
+tcp_otm_slow_ack = {}
+tcp_otm_slow_fin = {}
+
+tcp_mto_slow = {}
+tcp_mto_slow_syn = {}
+tcp_mto_slow_ack = {}
+tcp_mto_slow_fin = {}
+
+tcp_mtm_slow = {}
+tcp_mtm_slow_syn = {}
+tcp_mtm_slow_ack = {}
+tcp_mtm_slow_fin = {}
+# medium
+tcp_oto_medium = {}
+tcp_oto_medium_syn = {}
+tcp_oto_medium_ack = {}
+tcp_oto_medium_fin = {}
+
+tcp_otm_medium = {}
+tcp_otm_medium_syn = {}
+tcp_otm_medium_ack = {}
+tcp_otm_medium_fin = {}
+
+tcp_mto_medium = {}
+tcp_mto_medium_syn = {}
+tcp_mto_medium_ack = {}
+tcp_mto_medium_fin = {}
+
+tcp_mtm_medium = {}
+tcp_mtm_medium_syn = {}
+tcp_mtm_medium_ack = {}
+tcp_mtm_medium_fin = {}
+# rapid
+tcp_oto_rapid = {}
+tcp_oto_rapid_syn = {}
+tcp_oto_rapid_ack = {}
+tcp_oto_rapid_fin = {}
+
+tcp_otm_rapid = {}
+tcp_otm_rapid_syn = {}
+tcp_otm_rapid_ack = {}
+tcp_otm_rapid_fin = {}
+
+tcp_mto_rapid = {}
+tcp_mto_rapid_syn = {}
+tcp_mto_rapid_ack = {}
+tcp_mto_rapid_fin = {}
+
+tcp_mtm_rapid = {}
+tcp_mtm_rapid_syn = {}
+tcp_mtm_rapid_ack = {}
+tcp_mtm_rapid_fin = {}
 
 # UDP Dicts
 udp_flows = {}
@@ -40,6 +116,22 @@ udp_compare_rapid = {}
 udp_dist_slow = {}
 udp_dist_medium = {}
 udp_dist_rapid = {}
+# udp final stats
+#Slow
+udp_onetoone_slow = {}
+udp_onetomany_slow = {}
+udp_manytoone_slow = {}
+udp_manytomany_slow = {}
+#Medium
+udp_onetoone_medium = {}
+udp_onetomany_medium = {}
+udp_manytoone_medium = {}
+udp_manytomany_medium = {}
+#rapid
+udp_onetoone_rapid = {}
+udp_onetomany_rapid = {}
+udp_manytoone_rapid = {}
+udp_manytomany_rapid = {}
 
 # ICMP Dicts
 icmp_flows = {}
@@ -55,12 +147,28 @@ icmp_compare_rapid = {}
 icmp_dist_slow = {}
 icmp_dist_medium = {}
 icmp_dist_rapid = {}
+# icmp final stats
+#Slow
+icmp_onetoone_slow = {}
+icmp_onetomany_slow = {}
+icmp_manytoone_slow = {}
+icmp_manytomany_slow = {}
+#Medium
+icmp_onetoone_medium = {}
+icmp_onetomany_medium = {}
+icmp_manytoone_medium = {}
+icmp_manytomany_medium = {}
+#rapid
+icmp_onetoone_rapid = {}
+icmp_onetomany_rapid = {}
+icmp_manytoone_rapid = {}
+icmp_manytomany_rapid = {}
 
 # set of ip's
 ip_src = set()
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/output_file_00000_20191203121948.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
 #for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
     total_packets += 1 
@@ -115,12 +223,15 @@ for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 
 
             # extract IP and transport layer data
             src_ip = socket.inet_ntoa(ip.src)
-            src_port = ip.data.sport
+            if isinstance (ip.data, dpkt.udp.UDP) and ip.data.sport:
+                src_port = ip.data.dport  
+            else:
+                print('no sport udp') 
             dst_ip = socket.inet_ntoa(ip.dst)
-            dst_port = ip.data.dport
-
-            ips.add(src_ip)
-            ips.add(dst_ip)
+            if isinstance (ip.data, dpkt.udp.UDP) and ip.data.dport:
+                dst_port = ip.data.dport  
+            else:
+                print('no dport udp') 
 
             flows = udp_flows
             # store flow data
@@ -151,9 +262,6 @@ for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 
             # extract IP and transport layer data
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
-
-            ips.add(src_ip)
-            ips.add(dst_ip)
             
             flows = icmp_flows
             # store flow data
@@ -207,6 +315,7 @@ icmp_traffic.icmp_speed(icmp_flows, icmp_slow, icmp_medium, icmp_rapid)
 tcp_traffic.tcp_compare_src(tcp_slow, tcp_compare_slow)
 tcp_traffic.tcp_compare_src(tcp_medium, tcp_compare_medium)
 tcp_traffic.tcp_compare_src(tcp_rapid, tcp_compare_rapid)
+
 # UDP
 udp_traffic.udp_compare_src(udp_slow, udp_compare_slow)
 udp_traffic.udp_compare_src(udp_medium, udp_compare_medium)
@@ -223,7 +332,7 @@ icmp_traffic.icmp_compare_src(icmp_rapid, icmp_compare_rapid)
 tcp_traffic.find_dist(tcp_compare_slow, tcp_dist_slow)
 tcp_traffic.find_dist(tcp_compare_medium, tcp_dist_medium)
 tcp_traffic.find_dist(tcp_compare_rapid, tcp_dist_rapid)
-#print(tcp_dist_slow)
+
 # UDP
 udp_traffic.find_dist(udp_compare_slow, udp_dist_slow)
 udp_traffic.find_dist(udp_compare_medium, udp_dist_medium)
@@ -233,21 +342,182 @@ udp_traffic.find_dist(udp_compare_rapid, udp_dist_rapid)
 icmp_traffic.find_dist(icmp_compare_slow, icmp_dist_slow)
 icmp_traffic.find_dist(icmp_compare_medium, icmp_dist_medium)
 icmp_traffic.find_dist(icmp_compare_rapid, icmp_dist_rapid)
-print(udp_dist_slow)
 
+# put in dict in groups by dist TCP
+tcp_traffic.group_dist(tcp_dist_slow, tcp_onetoone_slow, tcp_onetomany_slow, tcp_manytoone_slow, tcp_manytomany_slow)
+tcp_traffic.group_dist(tcp_dist_medium, tcp_onetoone_medium, tcp_onetomany_medium, tcp_manytoone_medium, tcp_manytomany_medium)
+tcp_traffic.group_dist(tcp_dist_rapid, tcp_onetoone_rapid, tcp_onetomany_rapid, tcp_manytoone_rapid, tcp_manytomany_rapid)
+
+# put in dict in groups by dist UDP
+udp_traffic.group_dist(udp_dist_slow, udp_onetoone_slow, udp_onetomany_slow, udp_manytoone_slow, udp_manytomany_slow)
+udp_traffic.group_dist(udp_dist_medium, udp_onetoone_medium, udp_onetomany_medium, udp_manytoone_medium, udp_manytomany_medium)
+udp_traffic.group_dist(udp_dist_rapid, udp_onetoone_rapid, udp_onetomany_rapid, udp_manytoone_rapid, udp_manytomany_rapid)
+# put in dict in groups by dist ICMP
+icmp_traffic.group_dist(icmp_dist_slow, icmp_onetoone_slow, icmp_onetomany_slow, icmp_manytoone_slow, icmp_manytomany_slow)
+icmp_traffic.group_dist(icmp_dist_medium, icmp_onetoone_medium, icmp_onetomany_medium, icmp_manytoone_medium, icmp_manytomany_medium)
+icmp_traffic.group_dist(icmp_dist_rapid, icmp_onetoone_rapid, icmp_onetomany_rapid, icmp_manytoone_rapid, icmp_manytomany_rapid)
+
+# put tcp in flgas dist 
+# slow
+tcp_traffic.tcp_flags(tcp_onetoone_slow, tcp_oto_slow, tcp_oto_slow_syn, tcp_oto_slow_ack, tcp_oto_slow_fin)
+tcp_traffic.tcp_flags(tcp_onetomany_slow, tcp_otm_slow, tcp_otm_slow_syn, tcp_otm_slow_ack, tcp_otm_slow_fin)
+tcp_traffic.tcp_flags(tcp_manytoone_slow, tcp_mto_slow, tcp_mto_slow_syn, tcp_mto_slow_ack, tcp_mto_slow_fin)
+tcp_traffic.tcp_flags(tcp_manytomany_slow, tcp_mtm_slow, tcp_mtm_slow_syn, tcp_mtm_slow_ack, tcp_mtm_slow_fin)
+#medium
+tcp_traffic.tcp_flags(tcp_onetoone_medium, tcp_oto_medium, tcp_oto_medium_syn, tcp_oto_medium_ack, tcp_oto_medium_fin)
+tcp_traffic.tcp_flags(tcp_onetomany_medium, tcp_otm_medium, tcp_otm_medium_syn, tcp_otm_medium_ack, tcp_otm_medium_fin)
+tcp_traffic.tcp_flags(tcp_manytoone_medium, tcp_mto_medium, tcp_mto_medium_syn, tcp_mto_medium_ack, tcp_mto_medium_fin)
+tcp_traffic.tcp_flags(tcp_manytomany_medium, tcp_mtm_medium, tcp_mtm_medium_syn, tcp_mtm_medium_ack, tcp_mtm_medium_fin)
+# rapid
+tcp_traffic.tcp_flags(tcp_onetoone_rapid, tcp_oto_rapid, tcp_oto_rapid_syn, tcp_oto_rapid_ack, tcp_oto_rapid_fin)
+tcp_traffic.tcp_flags(tcp_onetomany_rapid, tcp_otm_rapid, tcp_otm_rapid_syn, tcp_otm_rapid_ack, tcp_otm_rapid_fin)
+tcp_traffic.tcp_flags(tcp_manytoone_rapid, tcp_mto_rapid, tcp_mto_rapid_syn, tcp_mto_rapid_ack, tcp_mto_rapid_fin)
+tcp_traffic.tcp_flags(tcp_manytomany_rapid, tcp_mtm_rapid, tcp_mtm_rapid_syn, tcp_mtm_rapid_ack, tcp_mtm_rapid_fin)
+print(tcp_otm_medium_ack)
 
 print("---------------------")
 print('PCAP info:')
 print(f'Number of packets: {total_packets}')
+print(f'Total Source IPs: {len(ip_src)}')
 print("---------------------")
-#print(f'Total TCP flows: {tcp_flows}')
+print("---------------------")
+print("TCP")
 print(f'Total TCP flows: {len(tcp_flows.keys())}')
 print("---------------------")
-#print(f'Total UDP flows: {udp_flows}')
+print('TCP slow stats')
+print(f'Total TCP slow src ips: {sum(len(keys) for keys in tcp_dist_slow)}')
+print(f'Total tcp slow one-to-one src ips: {sum(len(keys) for keys in tcp_onetoone_slow)}')
+print(f'Total tcp slow one-to-many src ips: {sum(len(keys) for keys in tcp_onetomany_slow)}')
+print(f'Total tcp slow many-to-one src ips: {sum(len(keys) for keys in tcp_manytoone_slow)}')
+print(f'Total tcp slow many-to-many fsrc ips: {sum(len(keys) for keys in tcp_manytomany_slow)}')
+print("---------------------")
+print('slow TCP flows stats:')
+print('slow one-to-one:')
+print(f'tcp one-to-one slow other src ips: {sum(len(keys) for keys in tcp_oto_slow)}')
+print(f'tcp one-to-one slow SYN src ips: {sum(len(keys) for keys in tcp_oto_slow_syn)}')
+print(f'tcp one-to-one slow ACK src ips: {sum(len(keys) for keys in tcp_oto_slow_ack)}')
+print(f'tcp one-to-one slow FIN src ips: {sum(len(keys) for keys in tcp_oto_slow_fin)}')
+print('slow one-to-many:')
+print(f'tcp one-to-many slow other src ips: {sum(len(keys) for keys in tcp_otm_slow)}')
+print(f'tcp one-to-many slow SYN src ips: {sum(len(keys) for keys in tcp_otm_slow_syn)}')
+print(f'tcp one-to-many slow ACK src ips: {sum(len(keys) for keys in tcp_otm_slow_ack)}')
+print(f'tcp one-to-many slow FIN src ips: {sum(len(keys) for keys in tcp_otm_slow_fin)}')
+print('slow many-to-one:')
+print(f'tcp many-to-one slow other src ips: {sum(len(keys) for keys in tcp_mto_slow)}')
+print(f'tcp many-to-one slow SYN src ips: {sum(len(keys) for keys in tcp_mto_slow_syn)}')
+print(f'tcp many-to-one slow ACK src ips: {sum(len(keys) for keys in tcp_mto_slow_ack)}')
+print(f'tcp many-to-one slow FIN src ips: {sum(len(keys) for keys in tcp_mto_slow_fin)}')
+print('slow many-to-many:')
+print(f'tcp many-to-many slow other src ips: {sum(len(keys) for keys in tcp_mtm_slow)}')
+print(f'tcp many-to-many slow SYN src ips: {sum(len(keys) for keys in tcp_mtm_slow_syn)}')
+print(f'tcp many-to-many slow ACK src ips: {sum(len(keys) for keys in tcp_mtm_slow_ack)}')
+print(f'tcp many-to-many slow FIN src ips: {sum(len(keys) for keys in tcp_mtm_slow_fin)}')
+print("---------------------")
+print('TCP medium stats')
+print(f'Total TCP medium src ips: {sum(len(keys) for keys in tcp_dist_medium)}')
+print(f'Total tcp medium one-to-one src ips: {sum(len(keys) for keys in tcp_onetoone_medium)}')
+print(f'Total tcp medium one-to-many src ips: {sum(len(keys) for keys in tcp_onetomany_medium)}')
+print(f'Total tcp medium many-to-one src ips: {sum(len(keys) for keys in tcp_manytoone_medium)}')
+print(f'Total tcp medium many-to-many src ips: {sum(len(keys) for keys in tcp_manytomany_medium)}')
+print("---------------------")
+print('medium TCP flows stats:')
+print('medium one-to-one:')
+print(f'tcp one-to-one medium other src ips: {sum(len(keys) for keys in tcp_oto_medium)}')
+print(f'tcp one-to-one medium SYN src ips: {sum(len(keys) for keys in tcp_oto_medium_syn)}')
+print(f'tcp one-to-one medium ACK src ips: {sum(len(keys) for keys in tcp_oto_medium_ack)}')
+print(f'tcp one-to-one medium FIN src ips: {sum(len(keys) for keys in tcp_oto_medium_fin)}')
+print('medium one-to-many:')
+print(f'tcp one-to-many medium other src ips: {sum(len(keys) for keys in tcp_otm_medium)}')
+print(f'tcp one-to-many medium SYN src ips: {sum(len(keys) for keys in tcp_otm_medium_syn)}')
+print(f'tcp one-to-many medium ACK src ips: {sum(len(keys) for keys in tcp_otm_medium_ack)}')
+print(f'tcp one-to-many medium FIN src ips: {sum(len(keys) for keys in tcp_otm_medium_fin)}')
+print('medium many-to-one:')
+print(f'tcp many-to-one medium other src ips: {sum(len(keys) for keys in tcp_mto_medium)}')
+print(f'tcp many-to-one medium SYN src ips: {sum(len(keys) for keys in tcp_mto_medium_syn)}')
+print(f'tcp many-to-one medium ACK src ips: {sum(len(keys) for keys in tcp_mto_medium_ack)}')
+print(f'tcp many-to-one medium FIN src ips: {sum(len(keys) for keys in tcp_mto_medium_fin)}')
+print('medium many-to-many:')
+print(f'tcp many-to-many medium other src ips: {sum(len(keys) for keys in tcp_mtm_medium)}')
+print(f'tcp many-to-many medium SYN src ips: {sum(len(keys) for keys in tcp_mtm_medium_syn)}')
+print(f'tcp many-to-many medium ACK src ips: {sum(len(keys) for keys in tcp_mtm_medium_ack)}')
+print(f'tcp many-to-many medium FIN src ips: {sum(len(keys) for keys in tcp_mtm_medium_fin)}')
+print("---------------------")
+print('TCP Rapid stats')
+print(f'Total TCP rapid src ips: {sum(len(keys) for keys in tcp_dist_rapid)}')
+print(f'Total tcp rapid one-to-one src ips: {sum(len(keys) for keys in tcp_onetoone_rapid)}')
+print(f'Total tcp rapid one-to-many src ips: {sum(len(keys) for keys in tcp_onetomany_rapid)}')
+print(f'Total tcp rapid many-to-one src ips: {sum(len(keys) for keys in tcp_manytoone_rapid)}')
+print(f'Total tcp rapid many-to-many src ips: {sum(len(keys) for keys in tcp_manytomany_rapid)}')
+print("---------------------")
+print('Rapid TCP flows stats:')
+print('Rapid one-to-one:')
+print(f'tcp one-to-one rapid other src ips: {sum(len(keys) for keys in tcp_oto_rapid)}')
+print(f'tcp one-to-one rapid SYN src ips: {sum(len(keys) for keys in tcp_oto_rapid_syn)}')
+print(f'tcp one-to-one rapid ACK src ips: {sum(len(keys) for keys in tcp_oto_rapid_ack)}')
+print(f'tcp one-to-one rapid FIN src ips: {sum(len(keys) for keys in tcp_oto_rapid_fin)}')
+print('Rapid one-to-many:')
+print(f'tcp one-to-many rapid other src ips: {sum(len(keys) for keys in tcp_otm_rapid)}')
+print(f'tcp one-to-many rapid SYN src ips: {sum(len(keys) for keys in tcp_otm_rapid_syn)}')
+print(f'tcp one-to-many rapid ACK src ips: {sum(len(keys) for keys in tcp_otm_rapid_ack)}')
+print(f'tcp one-to-many rapid FIN src ips: {sum(len(keys) for keys in tcp_otm_rapid_fin)}')
+print('Rapid many-to-one:')
+print(f'tcp many-to-one rapid other src ips: {sum(len(keys) for keys in tcp_mto_rapid)}')
+print(f'tcp many-to-one rapid SYN src ips: {sum(len(keys) for keys in tcp_mto_rapid_syn)}')
+print(f'tcp many-to-one rapid ACK src ips: {sum(len(keys) for keys in tcp_mto_rapid_ack)}')
+print(f'tcp many-to-one rapid FIN src ips: {sum(len(keys) for keys in tcp_mto_rapid_fin)}')
+print('Rapid many-to-many:')
+print(f'tcp many-to-many rapid other src ips: {sum(len(keys) for keys in tcp_mtm_rapid)}')
+print(f'tcp many-to-many rapid SYN src ips: {sum(len(keys) for keys in tcp_mtm_rapid_syn)}')
+print(f'tcp many-to-many rapid ACK src ips: {sum(len(keys) for keys in tcp_mtm_rapid_ack)}')
+print(f'tcp many-to-many rapid FIN src ips: {sum(len(keys) for keys in tcp_mtm_rapid_fin)}')
+print("---------------------")
+print("---------------------")
+print("UDP")
 print(f'Total UDP flows: {len(udp_flows.keys())}')
 print("---------------------")
-#print(f'Total ICMP flows: {icmp_flows}')
+print('udp slow stats')
+print(f'Total udp slow src ips: {sum(len(keys) for keys in udp_dist_slow)}')
+print(f'Total udp slow one-to-one src ips: {sum(len(keys) for keys in udp_onetoone_slow)}')
+print(f'Total udp slow one-to-many src ips: {sum(len(keys) for keys in udp_onetomany_slow)}')
+print(f'Total udp slow many-to-one src ips: {sum(len(keys) for keys in udp_manytoone_slow)}')
+print(f'Total udp slow many-to-many src ips: {sum(len(keys) for keys in udp_manytomany_slow)}')
+print("---------------------")
+print('udp Medium stats')
+print(f'Total udp medium src ips: {sum(len(keys) for keys in udp_dist_medium)}')
+print(f'Total udp medium one-to-one src ips: {sum(len(keys) for keys in udp_onetoone_medium)}')
+print(f'Total udp medium one-to-many src ips: {sum(len(keys) for keys in udp_onetomany_medium)}')
+print(f'Total udp medium many-to-one src ips: {sum(len(keys) for keys in udp_manytoone_medium)}')
+print(f'Total udp medium many-to-many src ips: {sum(len(keys) for keys in udp_manytomany_medium)}')
+print("---------------------")
+print('udp Rapid stats')
+print(f'Total udp rapid src ips: {sum(len(keys) for keys in udp_dist_rapid)}')
+print(f'Total udp rapid one-to-one src ips: {sum(len(keys) for keys in udp_onetoone_rapid)}')
+print(f'Total udp rapid one-to-many src ips: {sum(len(keys) for keys in udp_onetomany_rapid)}')
+print(f'Total udp rapid many-to-one src ips: {sum(len(keys) for keys in udp_manytoone_rapid)}')
+print(f'Total udp rapid many-to-many src ips: {sum(len(keys) for keys in udp_manytomany_rapid)}')
+print("---------------------")
+print("---------------------")
+print("ICMP")
 print(f'Total ICMP flows: {len(icmp_flows.keys())}')
 print("---------------------")
-print(f'Total IPs: {len(ips)}')
-
+print('ICMP slow stats')
+print(f'Total ICMP slow src ips: {sum(len(keys) for keys in icmp_dist_slow)}')
+print(f'Total icmp slow one-to-one src ips: {sum(len(keys) for keys in icmp_onetoone_slow)}')
+print(f'Total icmp slow one-to-many src ips: {sum(len(keys) for keys in icmp_onetomany_slow)}')
+print(f'Total icmp slow many-to-one src ips: {sum(len(keys) for keys in icmp_manytoone_slow)}')
+print(f'Total icmp slow many-to-many src ips: {sum(len(keys) for keys in icmp_manytomany_slow)}')
+print("---------------------")
+print('ICMP Medium stats')
+print(f'Total ICMP medium src ips: {sum(len(keys) for keys in icmp_dist_medium)}')
+print(f'Total icmp medium one-to-one src ips: {sum(len(keys) for keys in icmp_onetoone_medium)}')
+print(f'Total icmp medium one-to-many src ips: {sum(len(keys) for keys in icmp_onetomany_medium)}')
+print(f'Total icmp medium many-to-one src ips: {sum(len(keys) for keys in icmp_manytoone_medium)}')
+print(f'Total icmp medium many-to-many src ips: {sum(len(keys) for keys in icmp_manytomany_medium)}')
+print("---------------------")
+print('ICMP Rapid stats')
+print(f'Total ICMP rapid src ips: {sum(len(keys) for keys in icmp_dist_rapid)}')
+print(f'Total icmp rapid one-to-one src ips: {sum(len(keys) for keys in icmp_onetoone_rapid)}')
+print(f'Total icmp rapid one-to-many src ips: {sum(len(keys) for keys in icmp_onetomany_rapid)}')
+print(f'Total icmp rapid many-to-one src ips: {sum(len(keys) for keys in icmp_manytoone_rapid)}')
+print(f'Total icmp rapid many-to-many src ips: {sum(len(keys) for keys in icmp_manytomany_rapid)}')
+print("---------------------")

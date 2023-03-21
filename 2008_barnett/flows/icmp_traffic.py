@@ -112,3 +112,30 @@ def find_dist(icmp_compare_flows, final_dist):
             }
 
     return final_dist
+
+def group_dist(final_dist, one_to_one, one_to_many, many_to_one, many_to_many):
+    for key, value in final_dist.items():
+        num_dst_ips = len(key)
+        num_src_ips = value['ip_src_count']
+
+        # Get desired key-value pairs
+        src_ip = value['src_ips']
+        ip_src_count = value['ip_src_count']
+        packet_count = value['packet_count']
+        avg_time_between_packets = value['avg_time_between_packets']
+        
+        # Categorize based on number of destination IPs and source IPs
+        if num_dst_ips == 1 and num_src_ips == 1:
+            dst_ip = key
+            one_to_one[dst_ip] = {'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
+        elif num_dst_ips == 1 and num_src_ips > 1:
+            dst_ip = key
+            many_to_one[dst_ip] = {'src_ips': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
+        elif num_dst_ips > 1 and num_src_ips == 1:
+            dst_ip = key
+            one_to_many[dst_ip] = {'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
+        elif num_dst_ips > 1 and num_src_ips > 1:
+            dst_ip = key
+            many_to_many[dst_ip] = {'src_ips': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
+
+    return one_to_one, one_to_many, many_to_one, many_to_many

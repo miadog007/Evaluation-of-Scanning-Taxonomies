@@ -85,8 +85,8 @@ def udp_single_src(packet_data, src_ip, dst_port, udp_src):
 
         udp_src[flow_key] = flow
 
-    # Check for fragmented packets. Find sulution
-    if ip_packet.off and dpkt.ip.IP_OFFMASK != 0:
+    # Check for fragmented packets
+    if (ip_packet.off & dpkt.ip.IP_MF) != 0 or (ip_packet.off & dpkt.ip.IP_OFFMASK) != 0:
        flow['frag_packets'] += 1
 
     #  average packets per dst ip

@@ -113,13 +113,13 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
         flow['scan_packets'] += 1
     if ip_packet.data.flags & dpkt.tcp.TH_FIN:
         flow['scan_packets'] += 1
-    if ip_packet.data.flags & dpkt.tcp.TH_FIN and ip_packet.data.flags & dpkt.tcp.TH_ACK:
+    if ip_packet.data.flags & dpkt.tcp.TH_FIN & ip_packet.data.flags & dpkt.tcp.TH_ACK:
         flow['scan_packets'] += 1
     if not ip_packet.data.flags:
         flow['scan_packets'] += 1
 
     # Check for fragmented packets
-    if ip_packet.data.off & dpkt.ip.IP_OFFMASK != 0:
+    if (ip_packet.off & dpkt.ip.IP_MF) != 0 or (ip_packet.off & dpkt.ip.IP_OFFMASK) != 0:
        flow['frag_packets'] += 1
     
     # Calculate percentages
@@ -223,28 +223,31 @@ def small_syn_check(packet_data, src_ip, small_syns):
 
     ip_packet = eth_packet.data
     ip_src = socket.inet_ntoa(ip_packet.src)
-
-    if ip_src != src_ip or ip_packet.data.flags & dpkt.tcp.TH_SYN:
-        # Skip packets that don't match the specified information
+    if ip_src != src_ip:
         return None
 
-    flow_key = (ip_src)
+    if ip_packet.data.flags & dpkt.tcp.TH_SYN:
+        # Skip packets that don't match the specified information
 
-         # Check for tcp_flows that exists
-    if flow_key in small_syns:
-        # Update the flow information
-        flow = small_syns[flow_key]
-        flow['num_packets'] += 1
-        flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
-        flow['dst_ports'].add(ip_packet.data.dport)
-    else: 
-        # Create new tcp_flows
-        flow = {
-            'dst_ips': set(),
-            'dst_ports': set(),
-            'num_packets': 1
-        }
+        flow_key = (ip_src)
 
-        small_syns[flow_key] = flow
+            # Check for tcp_flows that exists
+        if flow_key in small_syns:
+            # Update the flow information
+            flow = small_syns[flow_key]
+            flow['num_packets'] += 1
+            flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
+            flow['dst_ports'].add(ip_packet.data.dport)
+        else: 
+            # Create new tcp_flows
+            flow = {
+                'dst_ips': set(),
+                'dst_ports': set(),
+                'num_packets': 1
+            }
+
+            small_syns[flow_key] = flow
+    else:
+        return None
     
     return flow

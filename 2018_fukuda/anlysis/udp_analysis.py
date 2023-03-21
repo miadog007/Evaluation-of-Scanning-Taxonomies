@@ -21,10 +21,12 @@ def udp_port_scan(udp_flows, udp_other):
         # Check if udp Port Scan Heavy/Light
         if dst_ports_count >= N2 and avg_packet_port > M:
             heavy_port_scan += 1
+            udp_other_remove(flow_key, udp_other)
         elif dst_ports_count > N2 and avg_packet_port <= M:
             light_port_scan += 1
+            udp_other_remove(flow_key, udp_other)
         else:
-            udp_other_add(flow_key, flow, udp_other)
+            udp_other_add(flow_key, udp_other)
 
     print(f"Heavy port scans: {heavy_port_scan}")
     print(f"Light port scans: {light_port_scan}")
@@ -52,12 +54,12 @@ def udp_network_scan(udp_srcs, udp_other):
         # Check if udp Port Scan Heavy/Light
         if dst_ips_count >= N1 and avg_packet_ip > M:
             heavy_network_scan += 1
-            udp_other_remove(flow_key, flow, udp_other)
+            udp_other_remove(flow_key, udp_other)
         elif dst_ips_count > N1 and avg_packet_ip <= M:
             light_network_scan += 1
-            udp_other_remove(flow_key, flow, udp_other)
+            udp_other_remove(flow_key,udp_other)
         else:
-            udp_other_add(flow_key, flow, udp_other)
+            udp_other_add(flow_key, udp_other)
 
     print(f"Heavy network scans: {heavy_network_scan}")
     print(f"Light network scans: {light_network_scan}")
@@ -79,9 +81,9 @@ def one_flow(udp_one_flows, udp_other):
     
         if packets >= N3:
             udp_one_flow += 1
-            udp_other_remove(flow_key, flow, udp_other)
+            udp_other_remove(flow_key, udp_other)
         else:
-            udp_other_add(flow_key, flow, udp_other)
+            udp_other_add(flow_key, udp_other)
 
     print(f"udp One Flows: {udp_one_flow}")
     return udp_other
@@ -108,9 +110,9 @@ def udp_fragment(udp_srcs, udp_other):
 
         if frag_packet >= 1:
             frag_connections += 1
-            udp_other_remove(flow_key, flow, udp_other)
+            udp_other_remove(flow_key, udp_other)
         else:
-            udp_other_add(flow_key, flow, udp_other)
+            udp_other_add(flow_key, udp_other)
 
     print(f"IP Fragement: {frag_connections}")
     return udp_other
@@ -135,20 +137,19 @@ def small_udp(small_udps, udp_other):
     
         if dst_ips_count < N1 and dst_ports_count < N2 and packets <= N3:
             Small_udp += 1
-            udp_other_remove(flow_key, flow, udp_other)
+            udp_other_remove(flow_key, udp_other)
         else:
-            udp_other_add(flow_key, flow, udp_other)
+            udp_other_add(flow_key, udp_other)
 
     print(f"Small UDP: {Small_udp}")
     return udp_other
 
-def udp_other_add(flow_key, flow, udp_other):
+def udp_other_add(flow_key, udp_other):
     '''
     Add to udp_other
     '''
 
     src_ip = flow_key[0]
-    packets = flow['num_packets']
 
     if src_ip in udp_other:
         udp_other[src_ip] += 1
@@ -157,17 +158,14 @@ def udp_other_add(flow_key, flow, udp_other):
 
     return udp_other
 
-def udp_other_remove(flow_key, flow, udp_other):
+def udp_other_remove(flow_key, udp_other):
     '''
     Remove from udp_other
     '''
     src_ip = flow_key[0]
-    packets = flow['num_packets']
 
     if src_ip in udp_other:
-        udp_other[src_ip] -= 1
-        if udp_other[src_ip] <= 0:
-            del udp_other[src_ip]
+        del udp_other[src_ip]
     else:
         return None
     

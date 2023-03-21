@@ -38,7 +38,7 @@ other_icmp = {}
 ip_src = set()
 
 # Main functions for finding TCP, UDP or ICMP packets
-for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
@@ -87,7 +87,10 @@ for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 
         elif ip.p == dpkt.ip.IP_PROTO_UDP:
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
-            dst_port = ip.data.dport    
+            if isinstance (ip.data, dpkt.udp.UDP) and ip.data.dport:
+                dst_port = ip.data.dport  
+            else:
+                print('no dport udp')  
 
             # send to tcp_sinle_flow
             udp_flow = udp_traffic.udp_single_flow(pkt, src_ip, dst_ip, udp_flows)
@@ -118,7 +121,6 @@ for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 
             src_ip = socket.inet_ntoa(ip.src)
             dst_ip = socket.inet_ntoa(ip.dst)
      
-
             # Send to icmp_single_src
             icmp_src = icmp_traffic.icmp_single_src(pkt, src_ip, icmp_srcs)
             if icmp_src is not None:
@@ -152,30 +154,6 @@ for ts, pkt in dpkt.pcap.Reader(open('data/smallcap_00001_20191204021309.pcap', 
         start_time = time.time()
 
 
-def is_valid_ip(address):
-    '''
-    Check if a given string is a valid IP address
-    '''
-    try:
-        ipaddress.ip_address(address)
-        return True
-    except ValueError:
-        return False
-
-def validate_dict_ip(dict):
-    '''
-    Check if all values in a dictionary are valid IP addresses
-    Remove invalid key-value pairs from the dictionary
-    '''
-    keys_to_remove = []
-    for key in dict:
-        if not is_valid_ip(dict[key]):
-            print(f'Removing invalid IP address: {dict[key]}')
-            keys_to_remove.append(key)
-    for key in keys_to_remove:
-        del dict[key]
-
-
 # Printing out result of each category in fukuda 2018
 print("---------------------")
 print('PCAP info:')
@@ -206,5 +184,4 @@ icmp_analysis.icmp_backscatter(icmp_backscatters)
 icmp_analysis.icmp_fragment(icmp_srcs, other_icmp)
 icmp_analysis.small_ping(small_pings, other_icmp)
 print(f"ICMP other: {len(other_icmp)}")
-print(other_icmp)
 print("---------------------")

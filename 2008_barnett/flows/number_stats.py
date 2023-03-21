@@ -1,0 +1,15 @@
+# Old version counting number of flows instead of ip src's
+
+print('ICMP Medium stats')
+print(f'Total ICMP medium flows: {len(icmp_dist_medium.keys())}')
+print(f'Total icmp medium one-to-one flows: {len(icmp_onetoone_medium.keys())}')
+print(f'Total icmp medium one-to-many flows: {len(icmp_onetomany_medium.keys())}')
+print(f'Total icmp medium many-to-one flows: {len(icmp_manytoone_medium.keys())}')
+print(f'Total icmp medium many-to-many flows: {len(icmp_manytomany_medium.keys())}')
+print("---------------------")
+print('ICMP Rapid stats')
+print(f'Total ICMP rapid flows: {len(icmp_dist_rapid.keys())}')
+print(f'Total icmp rapid one-to-one flows: {len(icmp_onetoone_rapid.keys())}')
+print(f'Total icmp rapid one-to-many flows: {len(icmp_onetomany_rapid.keys())}')
+print(f'Total icmp rapid many-to-one flows: {len(icmp_manytoone_rapid.keys())}')
+print(f'Total icmp rapid many-to-many flows: {len(icmp_manytomany_rapid.keys())}')

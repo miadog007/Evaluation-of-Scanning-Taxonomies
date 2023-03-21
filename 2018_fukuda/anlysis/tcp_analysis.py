@@ -177,9 +177,7 @@ def tcp_other_remove(flow_key, flow, tcp_other):
     packets = flow['num_packets']
 
     if src_ip in tcp_other:
-        tcp_other[src_ip] -= 1
-        if tcp_other[src_ip] <= 0:
-            del tcp_other[src_ip]
+        del tcp_other[src_ip]
     else:
         return None
     
