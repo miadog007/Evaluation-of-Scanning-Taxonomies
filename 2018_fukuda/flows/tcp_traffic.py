@@ -18,7 +18,7 @@ def tcp_single_flow(packet_data, src_ip, dst_ip, tcp_flows):
     ip_packet = eth_packet.data
     ip_src = socket.inet_ntoa(ip_packet.src)
     ip_dst = socket.inet_ntoa(ip_packet.dst)
-
+    dst_port = ip_packet.data.dport
     if ip_src != src_ip or ip_dst != dst_ip:
         # Skip packets that don't match the specified source and destination IP addresses
         return None
@@ -34,7 +34,7 @@ def tcp_single_flow(packet_data, src_ip, dst_ip, tcp_flows):
     else: 
         # Create new tcp_flows
         flow = {
-            'dst_ports': set(),
+            'dst_ports': set([dst_port]),
             'num_packets': 1,
             'scan_packets': 0,
         }
@@ -83,6 +83,8 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
 
     ip_packet = eth_packet.data
     ip_src = socket.inet_ntoa(ip_packet.src)
+    ip_dst = socket.inet_ntoa(ip_packet.dst)
+    ip_dst_string = set(str(ip_dst).strip('{}').split(','))
     port_dst = ip_packet.data.dport
 
     if ip_src != src_ip or port_dst != dst_port:
@@ -96,11 +98,11 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
         # Update the flow information
         flow = tcp_src[flow_key]
         flow['num_packets'] += 1
-        flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
+        flow['dst_ips'].update(ip_dst_string)
     else: 
         # Create new tcp_flows
         flow = {
-            'dst_ips': set(),
+            'dst_ips': set(ip_dst_string),
             'num_packets': 1,
             'scan_packets': 0,
             'frag_packets': 0
@@ -185,7 +187,9 @@ def tcp_backscatter_check(packet_data, src_ip, tcp_backscatters):
     
     ip_packet = eth_packet.data
     ip_src = socket.inet_ntoa(ip_packet.src)
-
+    ip_dst = socket.inet_ntoa(ip_packet.dst)
+    ip_dst_string = set(str(ip_dst).strip('{}').split(','))
+    port_dst = ip_packet.data.dport
 
     if (ip_src == src_ip and 
         ip_packet.data.flags & dpkt.tcp.TH_SYN and ip_packet.data.flags & dpkt.tcp.TH_ACK or 
@@ -199,9 +203,12 @@ def tcp_backscatter_check(packet_data, src_ip, tcp_backscatters):
             # Update the flow information
             flow = tcp_backscatters[flow_key]
             flow['num_packets'] += 1
+            flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
         else: 
         # Create new tcp_backscatter
             flow = {
+            'dst_ips': set(ip_dst_string),
+            'dst_port': set([port_dst]),
             'num_packets': 1
         }
         tcp_backscatters[flow_key] = flow
@@ -223,6 +230,9 @@ def small_syn_check(packet_data, src_ip, small_syns):
 
     ip_packet = eth_packet.data
     ip_src = socket.inet_ntoa(ip_packet.src)
+    ip_dst = socket.inet_ntoa(ip_packet.dst)
+    ip_dst_string = set(str(ip_dst).strip('{}').split(','))
+    port_dst = ip_packet.data.dport
     if ip_src != src_ip:
         return None
 
@@ -241,8 +251,8 @@ def small_syn_check(packet_data, src_ip, small_syns):
         else: 
             # Create new tcp_flows
             flow = {
-                'dst_ips': set(),
-                'dst_ports': set(),
+                'dst_ips': set(ip_dst_string),
+                'dst_ports': set([port_dst]),
                 'num_packets': 1
             }
 

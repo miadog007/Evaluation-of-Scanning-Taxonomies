@@ -1,150 +1,164 @@
-def udp_port_scan(udp_flows, udp_other):
+def udp_port_scan(udp_flows, udp_other, udp_hport_scans, udp_lport_scans):
     '''
     Check if flow is Port Scan
     Returns:
         Number of packets that is Port Scan
     '''
     flows = udp_flows
-    heavy_port_scan = 0
-    light_port_scan = 0
     N2 = 5
     N3 = 15
-    R = 0.50
+    R = 50
     M = 3
 
     for flow_key in flows:
         flow = flows[flow_key]
+        dst_ports = flow['dst_ports']
         dst_ports_count = len(flow['dst_ports'])
+        dst_ips = flow_key[1]
+        dst_ips_str = set(str(dst_ips).strip('{}').split(','))
         avg_packet_port = flow['avg_packets_per_dst_port']
         packets = flow['num_packets']
 
         # Check if udp Port Scan Heavy/Light
         if dst_ports_count >= N2 and avg_packet_port > M:
-            heavy_port_scan += 1
-            udp_other_remove(flow_key, udp_other)
+            udp_hport_scans[flow_key] = {'dst_ports': dst_ports, 'dst_ports_count': dst_ports_count, 'num_packets': packets, 'avg_packet_per_port': avg_packet_port}
+            udp_other_remove(flow_key, flow, udp_other)
         elif dst_ports_count > N2 and avg_packet_port <= M:
-            light_port_scan += 1
-            udp_other_remove(flow_key, udp_other)
+            udp_lport_scans[flow_key] = {'dst_ports': dst_ports, 'dst_ports_count': dst_ports_count, 'num_packets': packets, 'avg_packet_per_port': avg_packet_port}
+            udp_other_remove(flow_key, flow, udp_other)
         else:
-            udp_other_add(flow_key, udp_other)
+            udp_other_add(flow_key, flow, udp_other, dst_ips_str, 'port_scans')
 
-    print(f"Heavy port scans: {heavy_port_scan}")
-    print(f"Light port scans: {light_port_scan}")
-    return udp_other
+    return udp_other, udp_hport_scans, udp_lport_scans
 
-def udp_network_scan(udp_srcs, udp_other):
+def udp_network_scan(udp_srcs, udp_other, udp_hnetwork_scans, udp_lnetwork_scans):
     '''
     Check if flow is Network Scan
     Returns:
         Number of packets that is Network Scan
     '''
     flows = udp_srcs
-    heavy_network_scan = 0
-    light_network_scan = 0
     N1 = 5
-    R = 0.50
+    R = 50
     M = 3
 
     for flow_key in flows:
         flow = flows[flow_key]
+        dst_ports = flow_key[1]
+        dst_ips = flow['dst_ips']
+        dst_ips_str = set(str(dst_ips).strip('{}').split(','))
         dst_ips_count = len(flow['dst_ips'])
         avg_packet_ip = flow['avg_packets_per_dst_ip']
         packets = flow['num_packets']
+        src_ip = flow_key[0]
 
         # Check if udp Port Scan Heavy/Light
         if dst_ips_count >= N1 and avg_packet_ip > M:
-            heavy_network_scan += 1
-            udp_other_remove(flow_key, udp_other)
+            udp_hnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'dst_ports': dst_ports, 'num_packets': packets, 'avg_packet_per_ip': avg_packet_ip}
+            if src_ip in udp_other:
+                udp_other_remove(flow_key, flow, udp_other)
         elif dst_ips_count > N1 and avg_packet_ip <= M:
-            light_network_scan += 1
-            udp_other_remove(flow_key,udp_other)
+            udp_lnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'dst_ports': dst_ports, 'num_packets': packets, 'avg_packet_per_ip': avg_packet_ip}
+            if src_ip in udp_other:
+                udp_other_remove(flow_key, flow, udp_other)
         else:
-            udp_other_add(flow_key, udp_other)
+            udp_other_add(flow_key, flow, udp_other, dst_ips_str, 'network_scan')
 
-    print(f"Heavy network scans: {heavy_network_scan}")
-    print(f"Light network scans: {light_network_scan}")
-    return udp_other
+    return udp_other, udp_hnetwork_scans, udp_lnetwork_scans
 
-def one_flow(udp_one_flows, udp_other):
+def one_flow(udp_one_flows, udp_other, udp_oflow_final):
     '''
     Check if flow is One Flow
     Returns:
         Number of packets that is udp One Flow
     '''
     flows = udp_one_flows
-    udp_one_flow = 0
     N3 = 15
 
     for flow_key in flows:
         flow = flows[flow_key]    
         packets = flow['num_packets']
-    
+        src_ip = flow_key[0]
+        dst_ips = flow_key[1]
+        dst_port = flow_key[2]
+        dst_ips_str = set(str(dst_ips).strip('{}').split(','))
+
         if packets >= N3:
-            udp_one_flow += 1
-            udp_other_remove(flow_key, udp_other)
+            udp_oflow_final[flow_key] = {'dst_ips': dst_ips, 'dst_port': dst_port, 'num_packets': packets}
+            if src_ip in udp_other:
+                udp_other_remove(flow_key, flow, udp_other)
         else:
-            udp_other_add(flow_key, udp_other)
+            udp_other_add(flow_key, flow, udp_other, dst_ips_str, 'one_flow')
 
-    print(f"udp One Flows: {udp_one_flow}")
-    return udp_other
+    return udp_other, udp_oflow_final
 
-def udp_backscatter(tcp_backscatters):
+def udp_backscatter(udp_backscatters, udp_backscatter_final):
     '''
     Check number of backscatter
     '''
-    total_packets = 0
-    for flow_key in tcp_backscatters:
-        flow = tcp_backscatters[flow_key]
-        total_packets += 1
+    for flow_key in udp_backscatters:
+        flow = udp_backscatters[flow_key]
+        dst_ips = flow['dst_ips']
+        dst_port = flow['dst_port']
+        packets = flow['num_packets']
+        udp_backscatter_final[flow_key] = {'dst_ips': dst_ips, 'dst_port': dst_port, 'num_packets': packets}
 
 
-    print(f"UDP backscatter connections: {total_packets}")
+    return udp_backscatter_final
 
-def udp_fragment(udp_srcs, udp_other):
+def udp_fragment(udp_srcs, udp_other, udp_fragment):
     flows = udp_srcs
-    frag_connections = 0
 
     for flow_key in flows:
         flow = flows[flow_key]
         frag_packet = flow['frag_packets']
+        src_ip = flow_key[0]
+        dst_ips = flow['dst_ips']
+        dst_ips_str = set(str(dst_ips).strip('{}').split(','))
+        packets = flow['num_packets']
+        dst_port = flow_key[1]
 
         if frag_packet >= 1:
-            frag_connections += 1
-            udp_other_remove(flow_key, udp_other)
+            udp_fragment[flow_key] = {'dst_ips': dst_ips, 'dst_ports': dst_port, 'num_packets': packets}
+            if src_ip in udp_other:
+                udp_other_remove(flow_key, flow, udp_other)
         else:
-            udp_other_add(flow_key, udp_other)
+            udp_other_add(flow_key, flow, udp_other, dst_ips_str, 'backscatter')
 
-    print(f"IP Fragement: {frag_connections}")
-    return udp_other
+    return udp_other, udp_fragment
 
-def small_udp(small_udps, udp_other):
+def small_udp(small_udps, udp_other, small_udp_final):
     '''
     Check for Small udp
     Returns:
         Number of Samll udp
     '''
     flows = small_udps
-    Small_udp = 0
     N1 = 5
     N2 = 5
     N3 = 15
 
     for flow_key in flows:
-        flow = flows[flow_key]  
+        flow = flows[flow_key]
+        dst_ips = flow['dst_ips']
+        dst_ips_str = set(str(dst_ips).strip('{}').split(','))  
         dst_ips_count = len(flow['dst_ips'])
         dst_ports_count = len(flow['dst_ports'])
+        dst_ports = flow['dst_ports']
         packets = flow['num_packets']
-    
+        src_ip = flow_key[0]
+
         if dst_ips_count < N1 and dst_ports_count < N2 and packets <= N3:
-            Small_udp += 1
-            udp_other_remove(flow_key, udp_other)
+            small_udp_final[flow_key] = {'dst_ips': dst_ips, 'dst_ports': dst_ports, 'dst_ips_count': dst_ips_count, 'num_packets': packets}
+            if src_ip in udp_other:
+                udp_other_remove(flow_key, flow, udp_other)
         else:
-            udp_other_add(flow_key, udp_other)
+            udp_other_add(flow_key, flow, udp_other, dst_ips_str, 'Small UDP')
+    
+    print('small udp analysis done')
+    return udp_other, small_udp_final
 
-    print(f"Small UDP: {Small_udp}")
-    return udp_other
-
-def udp_other_add(flow_key, udp_other):
+def udp_other_add(flow_key, flow, udp_other, dst_ips, scan_type):
     '''
     Add to udp_other
     '''
@@ -152,13 +166,21 @@ def udp_other_add(flow_key, udp_other):
     src_ip = flow_key[0]
 
     if src_ip in udp_other:
-        udp_other[src_ip] += 1
+        flow = udp_other[src_ip]
+        flow['scan_types_from'].add(scan_type)
+        flow['dst_ips'].update(dst_ips)
+        flow['num_entries'] += 1
     else:
-        udp_other[src_ip] = 1
+        flow = {
+            'dst_ips': set(dst_ips),
+            'scan_types_from': set([scan_type]),
+            'num_entries': 1
+        }
+        udp_other[src_ip] = flow
 
     return udp_other
 
-def udp_other_remove(flow_key, udp_other):
+def udp_other_remove(flow_key, flow, udp_other):
     '''
     Remove from udp_other
     '''

@@ -14,31 +14,72 @@ total_packets = 0
 
 # dict for tcp traffic
 tcp_flows = {}
+tcp_hport_scans = {}
+tcp_lport_scans = {}
+
 tcp_srcs = {}
+tcp_hnetwork_scans = {}
+tcp_lnetwork_scans = {}
+
 tcp_one_flows = {}
+tcp_oflow_final = {}
+
 tcp_backscatters = {}
+tcp_bacsckatter_final = {}
+
+tcp_fragment = {}
+
 small_syns = {}
+small_syns_final = {}
+
 other_tcp = {}
 
 # dict for UDP traffic
 udp_flows = {}
+udp_hport_scans = {}
+udp_lport_scans = {}
+
 udp_srcs = {}
+udp_hnetwork_scans = {}
+udp_lnetwork_scans = {}
+
 udp_one_flows = {}
+udp_oflow_final = {}
+
 udp_backscatters = {}
+udp_backscatter_final = {}
+
+udp_fragment = {}
+
 small_udps = {}
+small_udps_final = {}
+
 other_udp = {}
 
 # dicts for ICMP traffic
 icmp_srcs = {}
+icmp_hnetwork_scans = {}
+icmp_lnetwork_scans = {}
+
 icmp_backscatters = {}
+icmp_backscatter_final = {}
+
+icmp_fragment = {}
+
 small_pings = {}
+small_pings_final = {}
+
 other_icmp = {}
 
 # set of ips
 ip_src = set()
 
+# others
+other = 0
+
 # Main functions for finding TCP, UDP or ICMP packets
-for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
@@ -56,7 +97,10 @@ for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap',
             dst_ip = socket.inet_ntoa(ip.dst)
 
             if isinstance(ip.data, dpkt.tcp.TCP):
-                dst_port = ip.data.dport        
+                dst_port = ip.data.dport
+            #else:
+             #   print('no dport tcp')
+              #  other += 1        
 
                 # send to tcp_sinle_flow
                 tcp_flow = tcp_traffic.tcp_single_flow(pkt, src_ip, dst_ip, tcp_flows)
@@ -89,8 +133,9 @@ for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap',
             dst_ip = socket.inet_ntoa(ip.dst)
             if isinstance (ip.data, dpkt.udp.UDP) and ip.data.dport:
                 dst_port = ip.data.dport  
-            else:
-                print('no dport udp')  
+            #else:
+             #   print('no dport udp')
+              #  other += 1  
 
             # send to tcp_sinle_flow
             udp_flow = udp_traffic.udp_single_flow(pkt, src_ip, dst_ip, udp_flows)
@@ -136,7 +181,7 @@ for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap',
             if small_ping is not None:
                 small_pings[(src_ip)] = small_ping
         else:
-            print('hello')
+            other += 1
 
     # Counter of packets each minute
     elapsed_time = time.time() - start_time
@@ -154,34 +199,62 @@ for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap',
         start_time = time.time()
 
 
+
+# TCP analysis
+tcp_analysis.tcp_port_scan(tcp_flows, other_tcp, tcp_hport_scans, tcp_lport_scans)
+tcp_analysis.tcp_network_scan(tcp_srcs, other_tcp, tcp_hnetwork_scans, tcp_lnetwork_scans)
+tcp_analysis.one_flow(tcp_one_flows, other_tcp, tcp_oflow_final)
+tcp_analysis.tcp_backscatter(tcp_backscatters, tcp_bacsckatter_final)
+tcp_analysis.tcp_fragment(tcp_srcs, other_tcp, tcp_fragment)
+tcp_analysis.small_syn(small_syns, other_tcp, small_syns_final)
+
+# UDP analysis
+udp_analysis.udp_port_scan(udp_flows, other_udp, udp_hport_scans, udp_lport_scans)
+udp_analysis.udp_network_scan(udp_srcs, other_udp, udp_hnetwork_scans, udp_lnetwork_scans)
+udp_analysis.one_flow(udp_one_flows, other_udp, udp_oflow_final)
+udp_analysis.udp_backscatter(udp_backscatters, udp_backscatter_final)
+udp_analysis.udp_fragment(udp_srcs, other_udp, udp_fragment)
+udp_analysis.small_udp(small_udps, other_udp, small_udps_final)
+
+# ICMP analysis
+icmp_analysis.icmp_network_scan(icmp_srcs, other_icmp, icmp_hnetwork_scans, icmp_lnetwork_scans)
+icmp_analysis.icmp_backscatter(icmp_backscatters, icmp_backscatter_final)
+icmp_analysis.icmp_fragment(icmp_srcs, other_icmp, icmp_fragment)
+icmp_analysis.small_ping(small_pings, other_icmp, small_pings_final)
+
 # Printing out result of each category in fukuda 2018
 print("---------------------")
 print('PCAP info:')
 print(f'Number of packets: {total_packets}')
 print(f'Number of src ips: {(len(ip_src))}')
 print("---------------------")
-print("TCP info:")
-tcp_analysis.tcp_port_scan(tcp_flows, other_tcp)
-tcp_analysis.tcp_network_scan(tcp_srcs, other_tcp)
-tcp_analysis.one_flow(tcp_one_flows, other_tcp)
-tcp_analysis.tcp_backscatter(tcp_backscatters)
-tcp_analysis.tcp_fragment(tcp_srcs, other_tcp)
-tcp_analysis.small_syn(small_syns, other_tcp)
-print(f"TCP other: {len(other_tcp)}")
+print('TCP info:')
+print(f'TCP Heavy Port scans: {len(tcp_hport_scans.keys())}')
+print(f'TCP Light Port scans: {len(tcp_lport_scans.keys())}')
+print(f'TCP Heavy Network scans: {len(tcp_hnetwork_scans.keys())}')
+print(f'TCP Light Network scans: {len(tcp_lnetwork_scans.keys())}')
+print(f'TCP One Flows: {len(tcp_oflow_final.keys())}')
+print(f'TCP Backscatter: {len(tcp_bacsckatter_final.keys())}')
+print(f"TCP IP Fragement: {len(tcp_fragment.keys())}")
+print(f'TCP Small SYN: {len(small_syns_final.keys())}')
+print(f'Other TCP: {(len(other_tcp.keys()))}')
 print("---------------------")
-print("UDP info:")
-udp_analysis.udp_port_scan(udp_flows, other_udp)
-udp_analysis.udp_network_scan(udp_srcs, other_udp)
-udp_analysis.one_flow(udp_one_flows, other_udp)
-udp_analysis.udp_backscatter(udp_backscatters)
-udp_analysis.udp_fragment(udp_srcs, other_udp)
-udp_analysis.small_udp(small_udps, other_udp)
-print(f"UDP other: {len(other_udp)}")
+print('UDP Info:')
+print(f'UDP Heavy Port scans: {len(udp_hport_scans.keys())}')
+print(f'UDP Light Port scans: {len(udp_lport_scans.keys())}')
+print(f'UDP Heavy Network scans: {len(udp_hnetwork_scans.keys())}')
+print(f'UDP Light Network scans: {len(udp_lnetwork_scans.keys())}')
+print(f'UDP One Flows: {len(udp_oflow_final.keys())}')
+print(f'UDP Backscatter: {len(udp_backscatter_final.keys())}')
+print(f"UDP IP Fragement: {len(udp_fragment.keys())}")
+print(f'UDP Small UDP: {len(small_udps_final.keys())}')
+print(f'Other UDP: {(len(other_udp.keys()))}')
 print("---------------------")
-print("ICMP info:")
-icmp_analysis.icmp_network_scan(icmp_srcs, other_icmp)
-icmp_analysis.icmp_backscatter(icmp_backscatters)
-icmp_analysis.icmp_fragment(icmp_srcs, other_icmp)
-icmp_analysis.small_ping(small_pings, other_icmp)
-print(f"ICMP other: {len(other_icmp)}")
+print('ICMP Info:')
+print(f'ICMP Heavy Network scans: {len(icmp_hnetwork_scans.keys())}')
+print(f'ICMP Light Network scans: {len(icmp_lnetwork_scans.keys())}')
+print(f'ICMP Backscatter: {len(icmp_backscatter_final.keys())}')
+print(f"ICMP IP Fragement: {len(icmp_fragment.keys())}")
+print(f'Small Pings:  {len(small_pings_final.keys())}')
+print(f'Other ICMP: {(len(other_icmp.keys()))}')
 print("---------------------")
