@@ -21,7 +21,7 @@ def icmp_network_scan(icmp_srcs, icmp_other, icmp_hnetwork_scans, icmp_lnetwork_
         # Check if icmp Port Scan Heavy/Light
         if dst_ips_count >= N1 and avg_packet_ip > M:
             icmp_hnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'num_packets': packets, 'avg_packet_per_ip': avg_packet_ip}
-        elif dst_ips_count > N1 and avg_packet_ip <= M:
+        elif dst_ips_count >= N1 and avg_packet_ip <= M:
             icmp_lnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'num_packets': packets, 'avg_packet_per_ip': avg_packet_ip}
         else:
             icmp_other_add(flow_key, flow, icmp_other, dst_ips_str, 'network_scan')

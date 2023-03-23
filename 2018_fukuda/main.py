@@ -3,7 +3,6 @@ import socket
 from flows import tcp_traffic, udp_traffic, icmp_traffic
 from anlysis import tcp_analysis, udp_analysis, icmp_analysis
 import time
-import ipaddress
 
 packets = 0
 minutes = 0
@@ -79,8 +78,8 @@ other = 0
 
 # Main functions for finding TCP, UDP or ICMP packets
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00004_20201224111405.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
     # open packet with dpkt
@@ -222,11 +221,13 @@ icmp_analysis.icmp_backscatter(icmp_backscatters, icmp_backscatter_final)
 icmp_analysis.icmp_fragment(icmp_srcs, other_icmp, icmp_fragment)
 icmp_analysis.small_ping(small_pings, other_icmp, small_pings_final)
 
+
 # Printing out result of each category in fukuda 2018
 print("---------------------")
 print('PCAP info:')
 print(f'Number of packets: {total_packets}')
 print(f'Number of src ips: {(len(ip_src))}')
+print(f'Other Traffic {other}')
 print("---------------------")
 print('TCP info:')
 print(f'TCP Heavy Port scans: {len(tcp_hport_scans.keys())}')

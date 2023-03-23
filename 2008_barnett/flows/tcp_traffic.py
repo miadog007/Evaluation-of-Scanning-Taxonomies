@@ -20,7 +20,7 @@ def tcp_compare_src(speed_list, tcp_compare_flows):
     '''
     Function to compare ip src to put togheter scan flows from different ports
     '''
-
+    
     # iterate through the tcp_slow dictionary
     for key, value in speed_list.items():
         # extract the source IP address, destination IP address, and destination port

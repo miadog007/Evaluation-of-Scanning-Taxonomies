@@ -117,7 +117,6 @@ def find_dist(udp_compare_flows, final_dist):
                 #'timestamps': value[0]['timestamps'],
                 'avg_time_between_packets': value['avg_time_between_packets']
             }
-
     return final_dist
 
 def group_dist(final_dist, one_to_one, one_to_many, many_to_one, many_to_many):
