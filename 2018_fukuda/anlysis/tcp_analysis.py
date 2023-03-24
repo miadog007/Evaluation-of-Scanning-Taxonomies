@@ -23,7 +23,7 @@ def tcp_port_scan(tcp_flows, tcp_other, tcp_hport_scans, tcp_lport_scans):
         # Check if TCP Port Scan Heavy/Light
         if dst_ports_count >= N2 and scan_percent >= R and avg_packet_port > M:
             tcp_hport_scans[flow_key] = {'dst_ports': dst_ports, 'dst_ports_count': dst_ports_count, 'num_packets': packets, 'scan_percent': scan_percent, 'avg_packet_per_port': avg_packet_port}
-        elif dst_ports_count > N2 and scan_percent >= R and avg_packet_port <= M:
+        elif dst_ports_count >= N2 and scan_percent >= R and avg_packet_port <= M:
             tcp_lport_scans[flow_key] = {'dst_ports': dst_ports, 'dst_ports_count': dst_ports_count, 'num_packets': packets, 'scan_percent': scan_percent, 'avg_packet_per_port': avg_packet_port}
         else:
             tcp_other_add(flow_key, flow, tcp_other, dst_ips_str, 'port_scans')
@@ -57,7 +57,7 @@ def tcp_network_scan(tcp_srcs, tcp_other, tcp_hnetwork_scans, tcp_lnetwork_scans
             tcp_hnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'dst_ports': dst_ports, 'num_packets': packets, 'scan_percent': scan_percent, 'avg_packet_per_ip': avg_packet_ip}
             if src_ip in tcp_other:
                 tcp_other_remove(flow_key, flow, tcp_other)
-        elif dst_ips_count > N1 and scan_percent >= R and avg_packet_ip <= M:
+        elif dst_ips_count >= N1 and scan_percent >= R and avg_packet_ip <= M:
             tcp_lnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'dst_ports': dst_ports, 'num_packets': packets, 'scan_percent': scan_percent, 'avg_packet_per_ip': avg_packet_ip}
             if src_ip in tcp_other:
                 tcp_other_remove(flow_key, flow, tcp_other)

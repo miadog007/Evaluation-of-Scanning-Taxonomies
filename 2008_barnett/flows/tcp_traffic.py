@@ -80,6 +80,7 @@ def tcp_compare_src(speed_list, tcp_compare_flows):
                 'SYN_count': syn_count,
                 'ACK_count': ack_count,
                 'FIN_count': fin_count,
+                'ip_src_count': 1,
                 'first_packet': value[0]['first_packet'],
                 'last_packet': value[0]['last_packet'],
                 #'timestamps': value[0]['timestamps'],

@@ -23,7 +23,7 @@ def udp_port_scan(udp_flows, udp_other, udp_hport_scans, udp_lport_scans):
         if dst_ports_count >= N2 and avg_packet_port > M:
             udp_hport_scans[flow_key] = {'dst_ports': dst_ports, 'dst_ports_count': dst_ports_count, 'num_packets': packets, 'avg_packet_per_port': avg_packet_port}
             udp_other_remove(flow_key, flow, udp_other)
-        elif dst_ports_count > N2 and avg_packet_port <= M:
+        elif dst_ports_count >= N2 and avg_packet_port <= M:
             udp_lport_scans[flow_key] = {'dst_ports': dst_ports, 'dst_ports_count': dst_ports_count, 'num_packets': packets, 'avg_packet_per_port': avg_packet_port}
             udp_other_remove(flow_key, flow, udp_other)
         else:
@@ -57,7 +57,7 @@ def udp_network_scan(udp_srcs, udp_other, udp_hnetwork_scans, udp_lnetwork_scans
             udp_hnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'dst_ports': dst_ports, 'num_packets': packets, 'avg_packet_per_ip': avg_packet_ip}
             if src_ip in udp_other:
                 udp_other_remove(flow_key, flow, udp_other)
-        elif dst_ips_count > N1 and avg_packet_ip <= M:
+        elif dst_ips_count >= N1 and avg_packet_ip <= M:
             udp_lnetwork_scans[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'dst_ports': dst_ports, 'num_packets': packets, 'avg_packet_per_ip': avg_packet_ip}
             if src_ip in udp_other:
                 udp_other_remove(flow_key, flow, udp_other)

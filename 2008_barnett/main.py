@@ -173,8 +173,8 @@ icmp_src = set()
 other = 0
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00003_20201218162044.pcap', 'rb')):
-#for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
+for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
     total_packets += 1 
     eth=dpkt.ethernet.Ethernet(pkt)
@@ -339,6 +339,7 @@ print('Traffic TCP medium compare Done')
 tcp_traffic.tcp_compare_src(tcp_rapid, tcp_compare_rapid)
 print('Traffic TCP Rapid compare Done')
 
+
 # UDP
 udp_traffic.udp_compare_src(udp_slow, udp_compare_slow)
 print('Traffic UDP slow compare Done')
@@ -351,7 +352,6 @@ print('Traffic UDP rapid compare Done')
 icmp_traffic.icmp_compare_src(icmp_slow, icmp_compare_slow)
 icmp_traffic.icmp_compare_src(icmp_medium, icmp_compare_medium)
 icmp_traffic.icmp_compare_src(icmp_rapid, icmp_compare_rapid)
-#print(icmp_compare_slow)
 print('Traffic compare Done')
 # check for tcp distrubution step 2: one-to-many and many-to-may
 # TCP

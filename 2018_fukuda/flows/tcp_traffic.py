@@ -42,19 +42,16 @@ def tcp_single_flow(packet_data, src_ip, dst_ip, tcp_flows):
         tcp_flows[flow_key] = flow
 
     # Update flags counters
-    if ip_packet.data.flags & dpkt.tcp.TH_SYN:
-        flow['scan_packets'] += 1
-    if ip_packet.data.flags & dpkt.tcp.TH_FIN:
-        flow['scan_packets'] += 1
-    if ip_packet.data.flags & dpkt.tcp.TH_FIN and ip_packet.data.flags & dpkt.tcp.TH_ACK:
-        flow['scan_packets'] += 1
-    if not ip_packet.data.flags:
+    if (ip_packet.data.flags & dpkt.tcp.TH_SYN or 
+        ip_packet.data.flags & dpkt.tcp.TH_FIN or 
+        ip_packet.data.flags & dpkt.tcp.TH_FIN & ip_packet.data.flags & dpkt.tcp.TH_ACK or not 
+        ip_packet.data.flags):
         flow['scan_packets'] += 1
 
         # Calculate percentages
     total_packets = flow['num_packets']
     if total_packets > 0:
-        flow['scan_percent'] = 100 * flow['scan_packets'] / total_packets
+        flow['scan_percent'] = flow['scan_packets'] / total_packets * 100
     else:
         flow['scan_percent'] = 0
     
@@ -111,13 +108,10 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
         tcp_src[flow_key] = flow
 
     # Update flags counters
-    if ip_packet.data.flags & dpkt.tcp.TH_SYN:
-        flow['scan_packets'] += 1
-    if ip_packet.data.flags & dpkt.tcp.TH_FIN:
-        flow['scan_packets'] += 1
-    if ip_packet.data.flags & dpkt.tcp.TH_FIN & ip_packet.data.flags & dpkt.tcp.TH_ACK:
-        flow['scan_packets'] += 1
-    if not ip_packet.data.flags:
+    if (ip_packet.data.flags & dpkt.tcp.TH_SYN or 
+        ip_packet.data.flags & dpkt.tcp.TH_FIN or 
+        ip_packet.data.flags & dpkt.tcp.TH_FIN & ip_packet.data.flags & dpkt.tcp.TH_ACK or not 
+        ip_packet.data.flags):
         flow['scan_packets'] += 1
 
     # Check for fragmented packets
@@ -127,7 +121,7 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
     # Calculate percentages
     total_packets = flow['num_packets']
     if total_packets > 0:
-        flow['scan_percent'] = 100 * flow['scan_packets'] / total_packets
+        flow['scan_percent'] = flow['scan_packets'] / total_packets * 100
     else:
         flow['scan_percent'] = 0
     
