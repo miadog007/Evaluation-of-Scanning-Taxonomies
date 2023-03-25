@@ -79,7 +79,8 @@ other = 0
 # Main functions for finding TCP, UDP or ICMP packets
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
     # open packet with dpkt
@@ -258,3 +259,6 @@ print(f"ICMP IP Fragement: {len(icmp_fragment.keys())}")
 print(f'Small Pings:  {len(small_pings_final.keys())}')
 print(f'Other ICMP: {(len(other_icmp.keys()))}')
 print("---------------------")
+for key, value in tcp_lnetwork_scans.items():
+    if key[0] == '51.81.255.129':
+        print(key, value)

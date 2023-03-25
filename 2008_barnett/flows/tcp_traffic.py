@@ -136,7 +136,7 @@ def find_dist(tcp_compare_flows, final_dist):
             if dst_port not in flow['dst_ports']:
                 flow['dst_ports'].append(dst_port)
         else:
-            # if it doesn't, create a new flow
+            # if it doesn't add to flow, create a new flow
             final_dist[flow_key] = {
                 'dst_ports': [dst_port],
                 'src_ips': [src_ip],
