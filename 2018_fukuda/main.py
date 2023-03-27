@@ -259,6 +259,6 @@ print(f"ICMP IP Fragement: {len(icmp_fragment.keys())}")
 print(f'Small Pings:  {len(small_pings_final.keys())}')
 print(f'Other ICMP: {(len(other_icmp.keys()))}')
 print("---------------------")
-for key, value in tcp_lnetwork_scans.items():
-    if key[0] == '51.81.255.129':
+for key, value in other_tcp.items():
+    if key == '119.45.157.33':
         print(key, value)

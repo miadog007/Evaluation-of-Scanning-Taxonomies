@@ -42,10 +42,22 @@ def tcp_single_flow(packet_data, src_ip, dst_ip, tcp_flows):
         tcp_flows[flow_key] = flow
 
     # Update flags counters
-    if (ip_packet.data.flags & dpkt.tcp.TH_SYN or 
-        ip_packet.data.flags & dpkt.tcp.TH_FIN or 
-        ip_packet.data.flags & dpkt.tcp.TH_FIN & ip_packet.data.flags & dpkt.tcp.TH_ACK or not 
-        ip_packet.data.flags):
+    if (ip_src == src_ip and 
+        ((ip_packet.data.flags & dpkt.tcp.TH_SYN and
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_ACK | dpkt.tcp.TH_RST | dpkt.tcp.TH_FIN | dpkt.tcp.TH_PUSH | dpkt.tcp.TH_URG)) or 
+        (ip_packet.data.flags & dpkt.tcp.TH_FIN and 
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_SYN | dpkt.tcp.TH_RST | dpkt.tcp.TH_ACK | dpkt.tcp.TH_PUSH | dpkt.tcp.TH_URG)) or 
+        (ip_packet.data.flags & dpkt.tcp.TH_FIN and ip_packet.data.flags & dpkt.tcp.TH_ACK and
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_SYN | dpkt.tcp.TH_URG | dpkt.tcp.TH_RST | dpkt.tcp.TH_PUSH)) or
+        ((ip_packet.data.flags & dpkt.tcp.TH_FIN == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_SYN == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_RST == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_PUSH == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_ACK == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_URG == 0)))):
         flow['scan_packets'] += 1
 
         # Calculate percentages
@@ -108,11 +120,24 @@ def tcp_single_src(packet_data, src_ip, dst_port, tcp_src):
         tcp_src[flow_key] = flow
 
     # Update flags counters
-    if (ip_packet.data.flags & dpkt.tcp.TH_SYN or 
-        ip_packet.data.flags & dpkt.tcp.TH_FIN or 
-        ip_packet.data.flags & dpkt.tcp.TH_FIN & ip_packet.data.flags & dpkt.tcp.TH_ACK or not 
-        ip_packet.data.flags):
+    if (ip_src == src_ip and 
+        ((ip_packet.data.flags & dpkt.tcp.TH_SYN and
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_ACK | dpkt.tcp.TH_RST | dpkt.tcp.TH_FIN | dpkt.tcp.TH_PUSH | dpkt.tcp.TH_URG)) or 
+        (ip_packet.data.flags & dpkt.tcp.TH_FIN and 
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_SYN | dpkt.tcp.TH_RST | dpkt.tcp.TH_ACK | dpkt.tcp.TH_PUSH | dpkt.tcp.TH_URG)) or 
+        (ip_packet.data.flags & dpkt.tcp.TH_FIN and ip_packet.data.flags & dpkt.tcp.TH_ACK and
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_SYN | dpkt.tcp.TH_URG | dpkt.tcp.TH_RST | dpkt.tcp.TH_PUSH)) or
+        ((ip_packet.data.flags & dpkt.tcp.TH_FIN == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_SYN == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_RST == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_PUSH == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_ACK == 0) and 
+        (ip_packet.data.flags & dpkt.tcp.TH_URG == 0)))):
         flow['scan_packets'] += 1
+
 
     # Check for fragmented packets
     if (ip_packet.off & dpkt.ip.IP_MF) != 0 or (ip_packet.off & dpkt.ip.IP_OFFMASK) != 0:
@@ -186,10 +211,20 @@ def tcp_backscatter_check(packet_data, src_ip, tcp_backscatters):
     port_dst = ip_packet.data.dport
 
     if (ip_src == src_ip and 
-        ip_packet.data.flags & dpkt.tcp.TH_SYN and ip_packet.data.flags & dpkt.tcp.TH_ACK or 
-        ip_packet.data.flags & dpkt.tcp.TH_ACK or 
-        ip_packet.data.flags & dpkt.tcp.TH_RST or
-        ip_packet.data.flags & dpkt.tcp.TH_RST and ip_packet.data.flags & dpkt.tcp.TH_ACK):
+        ((ip_packet.data.flags & dpkt.tcp.TH_SYN and ip_packet.data.flags & dpkt.tcp.TH_ACK and
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_RST | dpkt.tcp.TH_FIN | dpkt.tcp.TH_PUSH | dpkt.tcp.TH_URG)) or 
+        (ip_packet.data.flags & dpkt.tcp.TH_ACK and 
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_SYN | dpkt.tcp.TH_RST | dpkt.tcp.TH_FIN | dpkt.tcp.TH_PUSH | dpkt.tcp.TH_URG)) or 
+        (ip_packet.data.flags & dpkt.tcp.TH_RST and 
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_ACK | dpkt.tcp.TH_SYN | dpkt.tcp.TH_URG | dpkt.tcp.TH_FIN | dpkt.tcp.TH_PUSH))
+        or 
+        (ip_packet.data.flags & dpkt.tcp.TH_RST and ip_packet.data.flags & dpkt.tcp.TH_ACK and 
+        not ip_packet.data.flags & 
+            (dpkt.tcp.TH_SYN | dpkt.tcp.TH_URG | dpkt.tcp.TH_FIN | dpkt.tcp.TH_PUSH)))):
+
         
         flow_key = (ip_src)
         
@@ -230,7 +265,7 @@ def small_syn_check(packet_data, src_ip, small_syns):
     if ip_src != src_ip:
         return None
 
-    if ip_packet.data.flags & dpkt.tcp.TH_SYN:
+    if ip_packet.data.flags & dpkt.tcp.TH_SYN and not ip_packet.data.flags & (dpkt.tcp.TH_ACK | dpkt.tcp.TH_RST | dpkt.tcp.TH_FIN | dpkt.tcp.TH_PUSH | dpkt.tcp.TH_URG):
         # Skip packets that don't match the specified information
 
         flow_key = (ip_src)
