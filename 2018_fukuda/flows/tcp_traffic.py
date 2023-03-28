@@ -233,6 +233,7 @@ def tcp_backscatter_check(packet_data, src_ip, tcp_backscatters):
             flow = tcp_backscatters[flow_key]
             flow['num_packets'] += 1
             flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
+            flow['dst_port'].add(port_dst)
         else: 
         # Create new tcp_backscatter
             flow = {
