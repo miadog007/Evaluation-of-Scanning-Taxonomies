@@ -259,6 +259,7 @@ print(f"ICMP IP Fragement: {len(icmp_fragment.keys())}")
 print(f'Small Pings:  {len(small_pings_final.keys())}')
 print(f'Other ICMP: {(len(other_icmp.keys()))}')
 print("---------------------")
-for key, value in other_tcp.items():
-    if key == '119.45.157.33':
-        print(key, value)
+for key, value in tcp_bacsckatter_final.items():
+    if key == '51.255.81.155':
+        print(key, len(value['dst_ips']))
+
