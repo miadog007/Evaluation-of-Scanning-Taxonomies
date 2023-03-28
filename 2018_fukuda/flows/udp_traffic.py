@@ -150,13 +150,13 @@ def udp_backscatter_check(packet_data, src_ip, udp_backscatters):
     ip_src = socket.inet_ntoa(ip_packet.src)
     ip_dst = socket.inet_ntoa(ip_packet.dst)
     ip_dst_string = set(str(ip_dst).strip('{}').split(','))
-    port_dst = ip_packet.data.dport
+    port_src = ip_packet.data.sport
 
     if (ip_src == src_ip and 
-        ip_packet.data.dport == 53 or
-        ip_packet.data.dport == 123 or
-        ip_packet.data.dport == 137 or
-        ip_packet.data.dport == 161):
+        ip_packet.data.sport == 53 or
+        ip_packet.data.sport == 123 or
+        ip_packet.data.sport == 137 or
+        ip_packet.data.sport == 161):
         
         flow_key = (ip_src)
         
@@ -165,11 +165,12 @@ def udp_backscatter_check(packet_data, src_ip, udp_backscatters):
             flow = udp_backscatters[flow_key]
             flow['num_packets'] += 1
             flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
+            flow['src_port'].add(ip_packet.data.sport)
         else: 
         # Create new udp_backscatter
             flow = {
             'dst_ips': set(ip_dst_string),
-            'dst_port': set([port_dst]),
+            'src_port': set([port_src]),
             'num_packets': 1
         }
         udp_backscatters[flow_key] = flow

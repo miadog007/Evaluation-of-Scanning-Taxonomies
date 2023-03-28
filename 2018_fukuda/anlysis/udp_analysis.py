@@ -99,9 +99,9 @@ def udp_backscatter(udp_backscatters, udp_backscatter_final):
     for flow_key in udp_backscatters:
         flow = udp_backscatters[flow_key]
         dst_ips = flow['dst_ips']
-        dst_port = flow['dst_port']
+        src_port = flow['src_port']
         packets = flow['num_packets']
-        udp_backscatter_final[flow_key] = {'dst_ips': dst_ips, 'dst_port': dst_port, 'num_packets': packets}
+        udp_backscatter_final[flow_key] = {'dst_ips': dst_ips, 'src_port': src_port, 'num_packets': packets}
 
 
     return udp_backscatter_final
