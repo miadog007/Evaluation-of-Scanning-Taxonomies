@@ -222,6 +222,12 @@ icmp_analysis.icmp_backscatter(icmp_backscatters, icmp_backscatter_final)
 icmp_analysis.icmp_fragment(icmp_srcs, other_icmp, icmp_fragment)
 icmp_analysis.small_ping(small_pings, other_icmp, small_pings_final)
 
+# Fix other lists
+tcp_analysis.tcp_remove_key_other(other_tcp, tcp_hport_scans, tcp_lport_scans, tcp_hnetwork_scans, tcp_lnetwork_scans, tcp_oflow_final, small_syns_final)
+udp_analysis.udp_remove_key_other(other_udp, udp_hport_scans, udp_lport_scans, udp_hnetwork_scans, udp_lnetwork_scans, udp_oflow_final, small_udps_final)
+icmp_analysis.icmp_remove_key_other(other_icmp, icmp_hnetwork_scans, icmp_lnetwork_scans, small_pings_final)
+
+
 # Printing out result of each category in fukuda 2018
 print("---------------------")
 print('PCAP info:')
@@ -259,7 +265,5 @@ print(f"ICMP IP Fragement: {len(icmp_fragment.keys())}")
 print(f'Small Pings:  {len(small_pings_final.keys())}')
 print(f'Other ICMP: {(len(other_icmp.keys()))}')
 print("---------------------")
-for key, value in tcp_bacsckatter_final.items():
-    if key == '51.255.81.155':
-        print(key, len(value['dst_ips']))
+
 

@@ -14,7 +14,7 @@ with open('tcp_fukuda.txt', 'w') as f:
     f.write(f'TCP Backscatter: {tcp_bacsckatter_final}\n')
     f.write(f"TCP IP Fragement: {tcp_fragment}\n")
     f.write(f'TCP Small SYN: {small_syns_final}\n')
-    f.write(f'Other TCP: {other_tcp.keys()}\n')
+    f.write(f'Other TCP: {other_tcp}\n')
     f.write("---------------------\n")
 with open('udp_fukuda.txt', 'w') as f:
     f.write('UDP Info:\n')

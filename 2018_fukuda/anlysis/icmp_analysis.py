@@ -126,3 +126,16 @@ def icmp_other_remove(flow_key, flow, icmp_other):
         return None
     
     return icmp_other
+
+def icmp_remove_key_other(icmp_other, icmp_hnetwork_scans, icmp_lnetwork_scans, small_pings_final):
+    keys_to_remove = {key[0] for key in [*icmp_hnetwork_scans.keys(), *icmp_lnetwork_scans.keys()]}
+    
+    for key in list(icmp_other.keys()):
+        if key in keys_to_remove:
+            del icmp_other[key]
+    
+    for key in list(icmp_other.keys()):
+        if key in small_pings_final:
+            del icmp_other[key]
+
+    return icmp_other

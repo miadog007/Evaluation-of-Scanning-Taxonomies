@@ -192,3 +192,16 @@ def udp_other_remove(flow_key, flow, udp_other):
         return None
     
     return udp_other
+
+def udp_remove_key_other(udp_other, udp_hport_scans, udp_lport_scans, udp_hnetwork_scans, udp_lnetwork_scans, udp_oflow_final, small_udps_final):
+    keys_to_remove = {key[0] for key in [*udp_hport_scans.keys(), *udp_lport_scans.keys(), *udp_hnetwork_scans.keys(), *udp_lnetwork_scans.keys(), *udp_oflow_final.keys()]}
+    
+    for key in list(udp_other.keys()):
+        if key in keys_to_remove:
+            del udp_other[key]
+    
+    for key in list(udp_other.keys()):
+        if key in small_udps_final:
+            del udp_other[key]
+
+    return udp_other

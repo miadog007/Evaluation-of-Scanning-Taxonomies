@@ -194,3 +194,19 @@ def tcp_other_remove(flow_key, flow, tcp_other):
         return None
     
     return tcp_other
+
+def tcp_remove_key_other(tcp_other, tcp_hport_scans, tcp_lport_scans, tcp_hnetwork_scans, tcp_lnetwork_scans, tcp_oflow_final, small_syns_final):
+    keys_to_remove = {key[0] for key in [*tcp_hport_scans.keys(), *tcp_lport_scans.keys(), *tcp_hnetwork_scans.keys(), *tcp_lnetwork_scans.keys(), *tcp_oflow_final.keys()]}
+    
+    for key in list(tcp_other.keys()):
+        if key in keys_to_remove:
+            del tcp_other[key]
+    
+    for key in list(tcp_other.keys()):
+        if key in small_syns_final:
+            del tcp_other[key]
+
+    return tcp_other
+
+
+
