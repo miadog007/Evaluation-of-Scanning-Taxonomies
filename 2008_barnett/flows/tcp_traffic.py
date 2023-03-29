@@ -36,11 +36,11 @@ def tcp_compare_src(speed_list, tcp_compare_flows):
         time = value[0]['avg_time_between_packets']
 
         # determine the flags for this flow
-        if syn_count > ack_count and syn_count > fin_count:
+        if syn_count >= 1 and ack_count == 0 and fin_count == 0:
             flags = 'SYN'
-        elif ack_count > syn_count and ack_count > fin_count:
+        elif ack_count >= 1 and fin_count == 0:
             flags = 'ACK'
-        elif fin_count > syn_count and fin_count > ack_count:
+        elif fin_count >= 1:
             flags = 'FIN'
         else:
             flags = 'Other'

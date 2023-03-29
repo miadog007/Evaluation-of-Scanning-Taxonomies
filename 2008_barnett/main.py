@@ -174,7 +174,7 @@ other = 0
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
 #for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
     total_packets += 1 
@@ -557,3 +557,8 @@ print(f'Total icmp rapid many-to-many src ips: {sum(val["ip_src_count"] for val 
 print("---------------------")
 print(f'Other traffic: {other}')
 print("---------------------")
+
+
+#for val in tcp_manytoone_slow.values():
+ #   if len(val['dst_ports']) > 12:
+#        print(val['packet_count'])
