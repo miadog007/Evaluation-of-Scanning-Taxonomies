@@ -172,6 +172,12 @@ icmp_src = set()
 
 other = 0
 
+'''
+Flows are based on src, dst, dport
+Speed based on avrg speed for packets in flow
+distrubution are based on speed, flags, src, dst, dport
+'''
+
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
 for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
