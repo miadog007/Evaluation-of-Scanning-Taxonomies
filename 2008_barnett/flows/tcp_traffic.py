@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def tcp_speed(tcp_flows, tcp_slow, tcp_medium, tcp_rapid):
     '''
     Compare streams to find: 
@@ -16,7 +18,7 @@ def tcp_speed(tcp_flows, tcp_slow, tcp_medium, tcp_rapid):
     #print(tcp_slow)
     return tcp_slow, tcp_medium, tcp_rapid
 
-def tcp_compare_src(speed_list, tcp_compare_flows):
+def tcp_compare_src(speed_list, tcp_compare_flows) :
     '''
     Function to compare ip src to put togheter scan flows from different ports
     '''
@@ -36,11 +38,11 @@ def tcp_compare_src(speed_list, tcp_compare_flows):
         time = value[0]['avg_time_between_packets']
 
         # determine the flags for this flow
-        if syn_count >= 1 and ack_count == 0 and fin_count == 0:
+        if syn_count > ack_count and syn_count > fin_count:
             flags = 'SYN'
-        elif ack_count >= 1 and fin_count == 0:
+        elif ack_count > syn_count and ack_count > fin_count:
             flags = 'ACK'
-        elif fin_count >= 1:
+        elif fin_count > syn_count and fin_count > ack_count:
             flags = 'FIN'
         else:
             flags = 'Other'
@@ -65,13 +67,22 @@ def tcp_compare_src(speed_list, tcp_compare_flows):
                 flow['avg_time_between_packets'] = (avg_time + new_avg_time) / 2
             if value[0]['first_packet'] < flow['first_packet']:
                 flow['first_packet'] = value[0]['first_packet']
+                first_hour = datetime.strptime(value[0]['first_packet'], '%Y-%m-%d %H:%M:%S.%f')
+                flow['scan_periode-1'] = first_hour.strftime('%d-%H-%M')
             if value[0]['last_packet'] > flow['last_packet']:
                 flow['last_packet'] = value[0]['last_packet']
+                last_hour = datetime.strptime(value[0]['last_packet'], '%Y-%m-%d %H:%M:%S.%f')
+                flow['scan_periode-2'] = last_hour.strftime('%d-%H-%M')
             if dst_ip not in flow['ip_dst']:
                 flow['ip_dst'].append(dst_ip)
             if dst_port not in flow['dst_ports']:
                 flow['dst_ports'].append(dst_port)
+            
+
         else:
+            first_hour = datetime.strptime(value[0]['first_packet'], '%Y-%m-%d %H:%M:%S.%f')
+            last_hour = datetime.strptime(value[0]['last_packet'], '%Y-%m-%d %H:%M:%S.%f')
+
             # if it doesn't, create a new flow
             tcp_compare_flows[flow_key] = {
                 'ip_dst': [dst_ip],
@@ -84,9 +95,11 @@ def tcp_compare_src(speed_list, tcp_compare_flows):
                 'first_packet': value[0]['first_packet'],
                 'last_packet': value[0]['last_packet'],
                 #'timestamps': value[0]['timestamps'],
-                'avg_time_between_packets': value[0]['avg_time_between_packets']
-            }
+                'avg_time_between_packets': value[0]['avg_time_between_packets'],
+                'scan_periode-1': first_hour.strftime('%d-%H-%M'),
+                'scan_periode-2': last_hour.strftime('%d-%H-%M')
 
+            }
     return tcp_compare_flows
     
 
@@ -102,6 +115,8 @@ def find_dist(tcp_compare_flows, final_dist):
         src_ip = key[0]
         dst_ips = value['ip_dst']
         dst_port = value['dst_ports']
+        scan_periode1 = value['scan_periode-1']
+        scan_periode2 = value['scan_periode-2']
         # extract the packet counts for each flag
         syn_count = value['SYN_count']
         ack_count = value['ACK_count']
@@ -109,12 +124,17 @@ def find_dist(tcp_compare_flows, final_dist):
         time = value['avg_time_between_packets']
         flags_str = "".join(str(f) for f in flags)
         # create a tuple to represent the flow key
-        flow_key = (tuple(dst_ips), flags_str)
+        #flow_key = (tuple(dst_ips), flags_str)
+        flow_key = (tuple(dst_ips), tuple(dst_port), flags_str, scan_periode1, scan_periode2)
 
         # check if this flow key already exists in the final_dist
         if flow_key in final_dist:
             # if it does, update the existing flow
             flow = final_dist[flow_key]
+            #first_packet = datetime.strptime(value['first_packet'], '%Y-%m-%d %H:%M:%S.%f')
+            #last_packet = datetime.strptime(value['last_packet'], '%Y-%m-%d %H:%M:%S.%f')
+            #time_period = timedelta(minutes=5)
+            #if (last_packet - first_packet) <= time_period:
             flow['packet_count'] += value['packet_count']
             flow['ip_src_count'] += 1
             flow['SYN_count'] += syn_count
@@ -150,7 +170,6 @@ def find_dist(tcp_compare_flows, final_dist):
                 #'timestamps': value[0]['timestamps'],
                 'avg_time_between_packets': value['avg_time_between_packets']
             }
-
     return final_dist
 
 def group_dist(final_dist, one_to_one, one_to_many, many_to_one, many_to_many):

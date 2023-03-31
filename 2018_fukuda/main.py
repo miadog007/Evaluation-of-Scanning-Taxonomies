@@ -270,8 +270,6 @@ print("---------------------")
  #   if key == '51.81.255.129':
   #      print(key, value)
 
-for key, value in tcp_lport_scans.keys():
-    if value['dst_ports_count'] > 15:
-        print(key, value)
-
-
+#for key, value in tcp_lport_scans.items():
+  #  if key[0] == '89.248.165.33':
+   #     print(f"Key: {key}, Value: {value}")

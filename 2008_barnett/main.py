@@ -179,8 +179,8 @@ distrubution are based on speed, flags, src, dst, dport
 '''
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
 for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
 #for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
     total_packets += 1 
@@ -429,27 +429,27 @@ print(f'Total TCP slow one-to-many src ips: {sum(val["ip_src_count"] for val in 
 print(f'Total TCP slow many-to-one src ips: {sum(val["ip_src_count"] for val in tcp_manytoone_slow.values())}')
 print(f'Total TCP slow many-to-many src ips: {sum(val["ip_src_count"] for val in tcp_manytomany_slow.values())}')
 print("---------------------")
-print('slow TCP flows stats:')
-print('slow one-to-one:')
-print(f'TCP one-to-one slow other src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow.values())}')
-print(f'TCP one-to-one slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow_syn.values())}')
-print(f'TCP one-to-one slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow_ack.values())}')
-print(f'TCP one-to-one slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow_fin.values())}')
-print('slow one-to-many:')
-print(f'TCP one-to-many slow other src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow.values())}')
-print(f'TCP one-to-many slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow_syn.values())}')
-print(f'TCP one-to-many slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow_ack.values())}')
-print(f'TCP one-to-many slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow_fin.values())}')
-print('slow many-to-one:')
-print(f'TCP many-to-one slow other src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow.values())}')
-print(f'TCP many-to-one slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow_syn.values())}')
-print(f'TCP many-to-one slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow_ack.values())}')
-print(f'TCP many-to-one slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow_fin.values())}')
-print('slow many-to-many:')
-print(f'TCP many-to-many slow other src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow.values())}')
-print(f'TCP many-to-many slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow_syn.values())}')
-print(f'TCP many-to-many slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow_ack.values())}')
-print(f'TCP many-to-many slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow_fin.values())}')
+#print('slow TCP flows stats:')
+#print('slow one-to-one:')
+#print(f'TCP one-to-one slow other src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow.values())}')
+#print(f'TCP one-to-one slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow_syn.values())}')
+#print(f'TCP one-to-one slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow_ack.values())}')
+#print(f'TCP one-to-one slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_oto_slow_fin.values())}')
+#print('slow one-to-many:')
+#print(f'TCP one-to-many slow other src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow.values())}')
+#print(f'TCP one-to-many slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow_syn.values())}')
+#print(f'TCP one-to-many slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow_ack.values())}')
+#print(f'TCP one-to-many slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_otm_slow_fin.values())}')
+#print('slow many-to-one:')
+#print(f'TCP many-to-one slow other src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow.values())}')
+#print(f'TCP many-to-one slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow_syn.values())}')
+#print(f'TCP many-to-one slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow_ack.values())}')
+#print(f'TCP many-to-one slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_mto_slow_fin.values())}')
+#print('slow many-to-many:')
+#print(f'TCP many-to-many slow other src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow.values())}')
+#print(f'TCP many-to-many slow SYN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow_syn.values())}')
+#print(f'TCP many-to-many slow ACK src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow_ack.values())}')
+#print(f'TCP many-to-many slow FIN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_slow_fin.values())}')
 print("---------------------")
 print('TCP medium stats')
 print(f'Total tcp medium src ips: {sum(val["ip_src_count"] for val in tcp_dist_medium.values())}')
@@ -458,27 +458,27 @@ print(f'Total tcp medium one-to-many src ips: {sum(val["ip_src_count"] for val i
 print(f'Total tcp medium many-to-one src ips: {sum(val["ip_src_count"] for val in tcp_manytoone_medium.values())}')
 print(f'Total tcp medium many-to-many src ips: {sum(val["ip_src_count"] for val in tcp_manytomany_medium.values())}')
 print("---------------------")
-print('medium TCP flows stats:')
-print('medium one-to-one:')
-print(f'TCP one-to-one medium other src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium.values())}')
-print(f'TCP one-to-one medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium_syn.values())}')
-print(f'TCP one-to-one medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium_ack.values())}')
-print(f'TCP one-to-one medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium_fin.values())}')
-print('medium one-to-many:')
-print(f'TCP one-to-many medium other src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium.values())}')
-print(f'TCP one-to-many medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium_syn.values())}')
-print(f'TCP one-to-many medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium_ack.values())}')
-print(f'TCP one-to-many medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium_fin.values())}')
-print('medium many-to-one:')
-print(f'TCP many-to-one medium other src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium.values())}')
-print(f'TCP many-to-one medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium_syn.values())}')
-print(f'TCP many-to-one medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium_ack.values())}')
-print(f'TCP many-to-one medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium_fin.values())}')
-print('medium many-to-many:')
-print(f'TCP many-to-many medium other src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium.values())}')
-print(f'TCP many-to-many medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium_syn.values())}')
-print(f'TCP many-to-many medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium_ack.values())}')
-print(f'TCP many-to-many medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium_fin.values())}')
+#print('medium TCP flows stats:')
+#print('medium one-to-one:')
+#print(f'TCP one-to-one medium other src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium.values())}')
+#print(f'TCP one-to-one medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium_syn.values())}')
+#print(f'TCP one-to-one medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium_ack.values())}')
+#print(f'TCP one-to-one medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_oto_medium_fin.values())}')
+#print('medium one-to-many:')
+#print(f'TCP one-to-many medium other src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium.values())}')
+#print(f'TCP one-to-many medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium_syn.values())}')
+#print(f'TCP one-to-many medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium_ack.values())}')
+#print(f'TCP one-to-many medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_otm_medium_fin.values())}')
+#print('medium many-to-one:')
+#print(f'TCP many-to-one medium other src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium.values())}')
+#print(f'TCP many-to-one medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium_syn.values())}')
+#print(f'TCP many-to-one medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium_ack.values())}')
+#print(f'TCP many-to-one medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_mto_medium_fin.values())}')
+#print('medium many-to-many:')
+#print(f'TCP many-to-many medium other src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium.values())}')
+#print(f'TCP many-to-many medium SYN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium_syn.values())}')
+#print(f'TCP many-to-many medium ACK src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium_ack.values())}')
+#print(f'TCP many-to-many medium FIN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_medium_fin.values())}')
 print("---------------------")
 print('TCP Rapid stats')
 print(f'Total tcp rapid src ips: {sum(val["ip_src_count"] for val in tcp_dist_rapid.values())}')
@@ -487,27 +487,27 @@ print(f'Total tcp rapid one-to-many src ips: {sum(val["ip_src_count"] for val in
 print(f'Total tcp rapid many-to-one src ips: {sum(val["ip_src_count"] for val in tcp_manytoone_rapid.values())}')
 print(f'Total tcp rapid many-to-many src ips: {sum(val["ip_src_count"] for val in tcp_manytomany_rapid.values())}')
 print("---------------------")
-print('Rapid TCP flows stats:')
-print('rapid one-to-one:')
-print(f'TCP one-to-one rapid other src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid.values())}')
-print(f'TCP one-to-one rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid_syn.values())}')
-print(f'TCP one-to-one rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid_ack.values())}')
-print(f'TCP one-to-one rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid_fin.values())}')
-print('rapid one-to-many:')
-print(f'TCP one-to-many rapid other src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid.values())}')
-print(f'TCP one-to-many rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid_syn.values())}')
-print(f'TCP one-to-many rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid_ack.values())}')
-print(f'TCP one-to-many rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid_fin.values())}')
-print('rapid many-to-one:')
-print(f'TCP many-to-one rapid other src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid.values())}')
-print(f'TCP many-to-one rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid_syn.values())}')
-print(f'TCP many-to-one rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid_ack.values())}')
-print(f'TCP many-to-one rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid_fin.values())}')
-print('rapid many-to-many:')
-print(f'TCP many-to-many rapid other src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid.values())}')
-print(f'TCP many-to-many rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid_syn.values())}')
-print(f'TCP many-to-many rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid_ack.values())}')
-print(f'TCP many-to-many rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid_fin.values())}')
+#print('Rapid TCP flows stats:')
+#print('rapid one-to-one:')
+#print(f'TCP one-to-one rapid other src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid.values())}')
+#print(f'TCP one-to-one rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid_syn.values())}')
+#print(f'TCP one-to-one rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid_ack.values())}')
+#print(f'TCP one-to-one rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_oto_rapid_fin.values())}')
+#print('rapid one-to-many:')
+#print(f'TCP one-to-many rapid other src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid.values())}')
+#print(f'TCP one-to-many rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid_syn.values())}')
+#print(f'TCP one-to-many rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid_ack.values())}')
+#print(f'TCP one-to-many rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_otm_rapid_fin.values())}')
+#print('rapid many-to-one:')
+#print(f'TCP many-to-one rapid other src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid.values())}')
+#print(f'TCP many-to-one rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid_syn.values())}')
+#print(f'TCP many-to-one rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid_ack.values())}')
+#print(f'TCP many-to-one rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_mto_rapid_fin.values())}')
+#print('rapid many-to-many:')
+#print(f'TCP many-to-many rapid other src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid.values())}')
+#print(f'TCP many-to-many rapid SYN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid_syn.values())}')
+#print(f'TCP many-to-many rapid ACK src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid_ack.values())}')
+#print(f'TCP many-to-many rapid FIN src ips: {sum(val["ip_src_count"] for val in tcp_mtm_rapid_fin.values())}')
 print("---------------------")
 print("---------------------")
 print("UDP")
@@ -565,6 +565,43 @@ print(f'Other traffic: {other}')
 print("---------------------")
 
 
-#for val in tcp_manytoone_slow.values():
- #   if len(val['dst_ports']) > 12:
-#        print(val['packet_count'])
+#for val in tcp_manytoone_rapid.values():
+ #   if val['ip_src_count'] < val['packet_count']:
+  #      print(val['packet_count'])
+
+
+for key, val in tcp_manytoone_rapid.items():
+    if sum(len(port_range) for port_range in val['dst_ports']) > 1:
+        print(key) 
+
+for key, val in udp_manytoone_rapid.items():
+    if sum(len(port_range) for port_range in val['dst_ports']) > 1:
+        print(key)
+
+for key, val in tcp_manytomany_rapid.items():
+    if sum(len(port_range) for port_range in val['dst_ports']) > 1:
+        print(key) 
+
+for key, val in udp_manytomany_rapid.items():
+    if sum(len(port_range) for port_range in val['dst_ports']) > 1:
+        print(key)
+
+# Print out values and count for one-to-many
+#for key, value in tcp_otm_rapid_syn.items():
+ #   if '89.248.165.33' in value['src_ip']:
+  #      print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ip'], value['packet_count'])
+
+print(tcp_manytoone_medium)
+print('hello')
+print(tcp_manytomany_rapid)
+
+
+
+#with open('tcp_many-ports-check_barnett.txt', 'w') as f:
+    #f.write(f'Total TCP slow one-to-one src ips: {tcp_onetoone_rapid}\n')
+  #  f.write("---------------------\n")
+   # f.write(f'Total TCP slow one-to-many src ips: {tcp_onetomany_rapid}\n')
+    #f.write("---------------------\n")
+ #   f.write(f'Total TCP slow many-to-one src ips: {tcp_manytoone_rapid}\n')
+    #f.write("---------------------\n")
+  #  f.write(f'Total TCP slow many-to-many src ips: {tcp_manytomany_rapid}\n')
