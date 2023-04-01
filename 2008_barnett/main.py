@@ -20,6 +20,8 @@ tcp_rapid = {}
 tcp_compare_slow = {}
 tcp_compare_medium = {}
 tcp_compare_rapid = {}
+tcp_compare = {}
+
 # tcp dist step 2
 tcp_dist_slow = {}
 tcp_dist_medium = {}
@@ -112,6 +114,7 @@ udp_rapid = {}
 udp_compare_slow = {}
 udp_compare_medium = {}
 udp_compare_rapid = {}
+udp_compare = {}
 # UDP dist step 2
 udp_dist_slow = {}
 udp_dist_medium = {}
@@ -143,6 +146,7 @@ icmp_rapid = {}
 icmp_compare_slow = {}
 icmp_compare_medium = {}
 icmp_compare_rapid = {}
+icmp_compare = {}
 # ICMP dist step 2
 icmp_dist_slow = {}
 icmp_dist_medium = {}
@@ -179,8 +183,8 @@ distrubution are based on speed, flags, src, dst, dport
 '''
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
 #for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
     total_packets += 1 
@@ -215,13 +219,10 @@ for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.
                         flow_data['SYN_count'] += 1 if ip.data.flags & dpkt.tcp.TH_SYN else 0
                         flow_data['ACK_count'] += 1 if ip.data.flags & dpkt.tcp.TH_ACK else 0
                         flow_data['FIN_count'] += 1 if ip.data.flags & dpkt.tcp.TH_FIN else 0
-                        flow_data['last_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
-                        flow_data['timestamps'].append(ts)
-                        if len(flow_data['timestamps']) > 1:
-                            first_ts = flow_data['timestamps'][0]
-                            last_ts = flow_data['timestamps'][-1]
-                            time_diff = (last_ts - first_ts) / (len(flow_data['timestamps']) - 1)
-                            flow_data['avg_time_between_packets'] = time_diff
+                        if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') < flow_data['first_packet']:
+                            flow_data['first_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
+                        if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') > flow_data['last_packet']:
+                            flow_data['last_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                     else:
                         flows[flow] = [{
                             'packet_count': 1,
@@ -229,9 +230,7 @@ for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.
                             'ACK_count': 1 if ip.data.flags & dpkt.tcp.TH_ACK else 0,
                             'FIN_count': 1 if ip.data.flags & dpkt.tcp.TH_FIN else 0,
                             'first_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                            'last_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                            'timestamps': [ts],
-                            'avg_time_between_packets': 0
+                            'last_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                         }]
 
             elif ip.p == dpkt.ip.IP_PROTO_UDP:
@@ -258,20 +257,15 @@ for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.
                 if flows.get(flow):
                     flow_data = flows[flow][-1]
                     flow_data['packet_count'] += 1
-                    flow_data['last_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
-                    flow_data['timestamps'].append(ts)
-                    if len(flow_data['timestamps']) > 1:
-                        first_ts = flow_data['timestamps'][0]
-                        last_ts = flow_data['timestamps'][-1]
-                        time_diff = (last_ts - first_ts) / (len(flow_data['timestamps']) - 1)
-                        flow_data['avg_time_between_packets'] = time_diff
+                    if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') < flow_data['first_packet']:
+                            flow_data['first_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
+                    if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') > flow_data['last_packet']:
+                        flow_data['last_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                 else:
                     flows[flow] = [{
                         'packet_count': 1,
                         'first_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                        'last_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                        'timestamps': [ts],
-                        'avg_time_between_packets': 0
+                        'last_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                     }]
             
             elif ip.p == dpkt.ip.IP_PROTO_ICMP:
@@ -292,22 +286,17 @@ for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.
                         if flows.get(flow):
                             flow_data = flows[flow][-1]
                             flow_data['packet_count'] += 1
-                            flow_data['Pings'] += 1 if ip.icmp.type == 8 else 0
-                            flow_data['last_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
-                            flow_data['timestamps'].append(ts)
-                            if len(flow_data['timestamps']) > 1:
-                                first_ts = flow_data['timestamps'][0]
-                                last_ts = flow_data['timestamps'][-1]
-                                time_diff = (last_ts - first_ts) / (len(flow_data['timestamps']) - 1)
-                                flow_data['avg_time_between_packets'] = time_diff
+                            flow_data['pings'] += 1 if ip.icmp.type == 8 and ip.icmp.code == 0 else 0
+                            if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') < flow_data['first_packet']:
+                                flow_data['first_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
+                            if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') > flow_data['last_packet']:
+                                flow_data['last_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                         else:
                             flows[flow] = [{
                                 'packet_count': 1,
-                                'Pings': 1 if ip.icmp.type == 8 and ip.icmp.code == 8 else 0,
+                                'pings': 1 if ip.icmp.type == 8 and ip.icmp.code == 0 else 0,
                                 'first_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                                'last_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                                'timestamps': [ts],
-                                'avg_time_between_packets': 0
+                                'last_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                             }]
                     else:
                         print('gotcah 2')
@@ -333,49 +322,36 @@ for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.
         start_time = time.time()
 
 print('Starting analysis...')
-# check scanning speed
-tcp_traffic.tcp_speed(tcp_flows, tcp_slow, tcp_medium, tcp_rapid)
-udp_traffic.udp_speed(udp_flows, udp_slow, udp_medium, udp_rapid)
-icmp_traffic.icmp_speed(icmp_flows, icmp_slow, icmp_medium, icmp_rapid)
-print('Scanning speed Done')
 # Check for tcp distrubution step 1: one-to-one and one-to-many
 # TCP
-tcp_traffic.tcp_compare_src(tcp_slow, tcp_compare_slow)
-print('Traffic  TCP slow compare Done')
-tcp_traffic.tcp_compare_src(tcp_medium, tcp_compare_medium)
-print('Traffic TCP medium compare Done')
-tcp_traffic.tcp_compare_src(tcp_rapid, tcp_compare_rapid)
-print('Traffic TCP Rapid compare Done')
-
-
-# UDP
-udp_traffic.udp_compare_src(udp_slow, udp_compare_slow)
-print('Traffic UDP slow compare Done')
-udp_traffic.udp_compare_src(udp_medium, udp_compare_medium)
-print('Traffic UDP medium compare Done')
-udp_traffic.udp_compare_src(udp_rapid, udp_compare_rapid)
-print('Traffic UDP rapid compare Done')
-#print(udp_compare_slow)
-# ICMP
-icmp_traffic.icmp_compare_src(icmp_slow, icmp_compare_slow)
-icmp_traffic.icmp_compare_src(icmp_medium, icmp_compare_medium)
-icmp_traffic.icmp_compare_src(icmp_rapid, icmp_compare_rapid)
+tcp_traffic.tcp_compare_src(tcp_flows, tcp_compare)
+print('Traffic TCP compare Done')
+udp_traffic.udp_compare_src(udp_flows, udp_compare)
+print('Traffic UDP compare Done')
+icmp_traffic.icmp_compare_src(icmp_flows, icmp_compare)
 print('Traffic compare Done')
+
+# check scanning speed
+tcp_traffic.tcp_speed(tcp_compare, tcp_slow, tcp_medium, tcp_rapid)
+udp_traffic.udp_speed(udp_compare, udp_slow, udp_medium, udp_rapid)
+icmp_traffic.icmp_speed(icmp_compare, icmp_slow, icmp_medium, icmp_rapid)
+print('Scanning speed Done')
+
 # check for tcp distrubution step 2: one-to-many and many-to-may
 # TCP
-tcp_traffic.find_dist(tcp_compare_slow, tcp_dist_slow)
-tcp_traffic.find_dist(tcp_compare_medium, tcp_dist_medium)
-tcp_traffic.find_dist(tcp_compare_rapid, tcp_dist_rapid)
+tcp_traffic.find_dist(tcp_slow, tcp_dist_slow)
+tcp_traffic.find_dist(tcp_medium, tcp_dist_medium)
+tcp_traffic.find_dist(tcp_rapid, tcp_dist_rapid)
 print('TCP Final dist Done')
 # UDP
-udp_traffic.find_dist(udp_compare_slow, udp_dist_slow)
-udp_traffic.find_dist(udp_compare_medium, udp_dist_medium)
-udp_traffic.find_dist(udp_compare_rapid, udp_dist_rapid)
+udp_traffic.find_dist(udp_slow, udp_dist_slow)
+udp_traffic.find_dist(udp_medium, udp_dist_medium)
+udp_traffic.find_dist(udp_rapid, udp_dist_rapid)
 print('UDP Final dist Done')
 # ICMP
-icmp_traffic.find_dist(icmp_compare_slow, icmp_dist_slow)
-icmp_traffic.find_dist(icmp_compare_medium, icmp_dist_medium)
-icmp_traffic.find_dist(icmp_compare_rapid, icmp_dist_rapid)
+icmp_traffic.find_dist(icmp_slow, icmp_dist_slow)
+icmp_traffic.find_dist(icmp_medium, icmp_dist_medium)
+icmp_traffic.find_dist(icmp_rapid, icmp_dist_rapid)
 print('Final dist Done')
 
 # put in dict in groups by dist TCP
@@ -587,14 +563,13 @@ for key, val in udp_manytomany_rapid.items():
         print(key)
 
 # Print out values and count for one-to-many
-#for key, value in tcp_otm_rapid_syn.items():
- #   if '89.248.165.33' in value['src_ip']:
-  #      print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ip'], value['packet_count'])
+for key, value in tcp_onetomany_slow.items():
+    if '51.255.81.155' in value['src_ips']:
+        print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ips'], value['packet_count'])
 
-print(tcp_manytoone_medium)
-print('hello')
-print(tcp_manytomany_rapid)
-
+for key, value in tcp_onetomany_rapid.items():
+    if '51.255.81.155' in value['src_ips']:
+        print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ips'], value['packet_count'])
 
 
 #with open('tcp_many-ports-check_barnett.txt', 'w') as f:

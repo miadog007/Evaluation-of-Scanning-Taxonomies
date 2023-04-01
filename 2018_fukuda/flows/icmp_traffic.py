@@ -108,25 +108,26 @@ def small_ping_check(packet_data, src_ip, small_pings):
     ip_dst = socket.inet_ntoa(ip_packet.dst)
     ip_dst_string = set(str(ip_dst).strip('{}').split(','))
 
-    if ip_src != src_ip and ip_packet.data.icmp.type != 8 and ip_packet.data.icmp.code != 8:
+    if ip_packet.icmp.type == 8 and ip_packet.icmp.code == 0:
         # Skip packets that don't match the specified information
+
+        flow_key = (ip_src)
+
+            # Check for icmp_flows that exists
+        if flow_key in small_pings:
+            # Update the flow information
+            flow = small_pings[flow_key]
+            flow['num_packets'] += 1
+            flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
+        else: 
+            # Create new icmp_flows
+            flow = {
+                'dst_ips': set(ip_dst_string),
+                'num_packets': 1
+            }
+
+            small_pings[flow_key] = flow
+    else:
         return None
-
-    flow_key = (ip_src)
-
-         # Check for icmp_flows that exists
-    if flow_key in small_pings:
-        # Update the flow information
-        flow = small_pings[flow_key]
-        flow['num_packets'] += 1
-        flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
-    else: 
-        # Create new icmp_flows
-        flow = {
-            'dst_ips': set(ip_dst_string),
-            'num_packets': 1
-        }
-
-        small_pings[flow_key] = flow
     
     return flow

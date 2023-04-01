@@ -266,10 +266,29 @@ print(f'Small Pings:  {len(small_pings_final.keys())}')
 print(f'Other ICMP: {(len(other_icmp.keys()))}')
 print("---------------------")
 
-#for key, value in tcp_lnetwork_scans.keys():
- #   if key == '51.81.255.129':
-  #      print(key, value)
+for key, value in tcp_bacsckatter_final.items():
+    if key == '51.255.81.155':
+        print(key, len(value['dst_port']), len(value['dst_ips']), value['num_packets'])
 
 #for key, value in tcp_lport_scans.items():
   #  if key[0] == '89.248.165.33':
    #     print(f"Key: {key}, Value: {value}")
+
+
+# Find multiple categorized traffic.
+common_keys = set(key[0] for key in tcp_lnetwork_scans.keys()) & set(key[0] for key in tcp_lport_scans.keys())
+for key in common_keys:
+    count_lnetwork = 0
+    for key in tcp_lnetwork_scans.keys():
+        if key[0] in common_keys:
+            count_lnetwork += 1
+    count_lport = 0
+    for key in tcp_lport_scans.keys():
+        if key[0] in common_keys:
+            count_lport += 1
+
+print(f'network: {count_lnetwork}')
+print(f'port: {count_lport}')
+
+
+print(small_pings_final)
