@@ -568,10 +568,16 @@ for key, value in tcp_onetomany_slow.items():
     if '51.255.81.155' in value['src_ips']:
         print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ips'], value['packet_count'])
 
-for key, value in tcp_onetomany_rapid.items():
-    if '51.255.81.155' in value['src_ips']:
+print(' check for 193.122.96.137 ')
+for key, value in tcp_onetoone_slow.items():
+    if '193.122.96.137' in value['src_ips']:
         print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ips'], value['packet_count'])
-
+for key, value in tcp_onetoone_medium.items():
+    if '193.122.96.137' in value['src_ips']:
+        print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ips'], value['packet_count'])
+for key, value in tcp_onetoone_rapid.items():
+    if '193.122.96.137' in value['src_ips']:
+        print(len(key), sum(len(port_range) for port_range in value['dst_ports']), value['src_ips'], value['packet_count'])
 
 #with open('tcp_many-ports-check_barnett.txt', 'w') as f:
     #f.write(f'Total TCP slow one-to-one src ips: {tcp_onetoone_rapid}\n')
@@ -581,3 +587,4 @@ for key, value in tcp_onetomany_rapid.items():
  #   f.write(f'Total TCP slow many-to-one src ips: {tcp_manytoone_rapid}\n')
     #f.write("---------------------\n")
   #  f.write(f'Total TCP slow many-to-many src ips: {tcp_manytomany_rapid}\n')
+

@@ -277,18 +277,28 @@ for key, value in tcp_bacsckatter_final.items():
 
 # Find multiple categorized traffic.
 common_keys = set(key[0] for key in tcp_lnetwork_scans.keys()) & set(key[0] for key in tcp_lport_scans.keys())
-for key in common_keys:
-    count_lnetwork = 0
-    for key in tcp_lnetwork_scans.keys():
-        if key[0] in common_keys:
-            count_lnetwork += 1
-    count_lport = 0
-    for key in tcp_lport_scans.keys():
-        if key[0] in common_keys:
-            count_lport += 1
 
-print(f'network: {count_lnetwork}')
-print(f'port: {count_lport}')
+extra_keys = set(key[0] for key in tcp_lport_scans.keys()) - common_keys
+
+# fin donly in port scans
+for key in tcp_lport_scans.keys():
+    if key[0] in extra_keys:
+        value = tcp_lport_scans[key]
+        print(key, value['num_packets'])
 
 
-print(small_pings_final)
+
+#for key in common_keys:
+ #   count_lnetwork = 0
+#    for key in tcp_lnetwork_scans.keys():
+      #  if key[0] in common_keys:
+     #       count_lnetwork += 1
+    #count_lport = 0
+   # for key in tcp_lport_scans.keys():
+  #      if key[0] in common_keys:
+ #           count_lport += 1
+
+#print(f'network: {count_lnetwork}')
+#print(f'port: {count_lport}')
+
+
