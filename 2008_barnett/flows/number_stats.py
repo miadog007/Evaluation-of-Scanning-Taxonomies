@@ -1,7 +1,27 @@
-# Old version counting number of flows instead of ip src's
+with open('icmp_one-to-one_barnett.txt', 'w') as f:
+    f.write(f'Total icmp slow one-to-one src ips: {icmp_onetoone_slow}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp medium one-to-one src ips: {icmp_onetoone_medium}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp rapid one-to-one src ips: {icmp_onetoone_rapid}\n')
 
-print(f'Total tcp rapid src ips: {sum(val["ip_src_count"] for val in tcp_dist_rapid.values())}')
-print(f'Total tcp rapid one-to-one src ips: {sum(val["ip_src_count"] for val in tcp_onetoone_rapid.values())}')
-print(f'Total tcp rapid one-to-many src ips: {sum(val["ip_src_count"] for val in tcp_onetomany_rapid.values())}')
-print(f'Total tcp rapid many-to-one src ips: {sum(val["ip_src_count"] for val in tcp_manytoone_rapid.values())}')
-print(f'Total tcp rapid many-to-many src ips: {sum(val["ip_src_count"] for val in tcp_manytomany_rapid.values())}')
+with open('icmp_onetomany_barnett.txt', 'w') as f:
+    f.write(f'Total icmp slow one-to-one src ips: {icmp_onetomany_slow}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp medium one-to-one src ips: {icmp_onetomany_medium}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp rapid one-to-one src ips: {icmp_onetomany_rapid}\n')
+
+with open('icmp_manytoone_barnett.txt', 'w') as f:
+    f.write(f'Total icmp slow one-to-one src ips: {icmp_manytoone_slow}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp medium one-to-one src ips: {icmp_manytoone_medium}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp rapid one-to-one src ips: {icmp_manytoone_rapid}\n')
+
+with open('icmp_manytomany_barnett.txt', 'w') as f:
+    f.write(f'Total icmp slow one-to-one src ips: {icmp_manytomany_slow}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp medium one-to-one src ips: {icmp_manytomany_medium}\n')
+    f.write("---------------------\n")
+    f.write(f'Total icmp rapid one-to-one src ips: {icmp_manytomany_rapid}\n')

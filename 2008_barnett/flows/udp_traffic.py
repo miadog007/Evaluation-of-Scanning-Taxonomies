@@ -136,13 +136,13 @@ def group_dist(final_dist, one_to_one, one_to_many, many_to_one, many_to_many):
         # Categorize based on number of destination IPs and source IPs
         if num_dst_ips == 1 and num_src_ips == 1:
             dst_ip = key
-            one_to_one[dst_ip] = {'dst_ports': dst_ports, 'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
+            one_to_one[dst_ip] = {'dst_ports': dst_ports, 'src_ips': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
         elif num_dst_ips == 1 and num_src_ips > 1:
             dst_ip = key
             many_to_one[dst_ip] = {'dst_ports': dst_ports, 'src_ips': value['src_ips'], 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
         elif num_dst_ips > 1 and num_src_ips == 1:
             dst_ip = key
-            one_to_many[dst_ip] = {'dst_ports': dst_ports, 'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
+            one_to_many[dst_ip] = {'dst_ports': dst_ports, 'src_ips': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}
         elif num_dst_ips > 1 and num_src_ips > 1:
             dst_ip = key
             many_to_many[dst_ip] = {'dst_ports': dst_ports, 'src_ips': value['src_ips'], 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'avg_time_between_packets': avg_time_between_packets}

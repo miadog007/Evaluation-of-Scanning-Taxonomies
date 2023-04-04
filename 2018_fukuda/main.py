@@ -79,7 +79,8 @@ other = 0
 # Main functions for finding TCP, UDP or ICMP packets
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
@@ -266,9 +267,9 @@ print(f'Small Pings:  {len(small_pings_final.keys())}')
 print(f'Other ICMP: {(len(other_icmp.keys()))}')
 print("---------------------")
 
-for key, value in tcp_bacsckatter_final.items():
-    if key == '51.255.81.155':
-        print(key, len(value['dst_port']), len(value['dst_ips']), value['num_packets'])
+""" for key, value in other_tcp.items():
+    if key == '102.165.30.33':
+        print(key, value) """
 
 #for key, value in tcp_lport_scans.items():
   #  if key[0] == '89.248.165.33':
@@ -276,15 +277,15 @@ for key, value in tcp_bacsckatter_final.items():
 
 
 # Find multiple categorized traffic.
-common_keys = set(key[0] for key in tcp_lnetwork_scans.keys()) & set(key[0] for key in tcp_lport_scans.keys())
+""" common_keys = set(key[0] for key in tcp_lnetwork_scans.keys()) & set(key[0] for key in tcp_lport_scans.keys())
 
 extra_keys = set(key[0] for key in tcp_lport_scans.keys()) - common_keys
-
+ """
 # fin donly in port scans
-for key in tcp_lport_scans.keys():
-    if key[0] in extra_keys:
-        value = tcp_lport_scans[key]
-        print(key, value['num_packets'])
+#for key in tcp_lport_scans.keys():
+ #   if key[0] in extra_keys:
+  #      value = tcp_lport_scans[key]
+   #     print(key, value['num_packets'])
 
 
 
@@ -300,5 +301,6 @@ for key in tcp_lport_scans.keys():
 
 #print(f'network: {count_lnetwork}')
 #print(f'port: {count_lport}')
+
 
 
