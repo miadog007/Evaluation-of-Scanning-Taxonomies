@@ -183,9 +183,9 @@ distrubution are based on speed, flags, src, dst, dport
 '''
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
 #for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
     total_packets += 1 
@@ -306,6 +306,8 @@ for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb'
                 else:
                     print('gotcah 1')
                     other += 1
+            else:
+                other += 1
     else:
         other += 1
     # Counter of packets each minute
@@ -389,11 +391,21 @@ tcp_traffic.tcp_flags(tcp_onetomany_rapid, tcp_otm_rapid, tcp_otm_rapid_syn, tcp
 tcp_traffic.tcp_flags(tcp_manytoone_rapid, tcp_mto_rapid, tcp_mto_rapid_syn, tcp_mto_rapid_ack, tcp_mto_rapid_fin)
 tcp_traffic.tcp_flags(tcp_manytomany_rapid, tcp_mtm_rapid, tcp_mtm_rapid_syn, tcp_mtm_rapid_ack, tcp_mtm_rapid_fin)
 
+labled_sources = (sum(val["ip_src_count"] for val in tcp_dist_slow.values()) + 
+                  sum(val["ip_src_count"] for val in tcp_dist_medium.values())+
+                  sum(val["ip_src_count"] for val in tcp_dist_rapid.values())+
+                  sum(val["ip_src_count"] for val in udp_dist_slow.values())+
+                  sum(val["ip_src_count"] for val in udp_dist_medium.values())+
+                  sum(val["ip_src_count"] for val in udp_dist_rapid.values())+
+                  sum(val["ip_src_count"] for val in icmp_dist_slow.values())+
+                  sum(val["ip_src_count"] for val in icmp_dist_medium.values())+
+                  sum(val["ip_src_count"] for val in icmp_dist_rapid.values()))
+
 print("---------------------")
 print('PCAP info:')
 print(f'Number of packets: {total_packets}')
 print(f'Total Source IPs: {len(ip_src)}')
-print(f'Other traffic: {other}')
+print(f'Labled source ips: {labled_sources}')
 print("---------------------")
 print("---------------------")
 print("TCP")
@@ -676,3 +688,93 @@ with open('icmp_manytomany_barnett.txt', 'w') as f:
     f.write(f'Total icmp medium one-to-one src ips: {icmp_manytomany_medium}\n')
     f.write("---------------------\n")
     f.write(f'Total icmp rapid one-to-one src ips: {icmp_manytomany_rapid}\n') """
+
+with open('december_barnett.txt', 'a') as f:
+    f.write("---------------------\n")
+    f.write('PCAP info:\n')
+    f.write(f'Number of packets: {total_packets}\n')
+    f.write(f'Total Source IPs: {len(ip_src)}\n')
+    f.write(f'Labled source ips: {labled_sources}\n')
+    f.write("---------------------\n")
+    f.write("---------------------\n")
+    f.write("TCP\n")
+    f.write(f'Total TCP flows: {len(tcp_flows.keys())}\n')
+    f.write(f'TCP Uniqe IP src: {len(tcp_src)}\n')
+    f.write("---------------------\n")
+    f.write('TCP slow stats\n')
+    f.write(f'Total TCP slow src ips: {sum(val["ip_src_count"] for val in tcp_dist_slow.values())}\n')
+    f.write(f'Total TCP slow one-to-one src ips: {sum(val["ip_src_count"] for val in tcp_onetoone_slow.values())}\n')
+    f.write(f'Total TCP slow one-to-many src ips: {sum(val["ip_src_count"] for val in tcp_onetomany_slow.values())}\n')
+    f.write(f'Total TCP slow many-to-one src ips: {sum(val["ip_src_count"] for val in tcp_manytoone_slow.values())}\n')
+    f.write(f'Total TCP slow many-to-many src ips: {sum(val["ip_src_count"] for val in tcp_manytomany_slow.values())}\n')
+    f.write("---------------------\n")
+    f.write('TCP medium stats\n')
+    f.write(f'Total tcp medium src ips: {sum(val["ip_src_count"] for val in tcp_dist_medium.values())}\n')
+    f.write(f'Total tcp medium one-to-one src ips: {sum(val["ip_src_count"] for val in tcp_onetoone_medium.values())}\n')
+    f.write(f'Total tcp medium one-to-many src ips: {sum(val["ip_src_count"] for val in tcp_onetomany_medium.values())}\n')
+    f.write(f'Total tcp medium many-to-one src ips: {sum(val["ip_src_count"] for val in tcp_manytoone_medium.values())}\n')
+    f.write(f'Total tcp medium many-to-many src ips: {sum(val["ip_src_count"] for val in tcp_manytomany_medium.values())}\n')
+    f.write("---------------------\n")
+    f.write('TCP Rapid stats\n')
+    f.write(f'Total tcp rapid src ips: {sum(val["ip_src_count"] for val in tcp_dist_rapid.values())}\n')
+    f.write(f'Total tcp rapid one-to-one src ips: {sum(val["ip_src_count"] for val in tcp_onetoone_rapid.values())}\n')
+    f.write(f'Total tcp rapid one-to-many src ips: {sum(val["ip_src_count"] for val in tcp_onetomany_rapid.values())}\n')
+    f.write(f'Total tcp rapid many-to-one src ips: {sum(val["ip_src_count"] for val in tcp_manytoone_rapid.values())}\n')
+    f.write(f'Total tcp rapid many-to-many src ips: {sum(val["ip_src_count"] for val in tcp_manytomany_rapid.values())}\n')
+    f.write("---------------------\n")
+    f.write("---------------------\n")
+    f.write("---------------------\n")
+    f.write("UDP\n")
+    f.write(f'Total UDP flows: {len(udp_flows.keys())}\n')
+    f.write(f'UDP Uniqe IP src: {len(udp_src)}\n')
+    f.write("---------------------\n")
+    f.write('UDP slow stats\n')
+    f.write(f'Total udp slow src ips: {sum(val["ip_src_count"] for val in udp_dist_slow.values())}\n')
+    f.write(f'Total udp slow one-to-one src ips: {sum(val["ip_src_count"] for val in udp_onetoone_slow.values())}\n')
+    f.write(f'Total udp slow one-to-many src ips: {sum(val["ip_src_count"] for val in udp_onetomany_slow.values())}\n')
+    f.write(f'Total udp slow many-to-one src ips: {sum(val["ip_src_count"] for val in udp_manytoone_slow.values())}\n')
+    f.write(f'Total udp slow many-to-many src ips: {sum(val["ip_src_count"] for val in udp_manytomany_slow.values())}\n')
+    f.write("---------------------\n")
+    f.write('UDP Medium stats\n')
+    f.write(f'Total udp medium src ips: {sum(val["ip_src_count"] for val in udp_dist_medium.values())}\n')
+    f.write(f'Total udp medium one-to-one src ips: {sum(val["ip_src_count"] for val in udp_onetoone_medium.values())}\n')
+    f.write(f'Total udp medium one-to-many src ips: {sum(val["ip_src_count"] for val in udp_onetomany_medium.values())}\n')
+    f.write(f'Total udp medium many-to-one src ips: {sum(val["ip_src_count"] for val in udp_manytoone_medium.values())}\n')
+    f.write(f'Total udp medium many-to-many src ips: {sum(val["ip_src_count"] for val in udp_manytomany_medium.values())}\n')
+    f.write("---------------------\n")
+    f.write('UDP Rapid stats\n')
+    f.write(f'Total udp rapid src ips: {sum(val["ip_src_count"] for val in udp_dist_rapid.values())}\n')
+    f.write(f'Total udp rapid one-to-one src ips: {sum(val["ip_src_count"] for val in udp_onetoone_rapid.values())}\n')
+    f.write(f'Total udp rapid one-to-many src ips: {sum(val["ip_src_count"] for val in udp_onetomany_rapid.values())}\n')
+    f.write(f'Total udp rapid many-to-one src ips: {sum(val["ip_src_count"] for val in udp_manytoone_rapid.values())}\n')
+    f.write(f'Total udp rapid many-to-many src ips: {sum(val["ip_src_count"] for val in udp_manytomany_rapid.values())}\n')
+    f.write("---------------------\n")
+    f.write("---------------------\n")
+    f.write("---------------------\n")
+    f.write("ICMP\n")
+    f.write(f'Total ICMP flows: {len(icmp_flows.keys())}\n')
+    f.write(f'ICMP Uniqe IP src: {len(icmp_src)}\n')
+    f.write("---------------------\n")
+    f.write('ICMP slow stats\n')
+    f.write(f'Total icmp slow src ips: {sum(val["ip_src_count"] for val in icmp_dist_slow.values())}\n')
+    f.write(f'Total icmp slow one-to-one src ips: {sum(val["ip_src_count"] for val in icmp_onetoone_slow.values())}\n')
+    f.write(f'Total icmp slow one-to-many src ips: {sum(val["ip_src_count"] for val in icmp_onetomany_slow.values())}\n')
+    f.write(f'Total icmp slow many-to-one src ips: {sum(val["ip_src_count"] for val in icmp_manytoone_slow.values())}\n')
+    f.write(f'Total icmp slow many-to-many src ips: {sum(val["ip_src_count"] for val in icmp_manytomany_slow.values())}\n')
+    f.write("---------------------\n")
+    f.write('ICMP Medium stats\n')
+    f.write(f'Total icmp medium src ips: {sum(val["ip_src_count"] for val in icmp_dist_medium.values())}\n')
+    f.write(f'Total icmp medium one-to-one src ips: {sum(val["ip_src_count"] for val in icmp_onetoone_medium.values())}\n')
+    f.write(f'Total icmp medium one-to-many src ips: {sum(val["ip_src_count"] for val in icmp_onetomany_medium.values())}\n')
+    f.write(f'Total icmp medium many-to-one src ips: {sum(val["ip_src_count"] for val in icmp_manytoone_medium.values())}\n')
+    f.write(f'Total icmp medium many-to-many src ips: {sum(val["ip_src_count"] for val in icmp_manytomany_medium.values())}\n')
+    f.write("---------------------\n")
+    f.write('ICMP Rapid stats\n')
+    f.write(f'Total icmp rapid src ips: {sum(val["ip_src_count"] for val in icmp_dist_rapid.values())}\n')
+    f.write(f'Total icmp rapid one-to-one src ips: {sum(val["ip_src_count"] for val in icmp_onetoone_rapid.values())}\n')
+    f.write(f'Total icmp rapid one-to-many src ips: {sum(val["ip_src_count"] for val in icmp_onetomany_rapid.values())}\n')
+    f.write(f'Total icmp rapid many-to-one src ips: {sum(val["ip_src_count"] for val in icmp_manytoone_rapid.values())}\n')
+    f.write(f'Total icmp rapid many-to-many src ips: {sum(val["ip_src_count"] for val in icmp_manytomany_rapid.values())}\n')
+    f.write("---------------------\n")
+    f.write(f'Other traffic: {other}\n')
+    f.write("---------------------\n")

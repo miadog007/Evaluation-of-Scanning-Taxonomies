@@ -78,9 +78,9 @@ other = 0
 
 # Main functions for finding TCP, UDP or ICMP packets
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
@@ -229,12 +229,26 @@ udp_analysis.udp_remove_key_other(other_udp, udp_hport_scans, udp_lport_scans, u
 icmp_analysis.icmp_remove_key_other(other_icmp, icmp_hnetwork_scans, icmp_lnetwork_scans, small_pings_final)
 
 
+labled_sources = (len(tcp_hport_scans.keys()) + len(tcp_lport_scans.keys()) +
+                  len(tcp_hnetwork_scans.keys()) + len(tcp_lnetwork_scans.keys()) +
+                  len(tcp_oflow_final.keys()) + len(tcp_bacsckatter_final.keys()) + 
+                  len(tcp_fragment.keys()) + len(small_syns_final.keys()) +
+                  len(other_tcp.keys()) +
+                  len(udp_hport_scans.keys()) + len(udp_lport_scans.keys()) +
+                  len(udp_hnetwork_scans.keys()) + len(udp_lnetwork_scans.keys()) +
+                  len(udp_oflow_final.keys()) + len(udp_backscatter_final.keys()) + 
+                  len(udp_fragment.keys()) + len(small_udps_final.keys()) +
+                  len(other_udp.keys()) +
+                  len(icmp_hnetwork_scans.keys()) + len(icmp_lnetwork_scans.keys()) +
+                  len(icmp_backscatter_final.keys()) + len(icmp_fragment.keys()) + 
+                  len(small_pings_final.keys()) + len(other_icmp.keys()))
+
 # Printing out result of each category in fukuda 2018
 print("---------------------")
 print('PCAP info:')
 print(f'Number of packets: {total_packets}')
 print(f'Number of src ips: {(len(ip_src))}')
-print(f'Other Traffic {other}')
+print(f'Labled traffic: {labled_sources}')
 print("---------------------")
 print('TCP info:')
 print(f'TCP Heavy Port scans: {len(tcp_hport_scans.keys())}')
@@ -245,7 +259,7 @@ print(f'TCP One Flows: {len(tcp_oflow_final.keys())}')
 print(f'TCP Backscatter: {len(tcp_bacsckatter_final.keys())}')
 print(f"TCP IP Fragement: {len(tcp_fragment.keys())}")
 print(f'TCP Small SYN: {len(small_syns_final.keys())}')
-print(f'Other TCP: {(len(other_tcp.keys()))}')
+print(f'Other TCP: {len(other_tcp.keys())}')
 print("---------------------")
 print('UDP Info:')
 print(f'UDP Heavy Port scans: {len(udp_hport_scans.keys())}')
@@ -265,6 +279,8 @@ print(f'ICMP Backscatter: {len(icmp_backscatter_final.keys())}')
 print(f"ICMP IP Fragement: {len(icmp_fragment.keys())}")
 print(f'Small Pings:  {len(small_pings_final.keys())}')
 print(f'Other ICMP: {(len(other_icmp.keys()))}')
+print("---------------------")
+print(f'Other Traffic {other}')
 print("---------------------")
 
 """ for key, value in other_tcp.items():
@@ -302,5 +318,42 @@ extra_keys = set(key[0] for key in tcp_lport_scans.keys()) - common_keys
 #print(f'network: {count_lnetwork}')
 #print(f'port: {count_lport}')
 
-
-
+with open('december_fukuda.txt', 'a') as f:
+    f.write("---------------------\n")
+    f.write('PCAP info:\n')
+    f.write(f'Number of packets: {total_packets}\n')
+    f.write(f'Number of src ips: {(len(ip_src))}\n')
+    f.write(f'Labled src ips: {labled_sources}\n')
+    f.write("---------------------\n")
+    f.write('TCP info:\n')
+    f.write(f'TCP Heavy Port scans: {len(tcp_hport_scans.keys())}\n')
+    f.write(f'TCP Light Port scans: {len(tcp_lport_scans.keys())}\n')
+    f.write(f'TCP Heavy Network scans: {len(tcp_hnetwork_scans.keys())}\n')
+    f.write(f'TCP Light Network scans: {len(tcp_lnetwork_scans.keys())}\n')
+    f.write(f'TCP One Flows: {len(tcp_oflow_final.keys())}\n')
+    f.write(f'TCP Backscatter: {len(tcp_bacsckatter_final.keys())}\n')
+    f.write(f"TCP IP Fragement: {len(tcp_fragment.keys())}\n")
+    f.write(f'TCP Small SYN: {len(small_syns_final.keys())}\n')
+    f.write(f'Other TCP: {(len(other_tcp.keys()))}\n')
+    f.write("---------------------\n")
+    f.write('UDP Info:\n')
+    f.write(f'UDP Heavy Port scans: {len(udp_hport_scans.keys())}\n')
+    f.write(f'UDP Light Port scans: {len(udp_lport_scans.keys())}\n')
+    f.write(f'UDP Heavy Network scans: {len(udp_hnetwork_scans.keys())}\n')
+    f.write(f'UDP Light Network scans: {len(udp_lnetwork_scans.keys())}\n')
+    f.write(f'UDP One Flows: {len(udp_oflow_final.keys())}\n')
+    f.write(f'UDP Backscatter: {len(udp_backscatter_final.keys())}\n')
+    f.write(f"UDP IP Fragement: {len(udp_fragment.keys())}\n")
+    f.write(f'UDP Small UDP: {len(small_udps_final.keys())}\n')
+    f.write(f'Other UDP: {(len(other_udp.keys()))}\n')
+    f.write("---------------------\n")
+    f.write('ICMP Info:\n')
+    f.write(f'ICMP Heavy Network scans: {len(icmp_hnetwork_scans.keys())}\n')
+    f.write(f'ICMP Light Network scans: {len(icmp_lnetwork_scans.keys())}\n')
+    f.write(f'ICMP Backscatter: {len(icmp_backscatter_final.keys())}\n')
+    f.write(f"ICMP IP Fragement: {len(icmp_fragment.keys())}\n")
+    f.write(f'Small Pings:  {len(small_pings_final.keys())}\n')
+    f.write(f'Other ICMP: {(len(other_icmp.keys()))}\n')
+    f.write("---------------------\n")
+    f.write(f'Other Traffic {other}\n')
+    f.write("---------------------\n")

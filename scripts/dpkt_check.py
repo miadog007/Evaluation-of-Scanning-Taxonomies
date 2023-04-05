@@ -1,22 +1,38 @@
-import dpkt
-import socket
-
-
-def inet_to_str(inet):
-    try:
-        return socket.inet_ntop(socket.AF_INET, inet)
-    except ValueError:
-        return socket.inet_ntop(socket.AF_INET6, inet)
-
-
-# Write source IP's for every packet
-with open('anon_196.21.146.cap', 'rb') as dump:
-    for time_stamp, payload in dpkt.pcap.Reader(dump):
-        eth = dpkt.ethernet.Ethernet(payload)
-        print("{:15}\t{:5}\t{:15}\t{:5}".format(
-            inet_to_str(eth.data.src),
-            str(eth.data.data.sport),
-            inet_to_str(eth.data.dst),
-            str(eth.data.data.dport)))
-
-# ERROR if icmp
+f.write("---------------------\n")
+f.write('PCAP info:\n')
+f.write(f'Number of packets: {total_packets}\n')
+f.write(f'Number of src ips: {(len(ip_src))}\n')
+f.write(f'Labled src ips: {}')
+f.write("---------------------\n")
+f.write('TCP info:\n')
+f.write(f'TCP Heavy Port scans: {len(tcp_hport_scans.keys())}\n')
+f.write(f'TCP Light Port scans: {len(tcp_lport_scans.keys())}\n')
+f.write(f'TCP Heavy Network scans: {len(tcp_hnetwork_scans.keys())}\n')
+f.write(f'TCP Light Network scans: {len(tcp_lnetwork_scans.keys())}\n')
+f.write(f'TCP One Flows: {len(tcp_oflow_final.keys())}\n')
+f.write(f'TCP Backscatter: {len(tcp_bacsckatter_final.keys())}\n')
+f.write(f"TCP IP Fragement: {len(tcp_fragment.keys())}\n")
+f.write(f'TCP Small SYN: {len(small_syns_final.keys())}\n')
+f.write(f'Other TCP: {(len(other_tcp.keys()))}\n')
+f.write("---------------------\n")
+f.write('UDP Info:\n')
+f.write(f'UDP Heavy Port scans: {len(udp_hport_scans.keys())}\n')
+f.write(f'UDP Light Port scans: {len(udp_lport_scans.keys())}\n')
+f.write(f'UDP Heavy Network scans: {len(udp_hnetwork_scans.keys())}\n')
+f.write(f'UDP Light Network scans: {len(udp_lnetwork_scans.keys())}\n')
+f.write(f'UDP One Flows: {len(udp_oflow_final.keys())}\n')
+f.write(f'UDP Backscatter: {len(udp_backscatter_final.keys())}\n')
+f.write(f"UDP IP Fragement: {len(udp_fragment.keys())}\n")
+f.write(f'UDP Small UDP: {len(small_udps_final.keys())}\n')
+f.write(f'Other UDP: {(len(other_udp.keys()))}\n')
+f.write("---------------------\n")
+f.write('ICMP Info:\n')
+f.write(f'ICMP Heavy Network scans: {len(icmp_hnetwork_scans.keys())}\n')
+f.write(f'ICMP Light Network scans: {len(icmp_lnetwork_scans.keys())}\n')
+f.write(f'ICMP Backscatter: {len(icmp_backscatter_final.keys())}\n')
+f.write(f"ICMP IP Fragement: {len(icmp_fragment.keys())}\n")
+f.write(f'Small Pings:  {len(small_pings_final.keys())}\n')
+f.write(f'Other ICMP: {(len(other_icmp.keys()))}\n')
+f.write("---------------------\n")
+f.write(f'Other Traffic {other}\n')
+f.write("---------------------\n")
