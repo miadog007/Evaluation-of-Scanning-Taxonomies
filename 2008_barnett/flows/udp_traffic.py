@@ -81,12 +81,17 @@ def find_dist(speed_lists, final_dist):
         src_ip = key
         dst_ips = value['ip_dst']
         dst_port = value['dst_ports']
+        if len(value['dst_ports']) > 1:
+            ports = 'many'
+        else:
+            ports = 'one'
+
         scan_periode1 = value['scan_periode-1']
         scan_periode2 = value['scan_periode-2']
 
         time = value['avg_time_between_packets']
         # create a tuple to represent the flow key
-        flow_key = (tuple(dst_ips), tuple(dst_port), scan_periode1, scan_periode2)
+        flow_key = (tuple(dst_ips), ports, scan_periode1, scan_periode2)
 
         # check if this flow key already exists in the final_dist
         if flow_key in final_dist:

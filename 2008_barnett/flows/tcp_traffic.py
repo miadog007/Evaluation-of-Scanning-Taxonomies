@@ -18,17 +18,18 @@ def tcp_compare_src(tcp_flows, tcp_compare_flows) :
         fin_count = value[0]['FIN_count']
 
         # determine the flags for this flow
-        if syn_count > ack_count and syn_count > fin_count:
+        """  
+       if syn_count > ack_count and syn_count > fin_count:
             flags = 'SYN'
         elif ack_count > syn_count and ack_count > fin_count:
             flags = 'ACK'
         elif fin_count > syn_count and fin_count > ack_count:
             flags = 'FIN'
         else:
-            flags = 'Other'
+            flags = 'Other' """
 
         # create a tuple to represent the flow key
-        flow_key = (src_ip, flags)
+        flow_key = (src_ip)
 
         # check if this flow key already exists in the tcp_compare_flows
         if flow_key in tcp_compare_flows:
@@ -103,10 +104,15 @@ def find_dist(speed_lists, final_dist):
     # iterate through the tcp_slow dictionary
     for key, value in speed_lists.items():
         # extract the source IP address, destination IP address, and destination port
-        flags = key[1]
-        src_ip = key[0]
+        #flags = key[1]
+        src_ip = key
         dst_ips = value['ip_dst']
         dst_port = value['dst_ports']
+        if len(value['dst_ports']) > 1:
+            ports = 'many'
+        else:
+            ports = str(value['dst_ports'])
+            
         scan_periode1 = value['scan_periode-1']
         scan_periode2 = value['scan_periode-2']
         # extract the packet counts for each flag
@@ -114,10 +120,13 @@ def find_dist(speed_lists, final_dist):
         ack_count = value['ACK_count']
         fin_count = value['FIN_count']
         time = value['avg_time_between_packets']
-        flags_str = "".join(str(f) for f in flags)
+        
+        #flags_str = "".join(str(f) for f in flags)
         # create a tuple to represent the flow key
         #flow_key = (tuple(dst_ips), flags_str)
-        flow_key = (tuple(dst_ips), tuple(dst_port), flags_str, scan_periode1, scan_periode2)
+        #flags_str, tuple(dst_port),
+        
+        flow_key = (tuple(dst_ips), ports, scan_periode1, scan_periode2)
 
         # check if this flow key already exists in the final_dist
         if flow_key in final_dist:
@@ -161,8 +170,8 @@ def find_dist(speed_lists, final_dist):
 def group_dist(final_dist, one_to_one, one_to_many, many_to_one, many_to_many):
     for key, value in final_dist.items():
         num_dst_ips = len(key[0])
-
         num_src_ips = value['ip_src_count']
+        
 
         # Get desired key-value pairs
         dst_ports = value['dst_ports']
@@ -197,7 +206,21 @@ def tcp_flags(dist, other, syn_list, ack_list, fin_list):
         fin = value['fin_count']
         avg_time_between_packets = value['avg_time_between_packets']
 
+        if syn > 1 and ack == 0 and fin == 0:
+            syn_list[key] = {'dst_ports': dst_ports, 'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'syn_count': syn, 'ack_count': ack, 'fin_count': fin, 'avg_time_between_packets': avg_time_between_packets}
+
+        elif ack  > 1 and fin == 0:
+            ack_list[key] = {'dst_ports': dst_ports, 'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'syn_count': syn, 'ack_count': ack, 'fin_count': fin, 'avg_time_between_packets': avg_time_between_packets}
+
+        elif fin > 1:
+            fin_list[key] = {'dst_ports': dst_ports,  'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'syn_count': syn, 'ack_count': ack, 'fin_count': fin, 'avg_time_between_packets': avg_time_between_packets}
+
+        else:
+            other[key] = {'dst_ports': dst_ports,  'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'syn_count': syn, 'ack_count': ack, 'fin_count': fin, 'avg_time_between_packets': avg_time_between_packets}
+
+
         # For SYN
+        """
         if key[1] == 'SYN':
             dst_ip = key[0]
             syn_list[dst_ip] = {'dst_ports': dst_ports, 'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'syn_count': syn, 'ack_count': ack, 'fin_count': fin, 'avg_time_between_packets': avg_time_between_packets}
@@ -213,5 +236,5 @@ def tcp_flags(dist, other, syn_list, ack_list, fin_list):
         else:
             dst_ip = key[0]
             other[dst_ip] = {'dst_ports': dst_ports, 'src_ip': src_ip, 'ip_src_count': ip_src_count, 'packet_count': packet_count, 'syn_count': syn, 'ack_count': ack, 'fin_count': fin, 'avg_time_between_packets': avg_time_between_packets}
-
+            """
     return other, syn_list, ack_list, fin_list

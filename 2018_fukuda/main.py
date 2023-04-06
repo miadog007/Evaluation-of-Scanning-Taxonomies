@@ -78,8 +78,8 @@ other = 0
 
 # Main functions for finding TCP, UDP or ICMP packets
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00001_20201230085405.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/december5_00001_20201230200045.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
@@ -318,7 +318,135 @@ extra_keys = set(key[0] for key in tcp_lport_scans.keys()) - common_keys
 #print(f'network: {count_lnetwork}')
 #print(f'port: {count_lport}')
 
-with open('december_fukuda.txt', 'a') as f:
+""" keys = [*tcp_hport_scans.keys(), *tcp_lport_scans.keys()]
+tcp_port = set(tuple(key[0] for key in keys))
+#tcp_port2 = [ip[0] for ip in tcp_port]
+tcp_port_f = ', '.join(tcp_port)
+
+keys = [*tcp_hnetwork_scans.keys(), *tcp_lnetwork_scans.keys()]
+tcp_network = set(tuple(key[0] for key in keys))
+#tcp_network2 = [ip[0] for ip in tcp_network]
+tcp_network_f = ', '.join(tcp_network)
+
+keys = [*tcp_oflow_final]
+tcp_oflow = set(tuple(key[0] for key in keys))
+#tcp_network2 = [ip[0] for ip in tcp_network]
+tcp_oflow_f = ', '.join(tcp_oflow)
+
+keys = [*tcp_bacsckatter_final]
+tcp_back = set(tuple(key for key in keys))
+#tcp_network2 = [ip[0] for ip in tcp_network]
+tcp_back_f = ', '.join(tcp_back)
+
+keys = [*small_syns_final]
+tcp_small = set(tuple(key for key in keys))
+#tcp_network2 = [ip[0] for ip in tcp_network]
+tcp_small_f = ', '.join(tcp_small)
+
+keys = [*other_tcp]
+tcp_other1 = set(tuple(key for key in keys))
+#tcp_network2 = [ip[0] for ip in tcp_network]
+tcp_other_f = ', '.join(tcp_other1)
+
+with open('tcp_port_fukuda.txt', 'w') as f:
+    f.write(tcp_port_f)
+
+with open('tcp_network_fukuda.txt', 'w') as f:
+    f.write(tcp_network_f)
+
+with open('tcp_oflow_fukuda.txt', 'w') as f:
+    f.write(tcp_oflow_f)
+
+with open('tcp_back_fukuda.txt', 'w') as f:
+    f.write(tcp_back_f)
+
+with open('tcp_small_fukuda.txt', 'w') as f:
+    f.write(tcp_small_f)
+
+with open('tcp_other_fukuda.txt', 'w') as f:
+    f.write(tcp_other_f)
+
+keys = [*udp_hport_scans.keys(), *udp_lport_scans.keys()]
+udp_port = set(tuple(key[0] for key in keys))
+#udp_port2 = [ip[0] for ip in udp_port]
+udp_port_f = ', '.join(udp_port)
+
+keys = [*udp_hnetwork_scans.keys(), *udp_lnetwork_scans.keys()]
+udp_network = set(tuple(key[0] for key in keys))
+#udp_network2 = [ip[0] for ip in udp_network]
+udp_network_f = ', '.join(udp_network)
+
+keys = [*udp_oflow_final]
+udp_oflow = set(tuple(key[0] for key in keys))
+#udp_network2 = [ip[0] for ip in udp_network]
+udp_oflow_f = ', '.join(udp_oflow)
+
+keys = [*udp_backscatter_final]
+udp_back = set(tuple(key for key in keys))
+#udp_network2 = [ip[0] for ip in udp_network]
+udp_back_f = ', '.join(udp_back)
+
+keys = [*small_udps_final]
+udp_small = set(tuple(key for key in keys))
+#udp_network2 = [ip[0] for ip in udp_network]
+udp_small_f = ', '.join(udp_small)
+
+keys = [*other_udp]
+udp_other1 = set(tuple(key for key in keys))
+#udp_network2 = [ip[0] for ip in udp_network]
+udp_other_f = ', '.join(udp_other1)
+
+with open('udp_port_fukuda.txt', 'w') as f:
+    f.write(udp_port_f)
+
+with open('udp_network_fukuda.txt', 'w') as f:
+    f.write(udp_network_f)
+
+with open('udp_oflow_fukuda.txt', 'w') as f:
+    f.write(udp_oflow_f)
+
+with open('udp_back_fukuda.txt', 'w') as f:
+    f.write(udp_back_f)
+
+with open('udp_small_fukuda.txt', 'w') as f:
+    f.write(udp_small_f)
+
+with open('udp_other_fukuda.txt', 'w') as f:
+    f.write(udp_other_f)
+
+keys = [*icmp_hnetwork_scans.keys(), *icmp_lnetwork_scans.keys()]
+icmp_network = set(tuple(key for key in keys))
+#icmp_network2 = [ip[0] for ip in icmp_network]
+icmp_network_f = ', '.join(icmp_network)
+
+keys = [*icmp_backscatter_final]
+icmp_back = set(tuple(key for key in keys))
+#icmp_network2 = [ip[0] for ip in icmp_network]
+icmp_back_f = ', '.join(icmp_back)
+
+keys = [*small_pings_final]
+icmp_small = set(tuple(key for key in keys))
+#icmp_network2 = [ip[0] for ip in icmp_network]
+icmp_small_f = ', '.join(icmp_small)
+
+keys = [*other_icmp]
+icmp_other1 = set(tuple(key for key in keys))
+#icmp_network2 = [ip[0] for ip in icmp_network]
+icmp_other_f = ', '.join(icmp_other1)
+
+with open('icmp_network_fukuda.txt', 'w') as f:
+    f.write(icmp_network_f)
+
+with open('icmp_back_fukuda.txt', 'w') as f:
+    f.write(icmp_back_f)
+
+with open('icmp_small_fukuda.txt', 'w') as f:
+    f.write(icmp_small_f)
+
+with open('icmp_other_fukuda.txt', 'w') as f:
+    f.write(icmp_other_f) """
+
+""" with open('december_fukuda.txt', 'a') as f:
     f.write("---------------------\n")
     f.write('PCAP info:\n')
     f.write(f'Number of packets: {total_packets}\n')
@@ -356,4 +484,45 @@ with open('december_fukuda.txt', 'a') as f:
     f.write(f'Other ICMP: {(len(other_icmp.keys()))}\n')
     f.write("---------------------\n")
     f.write(f'Other Traffic {other}\n')
-    f.write("---------------------\n")
+    f.write("---------------------\n") """
+
+""" with open('tcp_port_scans_fukuda.txt', 'a') as f:
+    f.write(f'TCP Heavy Port scans: {tcp_hport_scans}\n')
+    f.write(f'TCP Light Port scans: {tcp_lport_scans}\n')
+with open('tcp_network_scans_fukuda.txt', 'a') as f:
+    f.write(f'TCP Heavy Network scans: {tcp_hnetwork_scans}\n')
+    f.write(f'TCP Light Network scans: {tcp_lnetwork_scans}\n')
+with open('tcp_one_flows_fukuda.txt', 'a') as f:
+    f.write(f'TCP one flows scans: {tcp_oflow_final}\n')
+with open('tcp_backscatter_fukuda.txt', 'a') as f:
+    f.write(f'TCP backscatter scans: {tcp_bacsckatter_final}\n')
+with open('tcp_small_fukuda.txt', 'a') as f:
+    f.write(f'TCP small syns scans: {small_syns_final}\n')
+with open('tcp_other_fukuda.txt', 'a') as f:
+    f.write(f'TCP other scans: {other_tcp}\n')
+
+with open('udp_port_scans_fukuda.txt', 'a') as f:
+    f.write(f'udp Heavy Port scans: {udp_hport_scans}\n')
+    f.write(f'udp Light Port scans: {udp_lport_scans}\n')
+with open('udp_network_scans_fukuda.txt', 'a') as f:
+    f.write(f'udp Heavy Network scans: {udp_hnetwork_scans}\n')
+    f.write(f'udp Light Network scans: {udp_lnetwork_scans}\n')
+with open('udp_one_flows_fukuda.txt', 'a') as f:
+    f.write(f'udp one flows scans: {udp_oflow_final}\n')
+with open('udp_backscatter_fukuda.txt', 'a') as f:
+    f.write(f'udp backscatter scans: {udp_backscatter_final}\n')
+with open('udp_small_fukuda.txt', 'a') as f:
+    f.write(f'udp small udp scans: {small_udps_final}\n')
+with open('udp_other_fukuda.txt', 'a') as f:
+    f.write(f'udp other scans: {other_udp}\n')
+
+with open('icmp_network_scans_fukuda.txt', 'a') as f:
+    f.write(f'icmp Heavy Network scans: {icmp_hnetwork_scans}\n')
+    f.write(f'icmp Light Network scans: {icmp_lnetwork_scans}\n')
+with open('icmp_backscatter_fukuda.txt', 'a') as f:
+    f.write(f'icmp backscatter scans: {icmp_backscatter_final}\n')
+with open('icmp_small_fukuda.txt', 'a') as f:
+    f.write(f'icmp small pings scans: {small_pings_final}\n')
+with open('icmp_other_fukuda.txt', 'a') as f:
+    f.write(f'icmp other scans: {other_icmp}\n')
+ """
