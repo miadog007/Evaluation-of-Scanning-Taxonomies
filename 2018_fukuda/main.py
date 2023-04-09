@@ -291,6 +291,27 @@ print("---------------------")
   #  if key[0] == '89.248.165.33':
    #     print(f"Key: {key}, Value: {value}")
 
+unique = set(key[0] for key in tcp_lnetwork_scans.keys())
+unique2 = set(key[0] for key in tcp_lport_scans.keys())
+unique3 = set(key for key in small_syns_final.keys())
+
+print('port')
+print(len(unique2))
+print('network')
+print(len(unique))
+print('small')
+print(len(unique3))
+
+from collections import Counter
+
+dst_port_counter = Counter()
+for key in tcp_lport_scans:
+    dst_ports = tcp_lport_scans[key]["dst_ports"]
+    dst_port_counter.update(dst_ports)
+
+for dst_port, count in dst_port_counter.items():
+    print(f"dst_port {dst_port} is represented {count} times")
+
 
 # Find multiple categorized traffic.
 """ common_keys = set(key[0] for key in tcp_lnetwork_scans.keys()) & set(key[0] for key in tcp_lport_scans.keys())
