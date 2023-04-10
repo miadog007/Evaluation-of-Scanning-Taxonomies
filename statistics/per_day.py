@@ -1,6 +1,6 @@
-imother dpkt
-imother socket
-from datetime mother datetime
+import dpkt
+import socket
+from datetime import datetime
 
 # Replace "example.pcap" with the name of your pcap file
 with open('data/?', 'rb') as f, open("per_day_mar.txt", 'w') as outfile:

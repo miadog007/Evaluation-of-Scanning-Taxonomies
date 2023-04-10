@@ -77,11 +77,11 @@ ip_src = set()
 other = 0
 
 # Main functions for finding TCP, UDP or ICMP packets
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00000_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/december5_00001_20201230200045.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/mar_packets_00000_20210301072506.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
     # open packet with dpkt
@@ -252,13 +252,20 @@ print(f'Labled traffic: {labled_sources}')
 print("---------------------")
 print('TCP info:')
 print(f'TCP Heavy Port scans: {len(tcp_hport_scans.keys())}')
+print(f'packets: {sum(val["num_packets"] for val in tcp_hport_scans.values())}')
 print(f'TCP Light Port scans: {len(tcp_lport_scans.keys())}')
+print(f'packets: {sum(val["num_packets"] for val in tcp_lport_scans.values())}')
 print(f'TCP Heavy Network scans: {len(tcp_hnetwork_scans.keys())}')
+print(f'packets: {sum(val["num_packets"] for val in tcp_hnetwork_scans.values())}')
 print(f'TCP Light Network scans: {len(tcp_lnetwork_scans.keys())}')
+print(f'packets: {sum(val["num_packets"] for val in tcp_lnetwork_scans.values())}')
 print(f'TCP One Flows: {len(tcp_oflow_final.keys())}')
+print(f'packets: {sum(val["num_packets"] for val in tcp_oflow_final.values())}')
 print(f'TCP Backscatter: {len(tcp_bacsckatter_final.keys())}')
+print(f'packets: {sum(val["num_packets"] for val in tcp_bacsckatter_final.values())}')
 print(f"TCP IP Fragement: {len(tcp_fragment.keys())}")
 print(f'TCP Small SYN: {len(small_syns_final.keys())}')
+print(f'packets: {sum(val["num_packets"] for val in small_syns_final.values())}')
 print(f'Other TCP: {len(other_tcp.keys())}')
 print("---------------------")
 print('UDP Info:')
@@ -291,34 +298,87 @@ print("---------------------")
   #  if key[0] == '89.248.165.33':
    #     print(f"Key: {key}, Value: {value}")
 
-unique = set(key[0] for key in tcp_lnetwork_scans.keys())
-unique2 = set(key[0] for key in tcp_lport_scans.keys())
-unique3 = set(key for key in small_syns_final.keys())
+""" unique = set(key[0] for key in udp_lnetwork_scans.keys())
+unique2 = set(key[0] for key in udp_lport_scans.keys())
+unique3 = set(key for key in small_udps_final.keys())
 
-print('port')
+print('port light')
 print(len(unique2))
-print('network')
+print('network light')
 print(len(unique))
 print('small')
-print(len(unique3))
+print(len(unique3)) """
 
 from collections import Counter
 
-dst_port_counter = Counter()
-for key in tcp_lport_scans:
-    dst_ports = tcp_lport_scans[key]["dst_ports"]
-    dst_port_counter.update(dst_ports)
+""" dst_port_counter_one_tcp = Counter()
+print('tcp one flows')
+# Loop over the dictionary and update the counter with each dst port
+for key, value in tcp_oflow_final.items():
+    dst_port = value['dst_port']
+    dst_port_counter_one_tcp[dst_port] += 1
 
-for dst_port, count in dst_port_counter.items():
-    print(f"dst_port {dst_port} is represented {count} times")
+# Loop over the counter and print the dst ports with their corresponding counts
+for dst_port, count_tcp_one in dst_port_counter_one_tcp.items():
+    if count_tcp_one > 100: 
+        print(f"dst_port {dst_port} is represented {count_tcp_one} times")
+
+dst_port_counter_one_udp = Counter()
+print('UDP one flows')
+# Loop over the dictionary and update the counter with each dst port
+for key, value in udp_oflow_final.items():
+    dst_port = value['dst_port']
+    dst_port_counter_one_udp[dst_port] += 1
+
+# Loop over the counter and print the dst ports with their corresponding counts
+for dst_port, count_udp_one in dst_port_counter_one_udp.items():
+    if count_udp_one > 100: 
+        print(f"dst_port {dst_port} is represented {count_udp_one} times") """
+    
+""" dst_port_counter_back_tcp = Counter()
+print('TCP back')
+# Loop over the dictionary and update the counter with each dst port
+for key, value in small_syns_final.items():
+    dst_ports = value['dst_ports']
+    for dst_port in dst_ports:
+        if isinstance(dst_port, int):
+            dst_port_counter_back_tcp[dst_port] += 1
+        else:
+            for port in dst_port:
+                dst_port_counter_back_tcp[port] += 1
+
+# Loop over the counter and print the dst ports with their corresponding counts
+for dst_port, count_tcp_bck in dst_port_counter_back_tcp.items():
+    if count_tcp_bck > 100: 
+        print(f"dst_port {dst_port} is represented {count_tcp_bck} times")
+
+dst_port_counter_back_udp = Counter()
+print('UDP back')
+# Loop over the dictionary and update the counter with each dst port
+for key, value in small_udps_final.items():
+    dst_ports = value['dst_ports']
+    for dst_port in dst_ports:
+        if isinstance(dst_port, int):
+            dst_port_counter_back_udp[dst_port] += 1
+        else:
+            for port in dst_port:
+                dst_port_counter_back_udp[port] += 1
+
+# Loop over the counter and print the dst ports with their corresponding counts
+for dst_port, count_udp_bck in dst_port_counter_back_udp.items():
+    if count_udp_bck > 100: 
+        print(f"dst_port {dst_port} is represented {count_udp_bck} times") """
+ 
 
 
-# Find multiple categorized traffic.
-""" common_keys = set(key[0] for key in tcp_lnetwork_scans.keys()) & set(key[0] for key in tcp_lport_scans.keys())
 
-extra_keys = set(key[0] for key in tcp_lport_scans.keys()) - common_keys
- """
-# fin donly in port scans
+
+""" # Find multiple categorized traffic.
+common_keys = set(key[0] for key in udp_lnetwork_scans.keys()) & set(key[0] for key in udp_lport_scans.keys())
+
+extra_keys = set(key[0] for key in udp_lport_scans.keys()) & set(key[0] for key in udp_hport_scans.keys()) - common_keys
+
+# find only in port scans
 #for key in tcp_lport_scans.keys():
  #   if key[0] in extra_keys:
   #      value = tcp_lport_scans[key]
@@ -326,18 +386,18 @@ extra_keys = set(key[0] for key in tcp_lport_scans.keys()) - common_keys
 
 
 
-#for key in common_keys:
- #   count_lnetwork = 0
-#    for key in tcp_lnetwork_scans.keys():
-      #  if key[0] in common_keys:
-     #       count_lnetwork += 1
-    #count_lport = 0
-   # for key in tcp_lport_scans.keys():
-  #      if key[0] in common_keys:
- #           count_lport += 1
+for key in common_keys:
+    count_lnetwork = 0
+    for key in tcp_lnetwork_scans.keys():
+        if key[0] in common_keys:
+            count_lnetwork += 1
+    count_lport = 0
+    for key in tcp_lport_scans.keys():
+        if key[0] in common_keys:
+            count_lport += 1
 
-#print(f'network: {count_lnetwork}')
-#print(f'port: {count_lport}')
+print(f'network: {count_lnetwork}')
+print(f'port: {count_lport}') """
 
 """ keys = [*tcp_hport_scans.keys(), *tcp_lport_scans.keys()]
 tcp_port = set(tuple(key[0] for key in keys))
