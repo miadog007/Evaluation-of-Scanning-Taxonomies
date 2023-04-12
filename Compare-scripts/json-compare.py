@@ -26,10 +26,7 @@ def compare(barnett_oto, barnett_otm, barnett_mto, barnett_mtm, fukuda_file):
 
     print(count_oto_otm)
     print(count_otm_oto)
-    
-
-
-
+ 
     """ with open('ICMP_compare.txt', 'a') as file:
         file.write(f'Total ICMP other uniqe ips in fukuda: {len(fukuda_ips)}\n')
         file.write(f'Ips in One-to-One: {count_oto}\n')
@@ -39,12 +36,61 @@ def compare(barnett_oto, barnett_otm, barnett_mto, barnett_mtm, fukuda_file):
         file.write('------------------------\n')
  """
 
-barnett_oto = 'Compare-scripts/barnett/ip_lists/tcp_onetoone_barnett.txt'
-barnett_otm = 'Compare-scripts/barnett/ip_lists/tcp_onetomany_barnett.txt'
-barnett_mto = 'Compare-scripts/barnett/ip_lists/tcp_manytoone_barnett.txt'
-barnett_mtm = 'Compare-scripts/barnett/ip_lists/tcp_manytomany_barnett.txt'
+# Barnet files
+# TCP
+barnett_oto_slow_tcp = 'Compare-scripts/barnett/ip_lists/tcp_onetoone_slow_barnett.txt'
+barnett_oto_medium_tcp = 'Compare-scripts/barnett/ip_lists/tcp_onetoone_medium_barnett.txt'
+barnett_oto_rapid_tcp = 'Compare-scripts/barnett/ip_lists/tcp_onetoone_rapid_barnett.txt'
 
+barnett_otm_slow_tcp = 'Compare-scripts/barnett/ip_lists/tcp_onetomany_slow_barnett.txt'
+barnett_otm_medium_tcp = 'Compare-scripts/barnett/ip_lists/tcp_onetomany_medium_barnett.txt'
+barnett_otm_rapid_tcp = 'Compare-scripts/barnett/ip_lists/tcp_onetomany_rapid_barnett.txt'
+
+barnett_mto_slow_tcp = 'Compare-scripts/barnett/ip_lists/tcp_manytoone_slow_barnett.txt'
+barnett_mto_medium_tcp = 'Compare-scripts/barnett/ip_lists/tcp_manytoone_medium_barnett.txt'
+barnett_mto_rapid_tcp = 'Compare-scripts/barnett/ip_lists/tcp_manytoone_rapid_barnett.txt'
+
+barnett_mtm_slow_tcp = 'Compare-scripts/barnett/ip_lists/tcp_manytomany_slow_barnett.txt'
+barnett_mtm_medium_tcp = 'Compare-scripts/barnett/ip_lists/tcp_manytomany_medium_barnett.txt'
+barnett_mtm_rapid_tcp = 'Compare-scripts/barnett/ip_lists/tcp_manytomany_rapid_barnett.txt'
+
+# UDP
+barnett_oto_slow_udp = 'Compare-scripts/barnett/ip_lists/udp_onetoone_slow_barnett.txt'
+barnett_oto_medium_udp = 'Compare-scripts/barnett/ip_lists/udp_onetoone_medium_barnett.txt'
+barnett_oto_rapid_udp = 'Compare-scripts/barnett/ip_lists/udp_onetoone_rapid_barnett.txt'
+
+barnett_otm_slow_udp = 'Compare-scripts/barnett/ip_lists/udp_onetomany_slow_barnett.txt'
+barnett_otm_medium_udp = 'Compare-scripts/barnett/ip_lists/udp_onetomany_medium_barnett.txt'
+barnett_otm_rapid_udp = 'Compare-scripts/barnett/ip_lists/udp_onetomany_rapid_barnett.txt'
+
+barnett_mto_slow_udp = 'Compare-scripts/barnett/ip_lists/udp_manytoone_slow_barnett.txt'
+barnett_mto_medium_udp = 'Compare-scripts/barnett/ip_lists/udp_manytoone_medium_barnett.txt'
+barnett_mto_rapid_udp = 'Compare-scripts/barnett/ip_lists/udp_manytoone_rapid_barnett.txt'
+
+barnett_mtm_slow_udp = 'Compare-scripts/barnett/ip_lists/udp_manytomany_slow_barnett.txt'
+barnett_mtm_medium_udp = 'Compare-scripts/barnett/ip_lists/udp_manytomany_medium_barnett.txt'
+barnett_mtm_rapid_udp = 'Compare-scripts/barnett/ip_lists/udp_manytomany_rapid_barnett.txt'
+# ICMP
+barnett_oto_slow_icmp = 'Compare-scripts/barnett/ip_lists/icmp_onetoone_slow_barnett.txt'
+barnett_oto_medium_icmp = 'Compare-scripts/barnett/ip_lists/icmp_onetoone_medium_barnett.txt'
+barnett_oto_rapid_icmp = 'Compare-scripts/barnett/ip_lists/icmp_onetoone_rapid_barnett.txt'
+
+barnett_otm_slow_icmp = 'Compare-scripts/barnett/ip_lists/icmp_onetomany_slow_barnett.txt'
+barnett_otm_medium_icmp = 'Compare-scripts/barnett/ip_lists/icmp_onetomany_medium_barnett.txt'
+barnett_otm_rapid_icmp = 'Compare-scripts/barnett/ip_lists/icmp_onetomany_rapid_barnett.txt'
+
+barnett_mto_slow_icmp = 'Compare-scripts/barnett/ip_lists/icmp_manytoone_slow_barnett.txt'
+barnett_mto_medium_icmp = 'Compare-scripts/barnett/ip_lists/icmp_manytoone_medium_barnett.txt'
+barnett_mto_rapid_icmp = 'Compare-scripts/barnett/ip_lists/icmp_manytoone_rapid_barnett.txt'
+
+barnett_mtm_slow_icmp = 'Compare-scripts/barnett/ip_lists/icmp_manytomany_slow_barnett.txt'
+barnett_mtm_medium_icmp = 'Compare-scripts/barnett/ip_lists/icmp_manytomany_medium_barnett.txt'
+barnett_mtm_rapid_icmp = 'Compare-scripts/barnett/ip_lists/icmp_manytomany_rapid_barnett.txt'
+
+# Fukuda files
 fukuda_file = 'Compare-scripts/fukuda/ip_lists/icmp_other_fukuda.txt'
+
+
 
 compare(barnett_oto, barnett_otm, barnett_mto, barnett_mtm, fukuda_file)
 

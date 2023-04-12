@@ -183,8 +183,8 @@ distrubution are based on speed, flags, src, dst, dport
 '''
 
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/jan_packets_00005_20210130091834.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/december5_00001_20201230200045.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/jan_packets_00005_20210130091834.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00000_20201201074044.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
 #for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     packets += 1
@@ -570,7 +570,7 @@ print("---------------------")
 print(f'Other traffic: {other}')
 print("---------------------")
 
-from collections import Counter
+""" from collections import Counter
 
 dst_port_counter_slow = Counter()
 print('tcp slow')
@@ -618,100 +618,276 @@ for key, value in udp_onetomany_rapid.items():
 # Loop over the counter and print the dst ports with their corresponding counts
 for dst_port, count_tcp_one_rapid in dst_port_counter_rapid.items():
     if count_tcp_one_rapid > 1000: 
-        print(f"dst_port {dst_port} is represented {count_tcp_one_rapid} times")
+        print(f"dst_port {dst_port} is represented {count_tcp_one_rapid} times") """
 
 # One to one lists
-""" values = [*tcp_onetoone_rapid.values(), *tcp_onetoone_medium.values(), *tcp_onetoone_slow.values()]
-tcp_oto_src_ips = set(tuple(entry['src_ips']) for entry in values)
-tcp_oto = [ip[0] for ip in tcp_oto_src_ips]
-tcp_oto_f = ', '.join(tcp_oto)
+values = [*tcp_onetoone_slow.values()]
+tcp_oto_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_oto_slow = [ip[0] for ip in tcp_oto_src_slow_ips]
+tcp_oto_slow_f = ', '.join(tcp_oto_slow)
 
-values = [*udp_onetoone_rapid.values(), *udp_onetoone_medium.values(), *udp_onetoone_slow.values()]
-udp_oto_src_ips = set(tuple(entry['src_ips']) for entry in values)
-udp_oto = [ip[0] for ip in udp_oto_src_ips]
-udp_oto_f = ', '.join(udp_oto)
+values = [*tcp_onetoone_medium.values()]
+tcp_oto_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_oto_medium = [ip[0] for ip in tcp_oto_src_medium_ips]
+tcp_oto_medium_f = ', '.join(tcp_oto_medium)
 
-values = [*icmp_onetoone_rapid.values(), *icmp_onetoone_medium.values(), *icmp_onetoone_slow.values()]
-icmp_oto_src_ips = set(tuple(entry['src_ips']) for entry in values)
-icmp_oto = [ip[0] for ip in icmp_oto_src_ips]
-icmp_oto_f = ', '.join(icmp_oto)
+values = [*tcp_onetoone_rapid.values()]
+tcp_oto_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_oto_rapid = [ip[0] for ip in tcp_oto_src_rapid_ips]
+tcp_oto_rapid_f = ', '.join(tcp_oto_rapid)
 
-with open('tcp_onetoone_barnett.txt', 'w') as f:
-    f.write(tcp_oto_f)
-with open('udp_onetoone_barnett.txt', 'w') as f:
-    f.write(udp_oto_f)
-with open('icmp_onetoone_barnett.txt', 'w') as f:
-    f.write(icmp_oto_f)
+with open('ip-list/tcp_onetoone_slow_barnett.txt', 'w') as f:
+    f.write(tcp_oto_slow_f)
+with open('ip-list/tcp_onetoone_medium_barnett.txt', 'w') as f:
+    f.write(tcp_oto_rapid_f)
+with open('ip-list/tcp_onetoone_rapid_barnett.txt', 'w') as f:
+    f.write(tcp_oto_rapid_f)
+
+values = [*udp_onetoone_slow.values()]
+udp_oto_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_oto_slow = [ip[0] for ip in udp_oto_src_slow_ips]
+udp_oto_slow_f = ', '.join(udp_oto_slow)
+
+values = [*udp_onetoone_medium.values()]
+udp_oto_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_oto_medium = [ip[0] for ip in udp_oto_src_medium_ips]
+udp_oto_medium_f = ', '.join(udp_oto_medium)
+
+values = [*udp_onetoone_rapid.values()]
+udp_oto_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_oto_rapid = [ip[0] for ip in udp_oto_src_rapid_ips]
+udp_oto_rapid_f = ', '.join(udp_oto_rapid)
+
+with open('ip-list/udp_onetoone_slow_barnett.txt', 'w') as f:
+    f.write(udp_oto_slow_f)
+with open('ip-list/udp_onetoone_medium_barnett.txt', 'w') as f:
+    f.write(udp_oto_rapid_f)
+with open('ip-list/udp_onetoone_rapid_barnett.txt', 'w') as f:
+    f.write(udp_oto_rapid_f)
+
+values = [*icmp_onetoone_slow.values()]
+icmp_oto_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_oto_slow = [ip[0] for ip in icmp_oto_src_slow_ips]
+icmp_oto_slow_f = ', '.join(icmp_oto_slow)
+
+values = [*icmp_onetoone_medium.values()]
+icmp_oto_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_oto_medium = [ip[0] for ip in icmp_oto_src_medium_ips]
+icmp_oto_medium_f = ', '.join(icmp_oto_medium)
+
+values = [*icmp_onetoone_rapid.values()]
+icmp_oto_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_oto_rapid = [ip[0] for ip in icmp_oto_src_rapid_ips]
+icmp_oto_rapid_f = ', '.join(icmp_oto_rapid)
+
+with open('ip-list/icmp_onetoone_slow_barnett.txt', 'w') as f:
+    f.write(icmp_oto_slow_f)
+with open('ip-list/icmp_onetoone_medium_barnett.txt', 'w') as f:
+    f.write(icmp_oto_rapid_f)
+with open('ip-list/icmp_onetoone_rapid_barnett.txt', 'w') as f:
+    f.write(icmp_oto_rapid_f)
 
 
 # one to many lists
-values = [*tcp_onetomany_rapid.values(), *tcp_onetomany_medium.values(), *tcp_onetomany_slow.values()]
-tcp_otm_src_ips = set(tuple(entry['src_ips']) for entry in values)
-tcp_otm = [ip[0] for ip in tcp_otm_src_ips]
-tcp_otm_f = ', '.join(tcp_otm)
+values = [*tcp_onetomany_slow.values()]
+tcp_otm_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_otm_slow = [ip[0] for ip in tcp_otm_src_slow_ips]
+tcp_otm_slow_f = ', '.join(tcp_otm_slow)
 
-values = [*udp_onetomany_rapid.values(), *udp_onetomany_medium.values(), *udp_onetomany_slow.values()]
-udp_otm_src_ips = set(tuple(entry['src_ips']) for entry in values)
-udp_otm = [ip[0] for ip in udp_otm_src_ips]
-udp_otm_f = ', '.join(udp_otm)
+values = [*tcp_onetomany_medium.values()]
+tcp_otm_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_otm_medium = [ip[0] for ip in tcp_otm_src_medium_ips]
+tcp_otm_medium_f = ', '.join(tcp_otm_medium)
 
-values = [*icmp_onetomany_rapid.values(), *icmp_onetomany_medium.values(), *icmp_onetomany_slow.values()]
-icmp_otm_src_ips = set(tuple(entry['src_ips']) for entry in values)
-icmp_otm = [ip[0] for ip in icmp_otm_src_ips]
-icmp_otm_f = ', '.join(icmp_otm)
+values = [*tcp_onetomany_rapid.values()]
+tcp_otm_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_otm_rapid = [ip[0] for ip in tcp_otm_src_rapid_ips]
+tcp_otm_rapid_f = ', '.join(tcp_otm_rapid)
 
-with open('tcp_onetomany_barnett.txt', 'w') as f:
-    f.write(tcp_otm_f)
-with open('udp_onetomany_barnett.txt', 'w') as f:
-    f.write(udp_otm_f)
-with open('icmp_onetomany_barnett.txt', 'w') as f:
-    f.write(icmp_otm_f)
+with open('ip-list/tcp_onetomany_slow_barnett.txt', 'w') as f:
+    f.write(tcp_otm_slow_f)
+with open('ip-list/tcp_onetomany_medium_barnett.txt', 'w') as f:
+    f.write(tcp_otm_rapid_f)
+with open('ip-list/tcp_onetomany_rapid_barnett.txt', 'w') as f:
+    f.write(tcp_otm_rapid_f)
+
+values = [*udp_onetomany_slow.values()]
+udp_otm_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_otm_slow = [ip[0] for ip in udp_otm_src_slow_ips]
+udp_otm_slow_f = ', '.join(udp_otm_slow)
+
+values = [*udp_onetomany_medium.values()]
+udp_otm_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_otm_medium = [ip[0] for ip in udp_otm_src_medium_ips]
+udp_otm_medium_f = ', '.join(udp_otm_medium)
+
+values = [*udp_onetomany_rapid.values()]
+udp_otm_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_otm_rapid = [ip[0] for ip in udp_otm_src_rapid_ips]
+udp_otm_rapid_f = ', '.join(udp_otm_rapid)
+
+with open('ip-list/udp_onetomany_slow_barnett.txt', 'w') as f:
+    f.write(udp_otm_slow_f)
+with open('ip-list/udp_onetomany_medium_barnett.txt', 'w') as f:
+    f.write(udp_otm_rapid_f)
+with open('ip-list/udp_onetomany_rapid_barnett.txt', 'w') as f:
+    f.write(udp_otm_rapid_f)
+
+values = [*icmp_onetomany_slow.values()]
+icmp_otm_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_otm_slow = [ip[0] for ip in icmp_otm_src_slow_ips]
+icmp_otm_slow_f = ', '.join(icmp_otm_slow)
+
+values = [*icmp_onetomany_medium.values()]
+icmp_otm_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_otm_medium = [ip[0] for ip in icmp_otm_src_medium_ips]
+icmp_otm_medium_f = ', '.join(icmp_otm_medium)
+
+values = [*icmp_onetomany_rapid.values()]
+icmp_otm_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_otm_rapid = [ip[0] for ip in icmp_otm_src_rapid_ips]
+icmp_otm_rapid_f = ', '.join(icmp_otm_rapid)
+
+with open('ip-list/icmp_onetomany_slow_barnett.txt', 'w') as f:
+    f.write(icmp_otm_slow_f)
+with open('ip-list/icmp_onetomany_medium_barnett.txt', 'w') as f:
+    f.write(icmp_otm_rapid_f)
+with open('ip-list/icmp_onetomany_rapid_barnett.txt', 'w') as f:
+    f.write(icmp_otm_rapid_f)
 
 # many to one list
-values = [*tcp_manytoone_rapid.values(), *tcp_manytoone_medium.values(), *tcp_manytoone_slow.values()]
-tcp_mto_src_ips = set(tuple(entry['src_ips']) for entry in values)
-tcp_mto = [ip[0] for ip in tcp_mto_src_ips]
-tcp_mto_f = ', '.join(tcp_mto)
+values = [*tcp_manytoone_slow.values()]
+tcp_mto_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_mto_slow = [ip[0] for ip in tcp_mto_src_slow_ips]
+tcp_mto_slow_f = ', '.join(tcp_mto_slow)
 
-values = [*udp_manytoone_rapid.values(), *udp_manytoone_medium.values(), *udp_manytoone_slow.values()]
-udp_mto_src_ips = set(tuple(entry['src_ips']) for entry in values)
-udp_mto = [ip[0] for ip in udp_mto_src_ips]
-udp_mto_f = ', '.join(udp_mto)
+values = [*tcp_manytoone_medium.values()]
+tcp_mto_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_mto_medium = [ip[0] for ip in tcp_mto_src_medium_ips]
+tcp_mto_medium_f = ', '.join(tcp_mto_medium)
 
-values = [*icmp_manytoone_rapid.values(), *icmp_manytoone_medium.values(), *icmp_manytoone_slow.values()]
-icmp_mto_src_ips = set(tuple(entry['src_ips']) for entry in values)
-icmp_mto = [ip[0] for ip in icmp_mto_src_ips]
-icmp_mto_f = ', '.join(icmp_mto)
+values = [*tcp_manytoone_rapid.values()]
+tcp_mto_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_mto_rapid = [ip[0] for ip in tcp_mto_src_rapid_ips]
+tcp_mto_rapid_f = ', '.join(tcp_mto_rapid)
 
-with open('tcp_manytoone_barnett.txt', 'w') as f:
-    f.write(tcp_mto_f)
-with open('udp_manytoone_barnett.txt', 'w') as f:
-    f.write(udp_mto_f)
-with open('icmp_manytoone_barnett.txt', 'w') as f:
-    f.write(icmp_mto_f)
+with open('ip-list/tcp_manytoone_slow_barnett.txt', 'w') as f:
+    f.write(tcp_mto_slow_f)
+with open('ip-list/tcp_manytoone_medium_barnett.txt', 'w') as f:
+    f.write(tcp_mto_rapid_f)
+with open('ip-list/tcp_manytoone_rapid_barnett.txt', 'w') as f:
+    f.write(tcp_mto_rapid_f)
+
+values = [*udp_manytoone_slow.values()]
+udp_mto_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_mto_slow = [ip[0] for ip in udp_mto_src_slow_ips]
+udp_mto_slow_f = ', '.join(udp_mto_slow)
+
+values = [*udp_manytoone_medium.values()]
+udp_mto_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_mto_medium = [ip[0] for ip in udp_mto_src_medium_ips]
+udp_mto_medium_f = ', '.join(udp_mto_medium)
+
+values = [*udp_manytoone_rapid.values()]
+udp_mto_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_mto_rapid = [ip[0] for ip in udp_mto_src_rapid_ips]
+udp_mto_rapid_f = ', '.join(udp_mto_rapid)
+
+with open('ip-list/udp_manytoone_slow_barnett.txt', 'w') as f:
+    f.write(udp_mto_slow_f)
+with open('ip-list/udp_manytoone_medium_barnett.txt', 'w') as f:
+    f.write(udp_mto_rapid_f)
+with open('ip-list/udp_manytoone_rapid_barnett.txt', 'w') as f:
+    f.write(udp_mto_rapid_f)
+
+values = [*icmp_manytoone_slow.values()]
+icmp_mto_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_mto_slow = [ip[0] for ip in icmp_mto_src_slow_ips]
+icmp_mto_slow_f = ', '.join(icmp_mto_slow)
+
+values = [*icmp_manytoone_medium.values()]
+icmp_mto_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_mto_medium = [ip[0] for ip in icmp_mto_src_medium_ips]
+icmp_mto_medium_f = ', '.join(icmp_mto_medium)
+
+values = [*icmp_manytoone_rapid.values()]
+icmp_mto_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_mto_rapid = [ip[0] for ip in icmp_mto_src_rapid_ips]
+icmp_mto_rapid_f = ', '.join(icmp_mto_rapid)
+
+with open('ip-list/icmp_manytoone_slow_barnett.txt', 'w') as f:
+    f.write(icmp_mto_slow_f)
+with open('ip-list/icmp_manytoone_medium_barnett.txt', 'w') as f:
+    f.write(icmp_mto_rapid_f)
+with open('ip-list/icmp_manytoone_rapid_barnett.txt', 'w') as f:
+    f.write(icmp_mto_rapid_f)
 
 # many to many lists
-values = [*tcp_manytomany_rapid.values(), *tcp_manytomany_medium.values(), *tcp_manytomany_slow.values()]
-tcp_mtm_src_ips = set(tuple(entry['src_ips']) for entry in values)
-tcp_mtm = [ip[0] for ip in tcp_mtm_src_ips]
-tcp_mtm_f = ', '.join(tcp_mtm)
+values = [*tcp_manytomany_slow.values()]
+tcp_mtm_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_mtm_slow = [ip[0] for ip in tcp_mtm_src_slow_ips]
+tcp_mtm_slow_f = ', '.join(tcp_mtm_slow)
 
-values = [*udp_manytomany_rapid.values(), *udp_manytomany_medium.values(), *udp_manytomany_slow.values()]
-udp_mtm_src_ips = set(tuple(entry['src_ips']) for entry in values)
-udp_mtm = [ip[0] for ip in udp_mtm_src_ips]
-udp_mtm_f = ', '.join(udp_mtm)
+values = [*tcp_manytomany_medium.values()]
+tcp_mtm_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_mtm_medium = [ip[0] for ip in tcp_mtm_src_medium_ips]
+tcp_mtm_medium_f = ', '.join(tcp_mtm_medium)
 
-values = [*icmp_manytomany_rapid.values(), *icmp_manytomany_medium.values(), *icmp_manytomany_slow.values()]
-icmp_mtm_src_ips = set(tuple(entry['src_ips']) for entry in values)
-icmp_mtm = [ip[0] for ip in icmp_mtm_src_ips]
-icmp_mtm_f = ', '.join(icmp_mtm)
+values = [*tcp_manytomany_rapid.values()]
+tcp_mtm_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+tcp_mtm_rapid = [ip[0] for ip in tcp_mtm_src_rapid_ips]
+tcp_mtm_rapid_f = ', '.join(tcp_mtm_rapid)
 
-with open('tcp_manytomany_barnett.txt', 'w') as f:
-    f.write(tcp_mtm_f)
-with open('udp_manytomany_barnett.txt', 'w') as f:
-    f.write(udp_mtm_f)
-with open('icmp_manytomany_barnett.txt', 'w') as f:
-    f.write(icmp_mtm_f) """
+with open('ip-list/tcp_manytomany_slow_barnett.txt', 'w') as f:
+    f.write(tcp_mtm_slow_f)
+with open('ip-list/tcp_manytomany_medium_barnett.txt', 'w') as f:
+    f.write(tcp_mtm_rapid_f)
+with open('ip-list/tcp_manytomany_rapid_barnett.txt', 'w') as f:
+    f.write(tcp_mtm_rapid_f)
+
+values = [*udp_manytomany_slow.values()]
+udp_mtm_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_mtm_slow = [ip[0] for ip in udp_mtm_src_slow_ips]
+udp_mtm_slow_f = ', '.join(udp_mtm_slow)
+
+values = [*udp_manytomany_medium.values()]
+udp_mtm_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_mtm_medium = [ip[0] for ip in udp_mtm_src_medium_ips]
+udp_mtm_medium_f = ', '.join(udp_mtm_medium)
+
+values = [*udp_manytomany_rapid.values()]
+udp_mtm_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+udp_mtm_rapid = [ip[0] for ip in udp_mtm_src_rapid_ips]
+udp_mtm_rapid_f = ', '.join(udp_mtm_rapid)
+
+with open('ip-list/udp_manytomany_slow_barnett.txt', 'w') as f:
+    f.write(udp_mtm_slow_f)
+with open('ip-list/udp_manytomany_medium_barnett.txt', 'w') as f:
+    f.write(udp_mtm_rapid_f)
+with open('ip-list/udp_manytomany_rapid_barnett.txt', 'w') as f:
+    f.write(udp_mtm_rapid_f)
+
+values = [*icmp_manytomany_slow.values()]
+icmp_mtm_src_slow_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_mtm_slow = [ip[0] for ip in icmp_mtm_src_slow_ips]
+icmp_mtm_slow_f = ', '.join(icmp_mtm_slow)
+
+values = [*icmp_manytomany_medium.values()]
+icmp_mtm_src_medium_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_mtm_medium = [ip[0] for ip in icmp_mtm_src_medium_ips]
+icmp_mtm_medium_f = ', '.join(icmp_mtm_medium)
+
+values = [*icmp_manytomany_rapid.values()]
+icmp_mtm_src_rapid_ips = set(tuple(entry['src_ips']) for entry in values)
+icmp_mtm_rapid = [ip[0] for ip in icmp_mtm_src_rapid_ips]
+icmp_mtm_rapid_f = ', '.join(icmp_mtm_rapid)
+
+with open('ip-list/icmp_manytomany_slow_barnett.txt', 'w') as f:
+    f.write(icmp_mtm_slow_f)
+with open('ip-list/icmp_manytomany_medium_barnett.txt', 'w') as f:
+    f.write(icmp_mtm_rapid_f)
+with open('ip-list/icmp_manytomany_rapid_barnett.txt', 'w') as f:
+    f.write(icmp_mtm_rapid_f)
 
 """ for val in tcp_onetomany_medium.values():
     if val['src_ips'] == '119.45.157.33':
@@ -761,92 +937,92 @@ for key, value in tcp_onetoone_rapid.items():
   #  f.write(f'Total TCP slow many-to-many src ips: {tcp_manytomany_rapid}\n')
 
 
+# Get full dicts
 
+with open('full-list/tcp_onetoone_slow_barnett.txt', 'w') as f:
+    f.write(str(tcp_onetoone_slow))
+with open('full-list/tcp_onetoone_medium_barnett.txt', 'w') as f:
+    f.write(str(tcp_onetoone_medium))
+with open('full-list/tcp_onetoone_rapid_barnett.txt', 'w') as f:
+    f.write(str(tcp_onetoone_rapid)) 
 
-""" with open('tcp_one-to-one_barnett.txt', 'w') as f:
-    f.write(f'Total TCP slow one-to-one src ips: {tcp_onetoone_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp medium one-to-one src ips: {tcp_onetoone_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp rapid one-to-one src ips: {tcp_onetoone_rapid}\n')
+with open('full-list/tcp_manytoone_slow_barnett.txt', 'w') as f:
+    f.write(str(tcp_manytoone_slow))
+with open('full-list/tcp_manytoone_medium_barnett.txt', 'w') as f:
+    f.write(str(tcp_manytoone_medium))
+with open('full-list/tcp_manytoone_rapid_barnett.txt', 'w') as f:
+    f.write(str(tcp_manytoone_rapid)) 
 
-with open('tcp_onetomany_barnett.txt', 'w') as f:
-    f.write(f'Total TCP slow one-to-many src ips: {tcp_onetomany_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp medium one-to-many src ips: {tcp_onetomany_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp rapid one-to-many src ips: {tcp_onetomany_rapid}\n')
+with open('full-list/tcp_onetomany_slow_barnett.txt', 'w') as f:
+    f.write(str(tcp_onetomany_slow))
+with open('full-list/tcp_onetomany_medium_barnett.txt', 'w') as f:
+    f.write(str(tcp_onetomany_medium))
+with open('full-list/tcp_onetomany_rapid_barnett.txt', 'w') as f:
+    f.write(str(tcp_onetomany_rapid)) 
 
-with open('tcp_manytoone_barnett.txt', 'w') as f:
-    f.write(f'Total TCP slow many-to-one src ips: {tcp_manytoone_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp medium many-to-one src ips: {tcp_manytoone_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp rapid many-to-one src ips: {tcp_manytoone_rapid}\n')
+with open('full-list/tcp_manytomany_slow_barnett.txt', 'w') as f:
+    f.write(str(tcp_manytomany_slow))
+with open('full-list/tcp_manytomany_medium_barnett.txt', 'w') as f:
+    f.write(str(tcp_manytomany_medium))
+with open('full-list/tcp_manytomany_rapid_barnett.txt', 'w') as f:
+    f.write(str(tcp_manytomany_rapid)) 
 
-with open('tcp_manytomany_barnett.txt', 'w') as f:
-    f.write(f'Total TCP slow many-to-many src ips: {tcp_manytomany_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp medium many-to-many src ips: {tcp_manytomany_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total tcp rapid many-to-many src ips: {tcp_manytomany_rapid}\n')
+with open('full-list/udp_onetoone_slow_barnett.txt', 'w') as f:
+    f.write(str(udp_onetoone_slow))
+with open('full-list/udp_onetoone_medium_barnett.txt', 'w') as f:
+    f.write(str(udp_onetoone_medium))
+with open('full-list/udp_onetoone_rapid_barnett.txt', 'w') as f:
+    f.write(str(udp_onetoone_rapid)) 
 
-with open('udp_one-to-one_barnett.txt', 'w') as f:
-    f.write(f'Total udp slow one-to-one src ips: {udp_onetoone_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp medium one-to-one src ips: {udp_onetoone_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp rapid one-to-one src ips: {udp_onetoone_rapid}\n')
+with open('full-list/udp_manytoone_slow_barnett.txt', 'w') as f:
+    f.write(str(udp_manytoone_slow))
+with open('full-list/udp_manytoone_medium_barnett.txt', 'w') as f:
+    f.write(str(udp_manytoone_medium))
+with open('full-list/udp_manytoone_rapid_barnett.txt', 'w') as f:
+    f.write(str(udp_manytoone_rapid)) 
 
-with open('udp_onetomany_barnett.txt', 'w') as f:
-    f.write(f'Total udp slow one-to-many src ips: {udp_onetomany_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp medium one-to-many src ips: {udp_onetomany_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp rapid one-to-many src ips: {udp_onetomany_rapid}\n')
+with open('full-list/udp_onetomany_slow_barnett.txt', 'w') as f:
+    f.write(str(udp_onetomany_slow))
+with open('full-list/udp_onetomany_medium_barnett.txt', 'w') as f:
+    f.write(str(udp_onetomany_medium))
+with open('full-list/udp_onetomany_rapid_barnett.txt', 'w') as f:
+    f.write(str(udp_onetomany_rapid)) 
 
-with open('udp_manytoone_barnett.txt', 'w') as f:
-    f.write(f'Total udp slow many-to-one src ips: {udp_manytoone_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp medium many-to-one src ips: {udp_manytoone_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp rapid many-to-one src ips: {udp_manytoone_rapid}\n')
+with open('full-list/udp_manytomany_slow_barnett.txt', 'w') as f:
+    f.write(str(udp_manytomany_slow))
+with open('full-list/udp_manytomany_medium_barnett.txt', 'w') as f:
+    f.write(str(udp_manytomany_medium))
+with open('full-list/udp_manytomany_rapid_barnett.txt', 'w') as f:
+    f.write(str(udp_manytomany_rapid)) 
 
-with open('udp_manytomany_barnett.txt', 'w') as f:
-    f.write(f'Total udp slow many-to-many src ips: {udp_manytomany_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp medium many-to-many src ips: {udp_manytomany_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total udp rapid many-to-many src ips: {udp_manytomany_rapid}\n')
+with open('full-list/icmp_onetoone_slow_barnett.txt', 'w') as f:
+    f.write(str(icmp_onetoone_slow))
+with open('full-list/icmp_onetoone_medium_barnett.txt', 'w') as f:
+    f.write(str(icmp_onetoone_medium))
+with open('full-list/icmp_onetoone_rapid_barnett.txt', 'w') as f:
+    f.write(str(icmp_onetoone_rapid)) 
 
-with open('icmp_one-to-one_barnett.txt', 'w') as f:
-    f.write(f'Total icmp slow one-to-one src ips: {icmp_onetoone_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp medium one-to-one src ips: {icmp_onetoone_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp rapid one-to-one src ips: {icmp_onetoone_rapid}\n')
+with open('full-list/icmp_manytoone_slow_barnett.txt', 'w') as f:
+    f.write(str(icmp_manytoone_slow))
+with open('full-list/icmp_manytoone_medium_barnett.txt', 'w') as f:
+    f.write(str(icmp_manytoone_medium))
+with open('full-list/icmp_manytoone_rapid_barnett.txt', 'w') as f:
+    f.write(str(icmp_manytoone_rapid)) 
 
-with open('icmp_onetomany_barnett.txt', 'w') as f:
-    f.write(f'Total icmp slow one-to-many src ips: {icmp_onetomany_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp medium one-to-many src ips: {icmp_onetomany_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp rapid one-to-many src ips: {icmp_onetomany_rapid}\n')
+with open('full-list/icmp_onetomany_slow_barnett.txt', 'w') as f:
+    f.write(str(icmp_onetomany_slow))
+with open('full-list/icmp_onetomany_medium_barnett.txt', 'w') as f:
+    f.write(str(icmp_onetomany_medium))
+with open('full-list/icmp_onetomany_rapid_barnett.txt', 'w') as f:
+    f.write(str(icmp_onetomany_rapid)) 
 
-with open('icmp_manytoone_barnett.txt', 'w') as f:
-    f.write(f'Total icmp slow many-to-one src ips: {icmp_manytoone_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp medium many-to-one src ips: {icmp_manytoone_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp rapid many-to-one src ips: {icmp_manytoone_rapid}\n')
+with open('full-list/icmp_manytomany_slow_barnett.txt', 'w') as f:
+    f.write(str(icmp_manytomany_slow))
+with open('full-list/icmp_manytomany_medium_barnett.txt', 'w') as f:
+    f.write(str(icmp_manytomany_medium))
+with open('full-list/icmp_manytomany_rapid_barnett.txt', 'w') as f:
+    f.write(str(icmp_manytomany_rapid)) 
 
-with open('icmp_manytomany_barnett.txt', 'w') as f:
-    f.write(f'Total icmp slow many-to-many src ips: {icmp_manytomany_slow}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp medium many-to-many src ips: {icmp_manytomany_medium}\n')
-    f.write("---------------------\n")
-    f.write(f'Total icmp rapid many-to-many src ips: {icmp_manytomany_rapid}\n') 
- """
 """ 
 with open('december_packet_barnett.txt', 'a') as f:
     f.write("---------------------\n")

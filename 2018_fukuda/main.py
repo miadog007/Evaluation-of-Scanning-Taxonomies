@@ -79,8 +79,8 @@ other = 0
 # Main functions for finding TCP, UDP or ICMP packets
 #for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00000_20201230060725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00003_20201218162044.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00004_20201230171405.pcap', 'rb')):
+for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00005_20201230060725.pcap', 'rb')):
+#for ts, pkt in dpkt.pcap.Reader(open('data/decmber5_0__00003_20201230142725.pcap', 'rb')):
 #for ts, pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap', 'rb')):
     packets += 1
     total_packets += 1 
@@ -204,6 +204,7 @@ for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00003_20201218162044.
 # TCP analysis
 tcp_analysis.tcp_port_scan(tcp_flows, other_tcp, tcp_hport_scans, tcp_lport_scans)
 tcp_analysis.tcp_network_scan(tcp_srcs, other_tcp, tcp_hnetwork_scans, tcp_lnetwork_scans)
+print('tcp check 1')
 tcp_analysis.one_flow(tcp_one_flows, other_tcp, tcp_oflow_final)
 tcp_analysis.tcp_backscatter(tcp_backscatters, tcp_bacsckatter_final)
 tcp_analysis.tcp_fragment(tcp_srcs, other_tcp, tcp_fragment)
@@ -212,6 +213,7 @@ tcp_analysis.small_syn(small_syns, other_tcp, small_syns_final)
 # UDP analysis
 udp_analysis.udp_port_scan(udp_flows, other_udp, udp_hport_scans, udp_lport_scans)
 udp_analysis.udp_network_scan(udp_srcs, other_udp, udp_hnetwork_scans, udp_lnetwork_scans)
+print('udp check 1')
 udp_analysis.one_flow(udp_one_flows, other_udp, udp_oflow_final)
 udp_analysis.udp_backscatter(udp_backscatters, udp_backscatter_final)
 udp_analysis.udp_fragment(udp_srcs, other_udp, udp_fragment)
@@ -228,13 +230,14 @@ tcp_analysis.tcp_remove_key_other(other_tcp, tcp_hport_scans, tcp_lport_scans, t
 udp_analysis.udp_remove_key_other(other_udp, udp_hport_scans, udp_lport_scans, udp_hnetwork_scans, udp_lnetwork_scans, udp_oflow_final, small_udps_final)
 icmp_analysis.icmp_remove_key_other(other_icmp, icmp_hnetwork_scans, icmp_lnetwork_scans, small_pings_final)
 
+print('Anlysis part 1 done')
 
 # Unique ip lists
 # TCP
-unique_tcp_hport_scans = set(key[0] for key in udp_hport_scans.keys())
-unique_tcp_lport_scans = set(key[0] for key in udp_lport_scans.keys())
-unique_tcp_hnetwork_scans = set(key[0] for key in udp_hnetwork_scans.keys())
-unique_tcp_lnetwork_scans = set(key[0] for key in udp_lnetwork_scans.keys())
+unique_tcp_hport_scans = set(key[0] for key in tcp_hport_scans.keys())
+unique_tcp_lport_scans = set(key[0] for key in tcp_lport_scans.keys())
+unique_tcp_hnetwork_scans = set(key[0] for key in tcp_hnetwork_scans.keys())
+unique_tcp_lnetwork_scans = set(key[0] for key in tcp_lnetwork_scans.keys())
 unique_tcp_one_flow = set(tcp_oflow_final.keys())
 unique_tcp_back = set(tcp_bacsckatter_final.keys())
 unique_tcp_fragment = set(tcp_fragment.keys())
@@ -620,43 +623,50 @@ with open('december_fukuda_unique_src.txt', 'a') as f:
     #f.write(f'Other Traffic {other}\n')
     #f.write("---------------------\n") 
 
-""" with open('tcp_port_scans_fukuda.txt', 'a') as f:
-    f.write(f'TCP Heavy Port scans: {tcp_hport_scans}\n')
-    f.write(f'TCP Light Port scans: {tcp_lport_scans}\n')
-with open('tcp_network_scans_fukuda.txt', 'a') as f:
-    f.write(f'TCP Heavy Network scans: {tcp_hnetwork_scans}\n')
-    f.write(f'TCP Light Network scans: {tcp_lnetwork_scans}\n')
+""" with open('tcp_heavy_port_scans_fukuda.txt', 'a') as f:
+    f.write(str(tcp_hport_scans))
+with open('tcp_light_port_scans_fukuda.txt', 'a') as f:   
+    f.write(str(tcp_lport_scans))
+with open('tcp_heavy_network_scans_fukuda.txt', 'a') as f:
+    f.write(str(tcp_hnetwork_scans))
+with open('tcp_light_network_scans_fukuda.txt', 'a') as f:   
+    f.write(str(tcp_lnetwork_scans))
 with open('tcp_one_flows_fukuda.txt', 'a') as f:
-    f.write(f'TCP one flows scans: {tcp_oflow_final}\n')
+    f.write(str(tcp_oflow_final))
 with open('tcp_backscatter_fukuda.txt', 'a') as f:
-    f.write(f'TCP backscatter scans: {tcp_bacsckatter_final}\n')
+    f.write(str(tcp_bacsckatter_final))
 with open('tcp_small_fukuda.txt', 'a') as f:
-    f.write(f'TCP small syns scans: {small_syns_final}\n')
+    f.write(str(small_syns_final))
 with open('tcp_other_fukuda.txt', 'a') as f:
-    f.write(f'TCP other scans: {other_tcp}\n')
+    f.write(str(other_tcp))
 
-with open('udp_port_scans_fukuda.txt', 'a') as f:
-    f.write(f'udp Heavy Port scans: {udp_hport_scans}\n')
-    f.write(f'udp Light Port scans: {udp_lport_scans}\n')
-with open('udp_network_scans_fukuda.txt', 'a') as f:
-    f.write(f'udp Heavy Network scans: {udp_hnetwork_scans}\n')
-    f.write(f'udp Light Network scans: {udp_lnetwork_scans}\n')
+with open('udp_heavy_port_scans_fukuda.txt', 'a') as f:
+    f.write(str(udp_hport_scans))
+with open('udp_light_port_scans_fukuda.txt', 'a') as f:   
+    f.write(str(udp_lport_scans))
+with open('udp_heavy_network_scans_fukuda.txt', 'a') as f:
+    f.write(str(udp_hnetwork_scans))
+with open('udp_light_network_scans_fukuda.txt', 'a') as f:   
+    f.write(str(udp_lnetwork_scans))
 with open('udp_one_flows_fukuda.txt', 'a') as f:
-    f.write(f'udp one flows scans: {udp_oflow_final}\n')
+    f.write(str(udp_oflow_final))
+with open('fragment_fukuda.txt', 'a') as f:
+    f.write(str(udp_fragment))
 with open('udp_backscatter_fukuda.txt', 'a') as f:
-    f.write(f'udp backscatter scans: {udp_backscatter_final}\n')
+    f.write(str(udp_backscatter_final))
 with open('udp_small_fukuda.txt', 'a') as f:
-    f.write(f'udp small udp scans: {small_udps_final}\n')
+    f.write(str(small_udps_final))
 with open('udp_other_fukuda.txt', 'a') as f:
-    f.write(f'udp other scans: {other_udp}\n')
+    f.write(str(other_udp))
 
-with open('icmp_network_scans_fukuda.txt', 'a') as f:
-    f.write(f'icmp Heavy Network scans: {icmp_hnetwork_scans}\n')
-    f.write(f'icmp Light Network scans: {icmp_lnetwork_scans}\n')
+with open('icmp_heavy_network_scans_fukuda.txt', 'a') as f:
+    f.write(str(icmp_hnetwork_scans))
+with open('icmp_light_network_scans_fukuda.txt', 'a') as f:   
+    f.write(str(icmp_lnetwork_scans))
 with open('icmp_backscatter_fukuda.txt', 'a') as f:
-    f.write(f'icmp backscatter scans: {icmp_backscatter_final}\n')
+    f.write(str(icmp_backscatter_final))
 with open('icmp_small_fukuda.txt', 'a') as f:
-    f.write(f'icmp small pings scans: {small_pings_final}\n')
+    f.write(str(small_pings_final))
 with open('icmp_other_fukuda.txt', 'a') as f:
-    f.write(f'icmp other scans: {other_icmp}\n')
+    f.write(str(other_icmp))
  """
