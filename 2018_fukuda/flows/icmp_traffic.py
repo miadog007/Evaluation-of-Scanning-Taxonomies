@@ -30,7 +30,7 @@ def icmp_single_src(packet_data, src_ip, icmp_src):
         flow = icmp_src[flow_key]
         flow['num_packets'] += 1
         flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
-    else: 
+    else:
         # Create new icmp_flows
         flow = {
             'dst_ips': set(ip_dst_string),
@@ -42,7 +42,7 @@ def icmp_single_src(packet_data, src_ip, icmp_src):
 
     # Check for fragmented packets
     if (ip_packet.off & dpkt.ip.IP_MF) != 0 or (ip_packet.off & dpkt.ip.IP_OFFMASK) != 0:
-       flow['frag_packets'] += 1
+        flow['frag_packets'] += 1
 
     #  average packets per dst ip
     total_packets = flow['num_packets']
@@ -62,35 +62,35 @@ def icmp_backscatter_check(packet_data, src_ip, icmp_backscatters):
     if not isinstance(eth_packet.data, dpkt.ip.IP) or not isinstance(eth_packet.data.data, dpkt.icmp.ICMP):
         # Skip non-icmp packets
         return None
-    
+
     ip_packet = eth_packet.data
     ip_src = socket.inet_ntoa(ip_packet.src)
     ip_dst = socket.inet_ntoa(ip_packet.dst)
     ip_dst_string = set(str(ip_dst).strip('{}').split(','))
 
-
     if (ip_packet.icmp.type == 0 and ip_packet.icmp.code == 0 or
         ip_packet.icmp.type == 3 or
-        ip_packet.icmp.type == 11 and ip_packet.icmp.type == 0):
-        
+            ip_packet.icmp.type == 11 and ip_packet.icmp.type == 0):
+
         flow_key = (ip_src)
-        
+
         if flow_key in icmp_backscatters:
             # Update the flow information
             flow = icmp_backscatters[flow_key]
             flow['num_packets'] += 1
             flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
-        else: 
-        # Create new icmp_backscatter
+        else:
+            # Create new icmp_backscatter
             flow = {
-            'dst_ips': set(ip_dst_string),
-            'num_packets': 1
-        }
+                'dst_ips': set(ip_dst_string),
+                'num_packets': 1
+            }
         icmp_backscatters[flow_key] = flow
     else:
         return None
-    
-    return flow  
+
+    return flow
+
 
 def small_ping_check(packet_data, src_ip, small_pings):
     '''
@@ -113,13 +113,13 @@ def small_ping_check(packet_data, src_ip, small_pings):
 
         flow_key = (ip_src)
 
-            # Check for icmp_flows that exists
+        # Check for icmp_flows that exists
         if flow_key in small_pings:
             # Update the flow information
             flow = small_pings[flow_key]
             flow['num_packets'] += 1
             flow['dst_ips'].add(socket.inet_ntoa(ip_packet.dst))
-        else: 
+        else:
             # Create new icmp_flows
             flow = {
                 'dst_ips': set(ip_dst_string),
@@ -129,5 +129,5 @@ def small_ping_check(packet_data, src_ip, small_pings):
             small_pings[flow_key] = flow
     else:
         return None
-    
+
     return flow
