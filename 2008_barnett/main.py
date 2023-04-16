@@ -5,173 +5,126 @@ from datetime import datetime
 import time
 from flows import tcp_traffic, udp_traffic, icmp_traffic
 
+
+# Counter fro number of packets and number of minutes
+# Packets reset every minute
 packets = 0
 minutes = 0
 start_time = time.time()
+
+# Counter for number of packets in Packet Capture
 total_packets = 0
 
-# TCP Dicts
+# --------------------------------------------------- 
+# TCP flows
 tcp_flows = {}
-# tcp speed checks
-tcp_slow = {}
-tcp_medium = {}
-tcp_rapid = {}
+
 # tcp dist step 1
-tcp_compare_slow = {}
-tcp_compare_medium = {}
-tcp_compare_rapid = {}
 tcp_compare = {}
 
+# tcp speed checks
+tcp_slow, tcp_medium, tcp_rapid = ({} for i in range(3))
+
 # tcp dist step 2
-tcp_dist_slow = {}
-tcp_dist_medium = {}
-tcp_dist_rapid = {}
-# tcp final stats
+tcp_dist_slow, tcp_dist_medium, tcp_dist_rapid = ({} for i in range(3))
 
 # TCP One-to-One dicts fro Slow, Medium and Rapid
 tcp_onetoone_slow, tcp_onetoone_medium, tcp_onetoone_rapid = ({} for i in range(3))
 
+# tcp one-to-many dicts for Slow, Medium and Rapid
+tcp_onetomany_slow, tcp_onetomany_medium, tcp_onetomany_rapid = ({} for i in range(3))
 
-    
+# tcp many-to-one dicts for Slow, Medium and Rapid
+tcp_manytoone_slow, tcp_manytoone_medium, tcp_manytoone_rapid = ({} for i in range(3))
 
-tcp_onetomany_slow = {}
-tcp_manytoone_slow = {}
-tcp_manytomany_slow = {}
-#Medium
-#tcp_onetoone_medium = {}
-tcp_onetomany_medium = {}
-tcp_manytoone_medium = {}
-tcp_manytomany_medium = {}
-#rapid
-#tcp_onetoone_rapid = {}
-tcp_onetomany_rapid = {}
-tcp_manytoone_rapid = {}
-tcp_manytomany_rapid = {}
-# tcp special
-# slow
-tcp_oto_slow = {}
-tcp_oto_slow_syn = {}
-tcp_oto_slow_ack = {}
-tcp_oto_slow_fin = {}
+# tcp many-to-many dicts for Slow, Medium and Rapid
+tcp_manytomany_slow, tcp_manytomany_medium, tcp_manytomany_rapid = ({} for i in range(3))
 
-tcp_otm_slow = {}
-tcp_otm_slow_syn = {}
-tcp_otm_slow_ack = {}
-tcp_otm_slow_fin = {}
+# tcp Slow one-to-one with flags
+tcp_oto_slow, tcp_oto_slow_syn, tcp_oto_slow_ack, tcp_oto_slow_fin = ({} for i in range(4))
 
-tcp_mto_slow = {}
-tcp_mto_slow_syn = {}
-tcp_mto_slow_ack = {}
-tcp_mto_slow_fin = {}
+# tcp Medium one-to-one with flags
+tcp_oto_medium, tcp_oto_medium_syn, tcp_oto_medium_ack, tcp_oto_medium_fin = ({} for i in range(4))
 
-tcp_mtm_slow = {}
-tcp_mtm_slow_syn = {}
-tcp_mtm_slow_ack = {}
-tcp_mtm_slow_fin = {}
-# medium
-tcp_oto_medium = {}
-tcp_oto_medium_syn = {}
-tcp_oto_medium_ack = {}
-tcp_oto_medium_fin = {}
+# tcp Rapid one-to-one with flags
+tcp_oto_rapid, tcp_oto_rapid_syn, tcp_oto_rapid_ack, tcp_oto_rapid_fin = ({} for i in range(4))
 
-tcp_otm_medium = {}
-tcp_otm_medium_syn = {}
-tcp_otm_medium_ack = {}
-tcp_otm_medium_fin = {}
+# tcp Slow one-to-many with flags
+tcp_otm_slow, tcp_otm_slow_syn, tcp_otm_slow_ack, tcp_otm_slow_fin = ({} for i in range(4))
 
-tcp_mto_medium = {}
-tcp_mto_medium_syn = {}
-tcp_mto_medium_ack = {}
-tcp_mto_medium_fin = {}
+# tcp Medium one-to-many with flags
+tcp_otm_medium, tcp_otm_medium_syn, tcp_otm_medium_ack, tcp_otm_medium_fin = ({} for i in range(4))
 
-tcp_mtm_medium = {}
-tcp_mtm_medium_syn = {}
-tcp_mtm_medium_ack = {}
-tcp_mtm_medium_fin = {}
-# rapid
-tcp_oto_rapid = {}
-tcp_oto_rapid_syn = {}
-tcp_oto_rapid_ack = {}
-tcp_oto_rapid_fin = {}
+# tcp Rapid one-to-many with flags
+tcp_otm_rapid, tcp_otm_rapid_syn, tcp_otm_rapid_ack, tcp_otm_rapid_fin = ({} for i in range(4))
 
-tcp_otm_rapid = {}
-tcp_otm_rapid_syn = {}
-tcp_otm_rapid_ack = {}
-tcp_otm_rapid_fin = {}
+# tcp Slow many-to-one with flags
+tcp_mto_slow, tcp_mto_slow_syn, tcp_mto_slow_ack, tcp_mto_slow_fin = ({} for i in range(4))
 
-tcp_mto_rapid = {}
-tcp_mto_rapid_syn = {}
-tcp_mto_rapid_ack = {}
-tcp_mto_rapid_fin = {}
+# tcp Medium many-to-one with flags
+tcp_mto_medium, tcp_mto_medium_syn, tcp_mto_medium_ack, tcp_mto_medium_fin = ({} for i in range(4))
 
-tcp_mtm_rapid = {}
-tcp_mtm_rapid_syn = {}
-tcp_mtm_rapid_ack = {}
-tcp_mtm_rapid_fin = {}
+# tcp Rapid many-to-one with flags
+tcp_mto_rapid, tcp_mto_rapid_syn, tcp_mto_rapid_ack, tcp_mto_rapid_fin = ({} for i in range(4))
 
-# UDP Dicts
+# tcp Slow many-to-many with flags
+tcp_mtm_slow, tcp_mtm_slow_syn, tcp_mtm_slow_ack, tcp_mtm_slow_fin = ({} for i in range(4))
+
+# tcp Medium many-to-many with flags
+tcp_mtm_medium, tcp_mtm_medium_syn, tcp_mtm_medium_ack, tcp_mtm_medium_fin = ({} for i in range(4))
+
+# tcp Rapid many-to-many with flags
+tcp_mtm_rapid, tcp_mtm_rapid_syn, tcp_mtm_rapid_ack, tcp_mtm_rapid_fin = ({} for i in range(4))
+
+# --------------------------------------------------- 
+# udp flows
 udp_flows = {}
-# UDP speed check
-udp_slow = {}
-udp_medium = {}
-udp_rapid = {}
-# UDP dist step 1
-udp_compare_slow = {}
-udp_compare_medium = {}
-udp_compare_rapid = {}
-udp_compare = {}
-# UDP dist step 2
-udp_dist_slow = {}
-udp_dist_medium = {}
-udp_dist_rapid = {}
-# UDP final stats
-#Slow
-udp_onetoone_slow = {}
-udp_onetomany_slow = {}
-udp_manytoone_slow = {}
-udp_manytomany_slow = {}
-#Medium
-udp_onetoone_medium = {}
-udp_onetomany_medium = {}
-udp_manytoone_medium = {}
-udp_manytomany_medium = {}
-#rapid
-udp_onetoone_rapid = {}
-udp_onetomany_rapid = {}
-udp_manytoone_rapid = {}
-udp_manytomany_rapid = {}
 
-# ICMP Dicts
+# udp dist step 1
+udp_compare = {}
+
+# udp speed checks
+udp_slow, udp_medium, udp_rapid = ({} for i in range(3))
+
+# udp dist step 2
+udp_dist_slow, udp_dist_medium, udp_dist_rapid = ({} for i in range(3))
+
+# udp One-to-One dicts fro Slow, Medium and Rapid
+udp_onetoone_slow, udp_onetoone_medium, udp_onetoone_rapid = ({} for i in range(3))
+
+# udp one-to-many dicts for Slow, Medium and Rapid
+udp_onetomany_slow, udp_onetomany_medium, udp_onetomany_rapid = ({} for i in range(3))
+
+# udp many-to-one dicts for Slow, Medium and Rapid
+udp_manytoone_slow, udp_manytoone_medium, udp_manytoone_rapid = ({} for i in range(3))
+
+# udp many-to-many dicts for Slow, Medium and Rapid
+udp_manytomany_slow, udp_manytomany_medium, udp_manytomany_rapid = ({} for i in range(3))
+
+# --------------------------------------------------- 
+# icmp flows
 icmp_flows = {}
-# ICMP speed checks
-icmp_slow = {}
-icmp_medium = {}
-icmp_rapid = {}
-# ICMP dist step 1
-icmp_compare_slow = {}
-icmp_compare_medium = {}
-icmp_compare_rapid = {}
+
+# icmp dist step 1
 icmp_compare = {}
-# ICMP dist step 2
-icmp_dist_slow = {}
-icmp_dist_medium = {}
-icmp_dist_rapid = {}
-# ICMP final stats
-#Slow
-icmp_onetoone_slow = {}
-icmp_onetomany_slow = {}
-icmp_manytoone_slow = {}
-icmp_manytomany_slow = {}
-#Medium
-icmp_onetoone_medium = {}
-icmp_onetomany_medium = {}
-icmp_manytoone_medium = {}
-icmp_manytomany_medium = {}
-#rapid
-icmp_onetoone_rapid = {}
-icmp_onetomany_rapid = {}
-icmp_manytoone_rapid = {}
-icmp_manytomany_rapid = {}
+
+# icmp speed checks
+icmp_slow, icmp_medium, icmp_rapid = ({} for i in range(3))
+
+# icmp dist step 2
+icmp_dist_slow, icmp_dist_medium, icmp_dist_rapid = ({} for i in range(3))
+
+# icmp One-to-One dicts fro Slow, Medium and Rapid
+icmp_onetoone_slow, icmp_onetoone_medium, icmp_onetoone_rapid = ({} for i in range(3))
+
+# icmp one-to-many dicts for Slow, Medium and Rapid
+icmp_onetomany_slow, icmp_onetomany_medium, icmp_onetomany_rapid = ({} for i in range(3))
+
+# icmp many-to-one dicts for Slow, Medium and Rapid
+icmp_manytoone_slow, icmp_manytoone_medium, icmp_manytoone_rapid = ({} for i in range(3))
+
+# icmp many-to-many dicts for Slow, Medium and Rapid
+icmp_manytomany_slow, icmp_manytomany_medium, icmp_manytomany_rapid = ({} for i in range(3))
 
 # set of ip's
 ip_src = set()
@@ -179,21 +132,15 @@ tcp_src = set()
 udp_src = set()
 icmp_src = set()
 
+# Count for "Other" Traffic
 other = 0
 
-'''
-Flows are based on src, dst, dport
-Speed based on avrg speed for packets in flow
-distrubution are based on speed, flags, src, dst, dport
-'''
 
-#for ts, pkt in dpkt.pcap.Reader(open('data/december5_00000_20201230060725.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/jan_packets_00005_20210130091834.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/decmber_packets_00000_20201201074044.pcap', 'rb')):
-#for ts, pkt in dpkt.pcap.Reader(open('data/feb4_00001_20210225011928.pcap', 'rb')):
 for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
     '''
-    
+    Flows are based on src, dst, dport
+    Speed based on avrg speed for packets in flow
+    distrubution are based on speed, flags, src, dst, dport
     '''
     packets += 1
     total_packets += 1 
@@ -222,12 +169,15 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
                     flow = ([(src_ip, src_port), (dst_ip, dst_port)])
                     flow = (flow[0], flow[1])
 
+                    # Update count SYN, ACK and FIN flags
                     if flows.get(flow):
                         flow_data = flows[flow][-1]
                         flow_data['packet_count'] += 1
                         flow_data['SYN_count'] += 1 if ip.data.flags & dpkt.tcp.TH_SYN else 0
                         flow_data['ACK_count'] += 1 if ip.data.flags & dpkt.tcp.TH_ACK else 0
                         flow_data['FIN_count'] += 1 if ip.data.flags & dpkt.tcp.TH_FIN else 0
+
+                        # Update first and last packet in flow
                         if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') < flow_data['first_packet']:
                             flow_data['first_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                         if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') > flow_data['last_packet']:
@@ -235,6 +185,7 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
                     else:
                         flows[flow] = [{
                             'packet_count': 1,
+                            # Count SYN, ACK and FIN flags in flow
                             'SYN_count': 1 if ip.data.flags & dpkt.tcp.TH_SYN else 0,
                             'ACK_count': 1 if ip.data.flags & dpkt.tcp.TH_ACK else 0,
                             'FIN_count': 1 if ip.data.flags & dpkt.tcp.TH_FIN else 0,
@@ -266,6 +217,8 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
                 if flows.get(flow):
                     flow_data = flows[flow][-1]
                     flow_data['packet_count'] += 1
+
+                    # Update first and last packet in flow
                     if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') < flow_data['first_packet']:
                             flow_data['first_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                     if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') > flow_data['last_packet']:
@@ -278,6 +231,8 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
                     }]
             
             elif ip.p == dpkt.ip.IP_PROTO_ICMP:
+
+                # Extra checks for ICMP
                 if hasattr(ip, 'icmp'):
                     if hasattr(ip.icmp, 'type'):
 
@@ -295,7 +250,11 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
                         if flows.get(flow):
                             flow_data = flows[flow][-1]
                             flow_data['packet_count'] += 1
+
+                            # Update count pings
                             flow_data['pings'] += 1 if ip.icmp.type == 8 and ip.icmp.code == 0 else 0
+
+                            # Update first and last packet in flow
                             if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') < flow_data['first_packet']:
                                 flow_data['first_packet'] = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                             if datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f') > flow_data['last_packet']:
@@ -308,11 +267,8 @@ for ts,pkt in dpkt.pcap.Reader(open('data/CaptureOne.pcap','rb')):
                                 'last_packet': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
                             }]
                     else:
-                        
-                        print('gotcah 2')
                         other += 1
                 else:
-                    print('gotcah 1')
                     other += 1
             else:
                 other += 1

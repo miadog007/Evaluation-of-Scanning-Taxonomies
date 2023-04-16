@@ -1,35 +1,23 @@
-# Port
-compare(barnett_oto_slow_icmp, barnett_oto_medium_icmp, barnett_oto_rapid_icmp, fukuda_icmp_port, 'icmp-port', 'one-to-one')
-compare(barnett_otm_slow_icmp, barnett_otm_medium_icmp, barnett_otm_rapid_icmp, fukuda_icmp_port, 'icmp-port', 'one-to-many')
-compare(barnett_mto_slow_icmp, barnett_mto_medium_icmp, barnett_mto_rapid_icmp, fukuda_icmp_port, 'icmp-port', 'many-to-one')
-compare(barnett_mtm_slow_icmp, barnett_mtm_medium_icmp, barnett_mtm_rapid_icmp, fukuda_icmp_port, 'icmp-port', 'many-to-many')
+# icmp flows
+icmp_flows = {}
 
-# Network
-compare(barnett_oto_slow_icmp, barnett_oto_medium_icmp, barnett_oto_rapid_icmp, fukuda_icmp_network, 'icmp-network', 'one-to-one')
-compare(barnett_otm_slow_icmp, barnett_otm_medium_icmp, barnett_otm_rapid_icmp, fukuda_icmp_network, 'icmp-network', 'one-to-many')
-compare(barnett_mto_slow_icmp, barnett_mto_medium_icmp, barnett_mto_rapid_icmp, fukuda_icmp_network, 'icmp-network', 'many-to-one')
-compare(barnett_mtm_slow_icmp, barnett_mtm_medium_icmp, barnett_mtm_rapid_icmp, fukuda_icmp_network, 'icmp-network', 'many-to-many')
+# icmp dist step 1
+icmp_compare = {}
 
-# One flow
-compare(barnett_oto_slow_icmp, barnett_oto_medium_icmp, barnett_oto_rapid_icmp, fukuda_icmp_oflow, 'icmp-oflow', 'one-to-one')
-compare(barnett_otm_slow_icmp, barnett_otm_medium_icmp, barnett_otm_rapid_icmp, fukuda_icmp_oflow, 'icmp-oflow', 'one-to-many')
-compare(barnett_mto_slow_icmp, barnett_mto_medium_icmp, barnett_mto_rapid_icmp, fukuda_icmp_oflow, 'icmp-oflow', 'many-to-one')
-compare(barnett_mtm_slow_icmp, barnett_mtm_medium_icmp, barnett_mtm_rapid_icmp, fukuda_icmp_oflow, 'icmp-oflow', 'many-to-many')
+# icmp speed checks
+icmp_slow, icmp_medium, icmp_rapid = ({} for i in range(3))
 
-# Backscatter
-compare(barnett_oto_slow_icmp, barnett_oto_medium_icmp, barnett_oto_rapid_icmp, fukuda_icmp_back, 'icmp-back', 'one-to-one')
-compare(barnett_otm_slow_icmp, barnett_otm_medium_icmp, barnett_otm_rapid_icmp, fukuda_icmp_back, 'icmp-back', 'one-to-many')
-compare(barnett_mto_slow_icmp, barnett_mto_medium_icmp, barnett_mto_rapid_icmp, fukuda_icmp_back, 'icmp-back', 'many-to-one')
-compare(barnett_mtm_slow_icmp, barnett_mtm_medium_icmp, barnett_mtm_rapid_icmp, fukuda_icmp_back, 'icmp-back', 'many-to-many')
+# icmp dist step 2
+icmp_dist_slow, icmp_dist_medium, icmp_dist_rapid = ({} for i in range(3))
 
-# Small
-compare(barnett_oto_slow_icmp, barnett_oto_medium_icmp, barnett_oto_rapid_icmp, fukuda_icmp_small, 'icmp-small', 'one-to-one')
-compare(barnett_otm_slow_icmp, barnett_otm_medium_icmp, barnett_otm_rapid_icmp, fukuda_icmp_small, 'icmp-small', 'one-to-many')
-compare(barnett_mto_slow_icmp, barnett_mto_medium_icmp, barnett_mto_rapid_icmp, fukuda_icmp_small, 'icmp-small', 'many-to-one')
-compare(barnett_mtm_slow_icmp, barnett_mtm_medium_icmp, barnett_mtm_rapid_icmp, fukuda_icmp_small, 'icmp-small', 'many-to-many')
+# icmp One-to-One dicts fro Slow, Medium and Rapid
+icmp_onetoone_slow, icmp_onetoone_medium, icmp_onetoone_rapid = ({} for i in range(3))
 
-# Other
-compare(barnett_oto_slow_icmp, barnett_oto_medium_icmp, barnett_oto_rapid_icmp, fukuda_icmp_other, 'icmp-other', 'one-to-one')
-compare(barnett_otm_slow_icmp, barnett_otm_medium_icmp, barnett_otm_rapid_icmp, fukuda_icmp_other, 'icmp-other', 'one-to-many')
-compare(barnett_mto_slow_icmp, barnett_mto_medium_icmp, barnett_mto_rapid_icmp, fukuda_icmp_other, 'icmp-other', 'many-to-one')
-compare(barnett_mtm_slow_icmp, barnett_mtm_medium_icmp, barnett_mtm_rapid_icmp, fukuda_icmp_other, 'icmp-other', 'many-to-many')
+# icmp one-to-many dicts for Slow, Medium and Rapid
+icmp_onetomany_slow, icmp_onetomany_medium, icmp_onetomany_rapid = ({} for i in range(3))
+
+# icmp many-to-one dicts for Slow, Medium and Rapid
+icmp_manytoone_slow, icmp_manytoone_medium, icmp_manytoone_rapid = ({} for i in range(3))
+
+# icmp many-to-many dicts for Slow, Medium and Rapid
+icmp_manytomany_slow, icmp_manytomany_medium, icmp_manytomany_rapid = ({} for i in range(3))

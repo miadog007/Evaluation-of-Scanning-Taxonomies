@@ -1,12 +1,45 @@
+'''
+Setting global parameters for analysing
+'''
+# Number of IP Destinations
+N1 = 5
+
+# Number of Destination ports
+N2 = 5
+
+# Number of Packets
+N3 = 15
+
+# Precentage
+R = 50
+
+# Packets per Destination IP/Port
+M = 3
+
+
 def icmp_network_scan(icmp_srcs, icmp_other, icmp_hnetwork_scans, icmp_lnetwork_scans):
     '''
-    Check if flow is Network Scan
+    Function for finding Network scans,
+    Adding to each flow:
+        Key:   
+            IP source
+        Values:
+            IP Destinations
+            Number of packets
+            Destination IPs count
+            Avrage Number of packets per Destination IP
+    Input:
+        icmp_other
+        icmp_network_flows dict
     Returns:
-        Number of packets that is Network Scan
+        icmp_other
+        icmp_hnetwork_scans
+        icmp_lnetwork_scans
     '''
     flows = icmp_srcs
+
+    global N1, M
     N1 = 5
-    R = 0.50
     M = 3
 
     for flow_key in flows:
@@ -16,7 +49,6 @@ def icmp_network_scan(icmp_srcs, icmp_other, icmp_hnetwork_scans, icmp_lnetwork_
         dst_ips_count = len(flow['dst_ips'])
         avg_packet_ip = flow['avg_packets_per_dst_ip']
         packets = flow['num_packets']
-        src_ip = flow_key[0]
 
         # Check if icmp Port Scan Heavy/Light
         if dst_ips_count >= N1 and avg_packet_ip > M:
@@ -31,7 +63,17 @@ def icmp_network_scan(icmp_srcs, icmp_other, icmp_hnetwork_scans, icmp_lnetwork_
 
 def icmp_backscatter(icmp_backscatters, icmp_backscatter_final):
     '''
-    Check number of backscatter
+    Function for finding Backscatter,
+    Adding to each flow:
+        Key:   
+            IP source
+        Values:
+            IP Destinations
+            Number of packets
+    Input:
+        icmp_backscatters dict
+    Returns:
+        icmp_backscatter_final dict
     '''
     for flow_key in icmp_backscatters:
         flow = icmp_backscatters[flow_key]
@@ -43,6 +85,23 @@ def icmp_backscatter(icmp_backscatters, icmp_backscatter_final):
     return icmp_backscatter_final
 
 def icmp_fragment(icmp_srcs, icmp_other, icmp_fragment):
+    '''
+    Function for finding Fragment,
+    Adding to each flow:
+        Key:   
+            IP source
+        Values:
+            IP Destination
+            Number of packets
+    Input:
+    icmp_other
+        icmp_port_flows
+        icmp_network_flows
+    Returns:
+        icmp_other
+        icmp_fragemnt
+    ''' 
+    
     flows = icmp_srcs
 
     for flow_key in flows:
@@ -56,7 +115,7 @@ def icmp_fragment(icmp_srcs, icmp_other, icmp_fragment):
         if frag_packet >= 1:
             icmp_fragment[flow_key] = {'dst_ips': dst_ips, 'num_packets': packets}
             if src_ip in icmp_other:
-                icmp_other_remove(flow_key, flow, icmp_other)
+                icmp_other_remove(flow_key, icmp_other)
         else:
             icmp_other_add(flow_key, flow, icmp_other, dst_ips_str, 'backscatter')
 
@@ -64,14 +123,25 @@ def icmp_fragment(icmp_srcs, icmp_other, icmp_fragment):
 
 def small_ping(small_pings, icmp_other, small_pings_final):
     '''
-    Check for Small icmp
+    Function for finding Small Ping,
+    Adding to each flow:
+        Key:   
+            IP source
+        Values:
+            IP Destination
+            Destination Port
+            Destination IPs count
+            Number of packets
+    Input:
+        icmp_other
+        small_pings dict
     Returns:
-        Number of Samll icmp
+        icmp_other
+        small_pings_final dict
     '''
     flows = small_pings
-    N1 = 5
-    N2 = 5
-    N3 = 15
+
+    global N1, N3
 
     for flow_key in flows:
         flow = flows[flow_key]
@@ -84,9 +154,9 @@ def small_ping(small_pings, icmp_other, small_pings_final):
         if dst_ips_count < N1 and packets <= N3:
             small_pings_final[flow_key] = {'dst_ips': dst_ips, 'dst_ips_count': dst_ips_count, 'num_packets': packets}
             if src_ip in icmp_other:
-                icmp_other_remove(flow_key, flow, icmp_other)
+                icmp_other_remove(flow_key, icmp_other)
         else:
-            icmp_other_add(flow_key, flow, icmp_other, dst_ips_str, 'Small UDP')
+            icmp_other_add(flow_key, flow, icmp_other, dst_ips_str, 'Small icmp')
 
     return icmp_other, small_pings_final
 
@@ -96,7 +166,6 @@ def icmp_other_add(flow_key, flow, icmp_other, dst_ips, scan_type):
     '''
 
     src_ip = flow_key[0]
-    packets = flow['num_packets']
 
     if src_ip in icmp_other:
         flow = icmp_other[src_ip]
@@ -113,12 +182,11 @@ def icmp_other_add(flow_key, flow, icmp_other, dst_ips, scan_type):
 
     return icmp_other
 
-def icmp_other_remove(flow_key, flow, icmp_other):
+def icmp_other_remove(flow_key, icmp_other):
     '''
     Remove from icmp_other
     '''
     src_ip = flow_key[0]
-    packets = flow['num_packets']
 
     if src_ip in icmp_other:
         del icmp_other[src_ip]
@@ -128,6 +196,15 @@ def icmp_other_remove(flow_key, flow, icmp_other):
     return icmp_other
 
 def icmp_remove_key_other(icmp_other, icmp_hnetwork_scans, icmp_lnetwork_scans, small_pings_final):
+    '''
+    Removes all Source IPs categories in an anomaly
+    
+    Input:
+        All icmp dicts
+    Output:
+        icmp_other dict
+    '''
+    
     keys_to_remove = {key[0] for key in [*icmp_hnetwork_scans.keys(), *icmp_lnetwork_scans.keys()]}
     
     for key in list(icmp_other.keys()):

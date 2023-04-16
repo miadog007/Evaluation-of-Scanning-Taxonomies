@@ -4,6 +4,10 @@ from datetime import datetime
 def udp_compare_src(speed_list, udp_compare_flows):
     '''
     Function to compare ip src to put togheter scan flows from different ports
+    Input:
+        udp_flows
+    Returns:
+        udp_compare_flow
     '''
 
     # iterate through the udp_slow dictionary
@@ -21,6 +25,8 @@ def udp_compare_src(speed_list, udp_compare_flows):
             # if it does, update the existing flow
             flow = udp_compare_flows[flow_key]
             flow['packet_count'] += value[0]['packet_count']
+
+            # Update Scan periode 
             if value[0]['first_packet'] < flow['first_packet']:
                 flow['first_packet'] = value[0]['first_packet']
                 first_hour = datetime.strptime(
@@ -31,12 +37,15 @@ def udp_compare_src(speed_list, udp_compare_flows):
                 last_hour = datetime.strptime(
                     value[0]['last_packet'], '%Y-%m-%d %H:%M:%S.%f')
                 flow['scan_periode-2'] = last_hour.strftime('%d-%H-%M')
+
+            # Find average time between packets
             if flow['packet_count'] > 0:
                 time_diff = datetime.strptime(
                     flow['last_packet'], '%Y-%m-%d %H:%M:%S.%f') - datetime.strptime(flow['first_packet'], '%Y-%m-%d %H:%M:%S.%f')
                 avg_time = time_diff / (flow['packet_count'] - 1)
                 flow['avg_time_between_packets'] = round(
                     avg_time.total_seconds(), 2)
+                
             if dst_ip not in flow['ip_dst']:
                 flow['ip_dst'].append(dst_ip)
             if dst_port not in flow['dst_ports']:
@@ -63,8 +72,13 @@ def udp_compare_src(speed_list, udp_compare_flows):
 
 def udp_speed(udp_compare_flows, udp_slow, udp_medium, udp_rapid):
     '''
-    Compare streams to find: 
-        Ports + distrubution
+    Function to find speed of scan, based on average time between packets
+    Input:
+        udp_compare_flows
+    Returns:
+        udp_slow
+        udp_medium
+        udp_rapid
     '''
 
     for flow, packets in udp_compare_flows.items():
@@ -76,15 +90,20 @@ def udp_speed(udp_compare_flows, udp_slow, udp_medium, udp_rapid):
         else:
             udp_rapid[flow] = packets
 
-    # print(udp_slow)
     return udp_slow, udp_medium, udp_rapid
 
 
 def find_dist(speed_lists, final_dist):
     '''
-    Find final dist
+    Function to compare destination IPs to find sitrubution
+    Input:
+        Takes in one speed_list
+        speeed_list
+    Returns:
+        Final Distrubution list
+        final_dist
     '''
-    # iterate through the udp_slow dictionary
+    # iterate through the speed_list dictionary
     for key, value in speed_lists.items():
         # extract the source IP address, destination IP address, and destination port
         src_ip = key
@@ -95,6 +114,7 @@ def find_dist(speed_lists, final_dist):
         else:
             ports = 'one'
 
+        # Establish pariode of scan
         scan_periode1 = value['scan_periode-1']
         scan_periode2 = value['scan_periode-2']
 
@@ -138,6 +158,17 @@ def find_dist(speed_lists, final_dist):
 
 
 def group_dist(final_dist, one_to_one, one_to_many, many_to_one, many_to_many):
+    '''
+    Function to place flows groups for distrubution
+    Input:
+        final_dist
+    Returns:
+        one-to-one
+        one-to-many
+        many-to-one
+        many-to-many
+    '''
+    
     for key, value in final_dist.items():
         num_dst_ips = len(key[0])
         num_src_ips = value['ip_src_count']

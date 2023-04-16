@@ -3,7 +3,11 @@ from datetime import datetime
 
 def icmp_compare_src(speed_list, icmp_compare_flows):
     '''
-    Function to compare ip src to put togheter
+    Function to compare ip src to put togheter scan flows from different ports
+    Input:
+        icmp_flows
+    Returns:
+        icmp_compare_flow
     '''
 
     # iterate through the icmp_slow dictionary
@@ -20,6 +24,8 @@ def icmp_compare_src(speed_list, icmp_compare_flows):
             # if it does, update the existing flow
             flow = icmp_compare_flows[flow_key]
             flow['packet_count'] += value[0]['packet_count']
+
+            # Update Scan periode
             if value[0]['first_packet'] < flow['first_packet']:
                 flow['first_packet'] = value[0]['first_packet']
                 first_hour = datetime.strptime(
@@ -30,6 +36,8 @@ def icmp_compare_src(speed_list, icmp_compare_flows):
                 last_hour = datetime.strptime(
                     value[0]['last_packet'], '%Y-%m-%d %H:%M:%S.%f')
                 flow['scan_periode-2'] = last_hour.strftime('%d-%H-%M')
+
+            # Find average time between packets
             if flow['packet_count'] > 0:
                 time_diff = datetime.strptime(
                     flow['last_packet'], '%Y-%m-%d %H:%M:%S.%f') - datetime.strptime(flow['first_packet'], '%Y-%m-%d %H:%M:%S.%f')
@@ -68,8 +76,13 @@ def icmp_compare_src(speed_list, icmp_compare_flows):
 
 def icmp_speed(icmp_compare_flows, icmp_slow, icmp_medium, icmp_rapid):
     '''
-    Compare streams to find: 
-        Ports + distrubution
+    Function to find speed of scan, based on average time between packets
+    Input:
+        icmp_compare_flows
+    Returns:
+        icmp_slow
+        icmp_medium
+        icmp_rapid
     '''
 
     for flow, packets in icmp_compare_flows.items():
@@ -86,13 +99,21 @@ def icmp_speed(icmp_compare_flows, icmp_slow, icmp_medium, icmp_rapid):
 
 def find_dist(speed_list, final_dist):
     '''
-    Find final dist
+    Function to compare destination IPs to find sitrubution
+    Input:
+        Takes in one speed_list
+        speeed_list
+    Returns:
+        Final Distrubution list
+        final_dist
     '''
     # iterate through the icmp_slow dictionary
     for key, value in speed_list.items():
         # extract the source IP address and destination IP address
         src_ip = key
         dst_ips = value['ip_dst']
+
+        # Establish pariode of scan
         scan_periode1 = value['scan_periode-1']
         scan_periode2 = value['scan_periode-2']
 
@@ -133,6 +154,17 @@ def find_dist(speed_list, final_dist):
 
 
 def group_dist(final_dist, one_to_one, one_to_many, many_to_one, many_to_many):
+    '''
+    Function to place flows groups for distrubution
+    Input:
+        final_dist
+    Returns:
+        one-to-one
+        one-to-many
+        many-to-one
+        many-to-many
+    '''
+    
     for key, value in final_dist.items():
         num_dst_ips = len(key[0])
         num_src_ips = value['ip_src_count']
