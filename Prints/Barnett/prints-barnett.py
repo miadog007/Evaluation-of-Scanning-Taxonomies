@@ -383,6 +383,34 @@ with open('ip-list/icmp_manytomany_medium_barnett.txt', 'w') as f:
 with open('ip-list/icmp_manytomany_rapid_barnett.txt', 'w') as f:
     f.write(icmp_mtm_rapid_f)
 
+
+port_counts = {}
+for key in tcp_onetomany_slow.keys():
+    if key[1] != 'many':
+        port = key[1]
+        if port in port_counts:
+            port_counts[port] += 1
+        else:
+            port_counts[port] = 1
+
+for port, count in port_counts.items():
+    if port_counts[port] > 1000:
+        print(f"Port {port} has {count} keys that are not 'many'")
+
+print('one to one')
+port_counts = {}
+for key in tcp_onetoone_rapid.keys():
+    if key[1] != 'many':
+        port = key[1]
+        if port in port_counts:
+            port_counts[port] += 1
+        else:
+            port_counts[port] = 1
+
+for port, count in port_counts.items():
+    if port_counts[port] > 1000:
+        print(f"Port {port} has {count} keys that are not 'many'")
+
 """ for val in tcp_onetomany_medium.values():
     if val['src_ips'] == '119.45.157.33':
        print(val['packet_count'])

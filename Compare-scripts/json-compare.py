@@ -39,6 +39,8 @@ def compare(barnett_slow, barnett_medium, barnett_rapid, fukuda_file, anomaly_fu
         file.write('------------------------\n')
 
 
+
+
 # Barnet files
 # TCP
 barnett_oto_slow_tcp = 'Compare-scripts/barnett/ip_list/tcp_onetoone_slow_barnett.txt'
