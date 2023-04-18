@@ -19,14 +19,16 @@ def compare(barnett_slow, barnett_medium, barnett_rapid, fukuda_file, anomaly_fu
     medium_count = len(medium)
     rapid_count = len(rapid)
 
-    count_slow = len(set(slow).intersection(set(fukuda_ips)))
-    count_medium = len(set(medium).intersection(set(fukuda_ips)))
-    count_rapid = len(set(rapid).intersection(set(fukuda_ips)))
+    count_slow = len(set(fukuda_ips).intersection(set(slow)))
+    count_medium = len(set(fukuda_ips).intersection(set(medium)))
+    count_rapid = len(set(fukuda_ips).intersection(set(rapid)))
 
-    with open(f'{anomaly_fuk}.txt', 'a') as file:
+    barnett_ips = slow_count + medium_count + rapid_count
+
+    with open(f'{anomaly_fuk}-mirror.txt', 'a') as file:
         file.write(f'{anomaly_bar}\n')
         file.write(
-            f'Total ICMP other uniqe ips in fukuda: {fukuda_ips_count}\n')
+            f'Total barnett ips: {barnett_ips}\n')
         file.write(f'Ips in Slow: {slow_count}\n')
         file.write(f'Ips in Slow and {anomaly_fuk}: {count_slow}\n')
         file.write('------------------------\n')
@@ -112,7 +114,7 @@ fukuda_udp_other = 'Compare-scripts/fukuda/ip_list/udp_other_ip.txt'
 # ICMP
 fukuda_icmp_network = 'Compare-scripts/fukuda/ip_list/icmp_network_fukuda.txt'
 fukuda_icmp_back = 'Compare-scripts/fukuda/ip_list/icmp_back_fukuda.txt'
-fukuda_icmp_small = 'Compare-scripts/fukuda/ip_list/icmp_small_ip.txt'
+fukuda_icmp_small = 'Compare-scripts/fukuda/ip_list/icmp_small-ip.txt'
 
 # TCP comparions
 # Port

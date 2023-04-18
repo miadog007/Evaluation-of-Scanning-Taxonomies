@@ -85,7 +85,7 @@ ip_src = set()
 other = 0
 
 # Insert Packet Capture
-pcap = 'data/feb_packets_00000_20210201075248.pcap'
+pcap = 'data/mar_packets_00000_20210301072506.pcap'
 #pcap = 'data/CaptureOne.pcap'
 
 # Main functions for finding TCP, UDP or ICMP packets
@@ -180,24 +180,30 @@ for ts, pkt in dpkt.pcap.Reader(open(pcap, 'rb')):
 
     # Find ICMP
         elif ip.p == dpkt.ip.IP_PROTO_ICMP:
-            src_ip = socket.inet_ntoa(ip.src)
-            dst_ip = socket.inet_ntoa(ip.dst)
+            if hasattr(ip, 'icmp'):
+                if hasattr(ip.icmp, 'type'):
+                    src_ip = socket.inet_ntoa(ip.src)
+                    dst_ip = socket.inet_ntoa(ip.dst)
 
-            # Send to icmp_single_src
-            icmp_src = icmp_traffic.icmp_single_src(pkt, src_ip, icmp_network_flows)
-            if icmp_src is not None:
-                icmp_network_flows[(src_ip)] = icmp_src
+                    # Send to icmp_single_src
+                    icmp_src = icmp_traffic.icmp_single_src(pkt, src_ip, icmp_network_flows)
+                    if icmp_src is not None:
+                        icmp_network_flows[(src_ip)] = icmp_src
 
-            # Send to icmp_backscatter
-            icmp_backscatter = icmp_traffic.icmp_backscatter_check(
-                pkt, icmp_backscatters)
-            if icmp_backscatter is not None:
-                icmp_backscatters[(src_ip)] = icmp_backscatter
+                    # Send to icmp_backscatter
+                    icmp_backscatter = icmp_traffic.icmp_backscatter_check(
+                        pkt, icmp_backscatters)
+                    if icmp_backscatter is not None:
+                        icmp_backscatters[(src_ip)] = icmp_backscatter
 
-            # Send to small_ping
-            small_ping = icmp_traffic.small_ping_check(pkt, small_pings)
-            if small_ping is not None:
-                small_pings[(src_ip)] = small_ping
+                    # Send to small_ping
+                    small_ping = icmp_traffic.small_ping_check(pkt, small_pings)
+                    if small_ping is not None:
+                        small_pings[(src_ip)] = small_ping
+                else:
+                    other += 1
+            else:
+                other += 1
         else:
             other += 1
 
@@ -368,7 +374,7 @@ print("---------------------")
 print(f'Other Traffic {other}')
 print("---------------------")
 
-with open('full-list-feb/feb_1-7_fukuda_unique_src.txt', 'a') as f:
+with open('full-list-mar/mar_1-7_fukuda_unique_src.txt', 'a') as f:
     f.write("---------------------\n")
     f.write('PCAP info:\n')
     f.write(f'Number of packets: {total_packets}\n')
@@ -410,49 +416,49 @@ with open('full-list-feb/feb_1-7_fukuda_unique_src.txt', 'a') as f:
     f.write(f'Other ICMP: {(len(unique_other_icmp))}\n') 
     f.write("---------------------\n")
 
-with open('full-list-feb/tcp_heavy_port_scans_fukuda.txt', 'a') as f:
+with open('full-list-mar/tcp_heavy_port_scans_fukuda.txt', 'a') as f:
     f.write(str(tcp_hport_scans))
-with open('full-list-feb/tcp_light_port_scans_fukuda.txt', 'a') as f:   
+with open('full-list-mar/tcp_light_port_scans_fukuda.txt', 'a') as f:   
     f.write(str(tcp_lport_scans))
-with open('full-list-feb/tcp_heavy_network_scans_fukuda.txt', 'a') as f:
+with open('full-list-mar/tcp_heavy_network_scans_fukuda.txt', 'a') as f:
     f.write(str(tcp_hnetwork_scans))
-with open('full-list-feb/tcp_light_network_scans_fukuda.txt', 'a') as f:   
+with open('full-list-mar/tcp_light_network_scans_fukuda.txt', 'a') as f:   
     f.write(str(tcp_lnetwork_scans))
-with open('full-list-feb/tcp_one_flows_fukuda.txt', 'a') as f:
+with open('full-list-mar/tcp_one_flows_fukuda.txt', 'a') as f:
     f.write(str(tcp_oflow_final))
-with open('full-list-feb/tcp_backscatter_fukuda.txt', 'a') as f:
+with open('full-list-mar/tcp_backscatter_fukuda.txt', 'a') as f:
     f.write(str(tcp_backscatter_final))
-with open('full-list-feb/tcp_small_fukuda.txt', 'a') as f:
+with open('full-list-mar/tcp_small_fukuda.txt', 'a') as f:
     f.write(str(small_syns_final))
-with open('full-list-feb/tcp_other_fukuda.txt', 'a') as f:
+with open('full-list-mar/tcp_other_fukuda.txt', 'a') as f:
     f.write(str(other_tcp))
 
-with open('full-list-feb/udp_heavy_port_scans_fukuda.txt', 'a') as f:
+with open('full-list-mar/udp_heavy_port_scans_fukuda.txt', 'a') as f:
     f.write(str(udp_hport_scans))
-with open('full-list-feb/udp_light_port_scans_fukuda.txt', 'a') as f:   
+with open('full-list-mar/udp_light_port_scans_fukuda.txt', 'a') as f:   
     f.write(str(udp_lport_scans))
-with open('full-list-feb/udp_heavy_network_scans_fukuda.txt', 'a') as f:
+with open('full-list-mar/udp_heavy_network_scans_fukuda.txt', 'a') as f:
     f.write(str(udp_hnetwork_scans))
-with open('full-list-feb/udp_light_network_scans_fukuda.txt', 'a') as f:   
+with open('full-list-mar/udp_light_network_scans_fukuda.txt', 'a') as f:   
     f.write(str(udp_lnetwork_scans))
-with open('full-list-feb/udp_one_flows_fukuda.txt', 'a') as f:
+with open('full-list-mar/udp_one_flows_fukuda.txt', 'a') as f:
     f.write(str(udp_oflow_final))
-with open('full-list-feb/fragment_fukuda.txt', 'a') as f:
+with open('full-list-mar/fragment_fukuda.txt', 'a') as f:
     f.write(str(udp_fragment))
-with open('full-list-feb/udp_backscatter_fukuda.txt', 'a') as f:
+with open('full-list-mar/udp_backscatter_fukuda.txt', 'a') as f:
     f.write(str(udp_backscatter_final))
-with open('full-list-feb/udp_small_fukuda.txt', 'a') as f:
+with open('full-list-mar/udp_small_fukuda.txt', 'a') as f:
     f.write(str(small_udps_final))
-with open('full-list-feb/udp_other_fukuda.txt', 'a') as f:
+with open('full-list-mar/udp_other_fukuda.txt', 'a') as f:
     f.write(str(other_udp))
 
-with open('full-list-feb/icmp_heavy_network_scans_fukuda.txt', 'a') as f:
+with open('full-list-mar/icmp_heavy_network_scans_fukuda.txt', 'a') as f:
     f.write(str(icmp_hnetwork_scans))
-with open('full-list-feb/icmp_light_network_scans_fukuda.txt', 'a') as f:   
+with open('full-list-mar/icmp_light_network_scans_fukuda.txt', 'a') as f:   
     f.write(str(icmp_lnetwork_scans))
-with open('full-list-feb/icmp_backscatter_fukuda.txt', 'a') as f:
+with open('full-list-mar/icmp_backscatter_fukuda.txt', 'a') as f:
     f.write(str(icmp_backscatter_final))
-with open('full-list-feb/icmp_small_fukuda.txt', 'a') as f:
+with open('full-list-mar/icmp_small_fukuda.txt', 'a') as f:
     f.write(str(small_pings_final))
-with open('full-list-feb/icmp_other_fukuda.txt', 'a') as f:
+with open('full-list-mar/icmp_other_fukuda.txt', 'a') as f:
     f.write(str(other_icmp))

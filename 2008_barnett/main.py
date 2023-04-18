@@ -136,7 +136,7 @@ icmp_src = set()
 other = 0
 #pcap = 'data/CaptureOne.pcap'
 # Insert Packet Capture
-pcap = 'data/feb_packets_00000_20210201075248.pcap'
+pcap = 'data/mar_packets_00000_20210301072506.pcap'
 
 # Main functions for finding TCP, UDP or ICMP packets
 for ts, pkt in dpkt.pcap.Reader(open(pcap, 'rb')):
@@ -479,92 +479,92 @@ print(f'Other traffic: {other}')
 print("---------------------")
 
 
-with open('full-list-feb/tcp_onetoone_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_onetoone_slow_barnett.txt', 'w') as f:
     f.write(str(tcp_onetoone_slow))
-with open('full-list-feb/tcp_onetoone_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_onetoone_medium_barnett.txt', 'w') as f:
     f.write(str(tcp_onetoone_medium))
-with open('full-list-feb/tcp_onetoone_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_onetoone_rapid_barnett.txt', 'w') as f:
     f.write(str(tcp_onetoone_rapid)) 
 
-with open('full-list-feb/tcp_manytoone_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_manytoone_slow_barnett.txt', 'w') as f:
     f.write(str(tcp_manytoone_slow))
-with open('full-list-feb/tcp_manytoone_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_manytoone_medium_barnett.txt', 'w') as f:
     f.write(str(tcp_manytoone_medium))
-with open('full-list-feb/tcp_manytoone_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_manytoone_rapid_barnett.txt', 'w') as f:
     f.write(str(tcp_manytoone_rapid)) 
 
-with open('full-list-feb/tcp_onetomany_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_onetomany_slow_barnett.txt', 'w') as f:
     f.write(str(tcp_onetomany_slow))
-with open('full-list-feb/tcp_onetomany_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_onetomany_medium_barnett.txt', 'w') as f:
     f.write(str(tcp_onetomany_medium))
-with open('full-list-feb/tcp_onetomany_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_onetomany_rapid_barnett.txt', 'w') as f:
     f.write(str(tcp_onetomany_rapid)) 
 
-with open('full-list-feb/tcp_manytomany_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_manytomany_slow_barnett.txt', 'w') as f:
     f.write(str(tcp_manytomany_slow))
-with open('full-list-feb/tcp_manytomany_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_manytomany_medium_barnett.txt', 'w') as f:
     f.write(str(tcp_manytomany_medium))
-with open('full-list-feb/tcp_manytomany_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/tcp_manytomany_rapid_barnett.txt', 'w') as f:
     f.write(str(tcp_manytomany_rapid)) 
 
-with open('full-list-feb/udp_onetoone_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_onetoone_slow_barnett.txt', 'w') as f:
     f.write(str(udp_onetoone_slow))
-with open('full-list-feb/udp_onetoone_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_onetoone_medium_barnett.txt', 'w') as f:
     f.write(str(udp_onetoone_medium))
-with open('full-list-feb/udp_onetoone_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_onetoone_rapid_barnett.txt', 'w') as f:
     f.write(str(udp_onetoone_rapid)) 
 
-with open('full-list-feb/udp_manytoone_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_manytoone_slow_barnett.txt', 'w') as f:
     f.write(str(udp_manytoone_slow))
-with open('full-list-feb/udp_manytoone_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_manytoone_medium_barnett.txt', 'w') as f:
     f.write(str(udp_manytoone_medium))
-with open('full-list-feb/udp_manytoone_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_manytoone_rapid_barnett.txt', 'w') as f:
     f.write(str(udp_manytoone_rapid)) 
 
-with open('full-list-feb/udp_onetomany_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_onetomany_slow_barnett.txt', 'w') as f:
     f.write(str(udp_onetomany_slow))
-with open('full-list-feb/udp_onetomany_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_onetomany_medium_barnett.txt', 'w') as f:
     f.write(str(udp_onetomany_medium))
-with open('full-list-feb/udp_onetomany_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_onetomany_rapid_barnett.txt', 'w') as f:
     f.write(str(udp_onetomany_rapid)) 
 
-with open('full-list-feb/udp_manytomany_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_manytomany_slow_barnett.txt', 'w') as f:
     f.write(str(udp_manytomany_slow))
-with open('full-list-feb/udp_manytomany_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_manytomany_medium_barnett.txt', 'w') as f:
     f.write(str(udp_manytomany_medium))
-with open('full-list-feb/udp_manytomany_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/udp_manytomany_rapid_barnett.txt', 'w') as f:
     f.write(str(udp_manytomany_rapid)) 
 
-with open('full-list-feb/icmp_onetoone_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_onetoone_slow_barnett.txt', 'w') as f:
     f.write(str(icmp_onetoone_slow))
-with open('full-list-feb/icmp_onetoone_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_onetoone_medium_barnett.txt', 'w') as f:
     f.write(str(icmp_onetoone_medium))
-with open('full-list-feb/icmp_onetoone_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_onetoone_rapid_barnett.txt', 'w') as f:
     f.write(str(icmp_onetoone_rapid)) 
 
-with open('full-list-feb/icmp_manytoone_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_manytoone_slow_barnett.txt', 'w') as f:
     f.write(str(icmp_manytoone_slow))
-with open('full-list-feb/icmp_manytoone_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_manytoone_medium_barnett.txt', 'w') as f:
     f.write(str(icmp_manytoone_medium))
-with open('full-list-feb/icmp_manytoone_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_manytoone_rapid_barnett.txt', 'w') as f:
     f.write(str(icmp_manytoone_rapid)) 
 
-with open('full-list-feb/icmp_onetomany_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_onetomany_slow_barnett.txt', 'w') as f:
     f.write(str(icmp_onetomany_slow))
-with open('full-list-feb/icmp_onetomany_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_onetomany_medium_barnett.txt', 'w') as f:
     f.write(str(icmp_onetomany_medium))
-with open('full-list-feb/icmp_onetomany_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_onetomany_rapid_barnett.txt', 'w') as f:
     f.write(str(icmp_onetomany_rapid)) 
 
-with open('full-list-feb/icmp_manytomany_slow_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_manytomany_slow_barnett.txt', 'w') as f:
     f.write(str(icmp_manytomany_slow))
-with open('full-list-feb/icmp_manytomany_medium_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_manytomany_medium_barnett.txt', 'w') as f:
     f.write(str(icmp_manytomany_medium))
-with open('full-list-feb/icmp_manytomany_rapid_barnett.txt', 'w') as f:
+with open('full-list-mar/icmp_manytomany_rapid_barnett.txt', 'w') as f:
     f.write(str(icmp_manytomany_rapid))
 
 
-with open('full-list-feb/jan_1-7_packet_barnett.txt', 'a') as f:
+with open('full-list-mar/jan_1-7_packet_barnett.txt', 'a') as f:
     f.write("---------------------\n")
     f.write('PCAP info:\n')
     f.write(f'Number of packets: {total_packets}\n')
