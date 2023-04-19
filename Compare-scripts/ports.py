@@ -26,8 +26,12 @@ fukuda_icmp_small = 'Compare-scripts/fukuda/full-list/icmp_small-ip.txt'
 # Open the file containing the Python dict
 dec = 'Compare-scripts/fukuda/full-list/tcp_light_network_scans_fukuda_dec.txt'
 jan = 'Compare-scripts/fukuda/full-list/tcp_light_network_scans_fukuda_jan.txt'
-feb = 'Compare-scripts/fukuda/full-list/tcp_light_network_scans_fukuda_feb.txt'
-mar = 'Compare-scripts/fukuda/full-list/tcp_light_network_scans_fukuda_mar.txt'
+feb = 'Compare-scripts/fukuda/full-list/udp_light_network_scans_fukuda_feb.txt'
+mar = 'Compare-scripts/fukuda/full-list/udp_light_network_scans_fukuda_mar.txt'
+
+feb_otm_slow_udp = 'Compare-scripts/barnett/full-list/udp_onetomany_slow_barnett_feb.txt'
+
+udp_small = 'Compare-scripts/fukuda/full-list/udp_small_fukuda_mar.txt'
 
 import ast
 
@@ -37,13 +41,22 @@ with open(mar, 'r') as f:
     
     counts = {}
     total_count = 0
-    for key in data_dict.keys():
-        second_part = key[1]
+    for key, value in data_dict.items():
+        # for small lists
+        second_part = value['dst_ports']
         if second_part in counts:
             counts[second_part] += 1
         else:
             counts[second_part] = 1
         total_count += 1
+        
+        # for network scan list
+        """  second_part = key[1]
+        if second_part in counts:
+            counts[second_part] += 1
+        else:
+            counts[second_part] = 1
+        total_count += 1 """
     
     top_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)[:10]
     print('Top 10')
