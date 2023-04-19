@@ -1,1 +1,0 @@
-#def icmp_stats():

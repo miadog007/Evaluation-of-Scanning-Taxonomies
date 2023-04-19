@@ -85,8 +85,7 @@ ip_src = set()
 other = 0
 
 # Insert Packet Capture
-pcap = 'data/mar_packets_00000_20210301072506.pcap'
-#pcap = 'data/CaptureOne.pcap'
+pcap = ''
 
 # Main functions for finding TCP, UDP or ICMP packets
 for ts, pkt in dpkt.pcap.Reader(open(pcap, 'rb')):
@@ -329,136 +328,50 @@ unique_labled_sources_icmp = (len(unique_icmp_hnetwork_scans) + len(unique_icmp_
                               len(unique_small_pings_final) + len(unique_other_icmp))
 
 # Sum all unique labled IP sources
-unique_labled_sources = unique_labled_sources_tcp + \
-    unique_labled_sources_udp + unique_labled_sources_icmp
+unique_labled_sources = (unique_labled_sources_tcp + 
+                        unique_labled_sources_udp + 
+                        unique_labled_sources_icmp)
 
 
 # Printing out result of each category in Liu & Fukuda 2018
 print("---------------------")
 print('PCAP info:')
+print(f'PCAP file: {pcap}')
+print(f'Unique IPs: {len(ip_src)}')
 print(f'Number of packets: {total_packets}')
-print(f'Number of src ips: {(len(ip_src))}')
-print(f'Labled traffic: {labled_sources}')
+print(f'Uncategorized Packets(Other): {other}')
+print(f'Src IPs entries: {unique_labled_sources}')
 print("---------------------")
 print('TCP info:')
+print(f'TCP src IPs entries: {unique_labled_sources_tcp}')
 print(f'TCP Heavy Port scans: {len(unique_tcp_hport_scans)}')
-print(f'TCP Light pors scans: {len(tcp_lport_scans.keys())}')
+print(f'TCP Light Port scans: {len(unique_tcp_lport_scans)}')
 print(f'TCP Heavy Network scans: {len(unique_tcp_hnetwork_scans)}')
-print(f'TCP Light Network scans: {len(tcp_lnetwork_scans.keys())}')
-print(f'TCP One Flows: {len(tcp_oflow_final.keys())}')
-print(f'TCP Backscatter: {len(tcp_backscatter_final.keys())}')
-print(f"TCP IP Fragement: {len(tcp_fragment.keys())}")
-print(f'TCP Small SYN: {len(small_syns_final.keys())}')
-print(f'Other TCP: {len(other_tcp.keys())}')
-print(f'Other TCP unique: {len(unique_other_tcp)}')
+print(f'TCP Light Network scans: {len(unique_tcp_lnetwork_scans)}')
+print(f'TCP One Flows: {len(unique_tcp_one_flow)}')
+print(f'TCP Backscatter: {len(unique_tcp_back)}')
+print(f"TCP IP Fragement: {len(unique_tcp_fragment)}")
+print(f'TCP Small SYN: {len(unique_small_syns_final)}')
+print(f'Other TCP: {(len(unique_other_tcp))}')
 print("---------------------")
 print('UDP Info:')
-print(f'UDP Heavy Port scans: {len(udp_hport_scans.keys())}')
-print(f'UDP Light Port scans: {len(udp_lport_scans.keys())}')
-print(f'UDP Heavy Network scans: {len(udp_hnetwork_scans.keys())}')
-print(f'UDP Light Network scans: {len(udp_lnetwork_scans.keys())}')
-print(f'UDP One Flows: {len(udp_oflow_final.keys())}')
-print(f'UDP Backscatter: {len(udp_backscatter_final.keys())}')
-print(f"UDP IP Fragement: {len(udp_fragment.keys())}")
-print(f'UDP Small UDP: {len(small_udps_final.keys())}')
-print(f'Other UDP: {(len(other_udp.keys()))}')
+print(f'UDP src IPs entries: {unique_labled_sources_udp}')
+print(f'UDP Heavy Port scans: {len(unique_udp_hport_scans)}')
+print(f'UDP Light Port scans: {len(unique_udp_lport_scans)}')
+print(f'UDP Heavy Network scans: {len(unique_udp_hnetwork_scans)}')
+print(f'UDP Light Network scans: {len(unique_udp_lnetwork_scans)}')
+print(f'UDP One Flows: {len(unique_udp_one_flow)}')
+print(f'UDP Backscatter: {len(unique_udp_back)}')
+print(f"UDP IP Fragement: {len(unique_udp_fragment)}")
+print(f'UDP Small UDP: {len(unique_small_udps_final)}')
+print(f'Other UDP: {(len(unique_other_udp))}')
 print("---------------------")
 print('ICMP Info:')
-print(f'ICMP Heavy Network scans: {len(icmp_hnetwork_scans.keys())}')
-print(f'ICMP Light Network scans: {len(icmp_lnetwork_scans.keys())}')
-print(f'ICMP Backscatter: {len(icmp_backscatter_final.keys())}')
-print(f"ICMP IP Fragement: {len(icmp_fragment.keys())}")
-print(f'Small Pings:  {len(small_pings_final.keys())}')
-print(f'Other ICMP: {(len(other_icmp.keys()))}')
+print(f'ICMP src IPs entries: {unique_labled_sources_icmp}')
+print(f'ICMP Heavy Network scans: {len(unique_icmp_hnetwork_scans)}')
+print(f'ICMP Light Network scans: {len(unique_icmp_lnetwork_scans)}')
+print(f'ICMP Backscatter: {len(unique_icmp_back)}')
+print(f"ICMP IP Fragement: {len(unique_icmp_fragment)}")
+print(f'Small Pings:  {len(unique_small_pings_final)}')
+print(f'Other ICMP: {(len(unique_other_icmp))}') 
 print("---------------------")
-print(f'Other Traffic {other}')
-print("---------------------")
-
-with open('full-list-mar/mar_1-7_fukuda_unique_src.txt', 'a') as f:
-    f.write("---------------------\n")
-    f.write('PCAP info:\n')
-    f.write(f'Number of packets: {total_packets}\n')
-    f.write(f'Number of src ips: {(len(ip_src))}\n')
-    f.write(f'Labled src ips: {labled_sources}\n')
-    f.write(f'Unique labled src ips: {unique_labled_sources}\n')
-    f.write("---------------------\n")
-    f.write('TCP info:\n')
-    f.write(f'Unique labled TCP src ips: {unique_labled_sources_tcp}\n')
-    f.write(f'TCP Heavy Port scans: {len(unique_tcp_hport_scans)}\n')
-    f.write(f'TCP Light Port scans: {len(unique_tcp_lport_scans)}\n')
-    f.write(f'TCP Heavy Network scans: {len(unique_tcp_hnetwork_scans)}\n')
-    f.write(f'TCP Light Network scans: {len(unique_tcp_lnetwork_scans)}\n')
-    f.write(f'TCP One Flows: {len(unique_tcp_one_flow)}\n')
-    f.write(f'TCP Backscatter: {len(unique_tcp_back)}\n')
-    f.write(f"TCP IP Fragement: {len(unique_tcp_fragment)}\n")
-    f.write(f'TCP Small SYN: {len(unique_small_syns_final)}\n')
-    f.write(f'Other TCP: {(len(unique_other_tcp))}\n')
-    f.write("---------------------\n")
-    f.write('UDP Info:\n')
-    f.write(f'Unique labled UDP src ips: {unique_labled_sources_udp}\n')
-    f.write(f'UDP Heavy Port scans: {len(unique_udp_hport_scans)}\n')
-    f.write(f'UDP Light Port scans: {len(unique_udp_lport_scans)}\n')
-    f.write(f'UDP Heavy Network scans: {len(unique_udp_hnetwork_scans)}\n')
-    f.write(f'UDP Light Network scans: {len(unique_udp_lnetwork_scans)}\n')
-    f.write(f'UDP One Flows: {len(unique_udp_one_flow)}\n')
-    f.write(f'UDP Backscatter: {len(unique_udp_back)}\n')
-    f.write(f"UDP IP Fragement: {len(unique_udp_fragment)}\n")
-    f.write(f'UDP Small UDP: {len(unique_small_udps_final)}\n')
-    f.write(f'Other UDP: {(len(unique_other_udp))}\n')
-    f.write("---------------------\n")
-    f.write('ICMP Info:\n')
-    f.write(f'Unique labled ICMP src ips: {unique_labled_sources_icmp}\n')
-    f.write(f'ICMP Heavy Network scans: {len(unique_icmp_hnetwork_scans)}\n')
-    f.write(f'ICMP Light Network scans: {len(unique_icmp_lnetwork_scans)}\n')
-    f.write(f'ICMP Backscatter: {len(unique_icmp_back)}\n')
-    f.write(f"ICMP IP Fragement: {len(unique_icmp_fragment)}\n")
-    f.write(f'Small Pings:  {len(unique_small_pings_final)}\n')
-    f.write(f'Other ICMP: {(len(unique_other_icmp))}\n') 
-    f.write("---------------------\n")
-
-with open('full-list-mar/tcp_heavy_port_scans_fukuda.txt', 'a') as f:
-    f.write(str(tcp_hport_scans))
-with open('full-list-mar/tcp_light_port_scans_fukuda.txt', 'a') as f:   
-    f.write(str(tcp_lport_scans))
-with open('full-list-mar/tcp_heavy_network_scans_fukuda.txt', 'a') as f:
-    f.write(str(tcp_hnetwork_scans))
-with open('full-list-mar/tcp_light_network_scans_fukuda.txt', 'a') as f:   
-    f.write(str(tcp_lnetwork_scans))
-with open('full-list-mar/tcp_one_flows_fukuda.txt', 'a') as f:
-    f.write(str(tcp_oflow_final))
-with open('full-list-mar/tcp_backscatter_fukuda.txt', 'a') as f:
-    f.write(str(tcp_backscatter_final))
-with open('full-list-mar/tcp_small_fukuda.txt', 'a') as f:
-    f.write(str(small_syns_final))
-with open('full-list-mar/tcp_other_fukuda.txt', 'a') as f:
-    f.write(str(other_tcp))
-
-with open('full-list-mar/udp_heavy_port_scans_fukuda.txt', 'a') as f:
-    f.write(str(udp_hport_scans))
-with open('full-list-mar/udp_light_port_scans_fukuda.txt', 'a') as f:   
-    f.write(str(udp_lport_scans))
-with open('full-list-mar/udp_heavy_network_scans_fukuda.txt', 'a') as f:
-    f.write(str(udp_hnetwork_scans))
-with open('full-list-mar/udp_light_network_scans_fukuda.txt', 'a') as f:   
-    f.write(str(udp_lnetwork_scans))
-with open('full-list-mar/udp_one_flows_fukuda.txt', 'a') as f:
-    f.write(str(udp_oflow_final))
-with open('full-list-mar/fragment_fukuda.txt', 'a') as f:
-    f.write(str(udp_fragment))
-with open('full-list-mar/udp_backscatter_fukuda.txt', 'a') as f:
-    f.write(str(udp_backscatter_final))
-with open('full-list-mar/udp_small_fukuda.txt', 'a') as f:
-    f.write(str(small_udps_final))
-with open('full-list-mar/udp_other_fukuda.txt', 'a') as f:
-    f.write(str(other_udp))
-
-with open('full-list-mar/icmp_heavy_network_scans_fukuda.txt', 'a') as f:
-    f.write(str(icmp_hnetwork_scans))
-with open('full-list-mar/icmp_light_network_scans_fukuda.txt', 'a') as f:   
-    f.write(str(icmp_lnetwork_scans))
-with open('full-list-mar/icmp_backscatter_fukuda.txt', 'a') as f:
-    f.write(str(icmp_backscatter_final))
-with open('full-list-mar/icmp_small_fukuda.txt', 'a') as f:
-    f.write(str(small_pings_final))
-with open('full-list-mar/icmp_other_fukuda.txt', 'a') as f:
-    f.write(str(other_icmp))
