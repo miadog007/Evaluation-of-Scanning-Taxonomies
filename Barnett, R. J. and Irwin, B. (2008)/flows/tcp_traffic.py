@@ -76,7 +76,6 @@ def tcp_compare_src(tcp_flows, tcp_compare_flows):
                 'ip_src_count': 1,
                 'first_packet': value[0]['first_packet'],
                 'last_packet': value[0]['last_packet'],
-                # 'timestamps': value[0]['timestamps'],
                 'avg_time_between_packets': 0,
                 'scan_periode-1': first_hour.strftime('%d-%H-%M'),
                 'scan_periode-2': last_hour.strftime('%d-%H-%M')
