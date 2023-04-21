@@ -10,8 +10,8 @@ Each folder represents a Python version of a Network Scanning Taxonomy. The scri
 
 The two taxonomies created for the bachelor's thesis are:
 
-*Barnett, R. J. and Irwin, B. (2008)
-*Liu, J. and Fukuda, K. (2018)
+- Barnett, R. J. and Irwin, B. (2008)
+- Liu, J. and Fukuda, K. (2018)
 
 Both scripts use Python and Dpkt for fast packet capture parsing. 500MB of packet captures takes about 15-20 minutes to be analyzed.
 
