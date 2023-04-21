@@ -86,7 +86,8 @@ def tcp_compare_src(tcp_flows, tcp_compare_flows):
 
 def tcp_speed(tcp_compare_flows, tcp_slow, tcp_medium, tcp_rapid):
     '''
-    Function to find speed of scan, based on average time between packets
+    Function to find speed of scan, based on average time between packets.
+    Speeds are based on Nmap: https://nmap.org/book/performance-timing-templates.html
     Input:
         tcp_compare_flows
     Returns:
@@ -111,8 +112,8 @@ def find_dist(speed_lists, final_dist):
     '''
     Function to compare destination IPs to find sitrubution
     Input:
-        Takes in one speed_list
-        speeed_list
+        Takes in one three speed_lists
+        speeed_lists
     Returns:
         Final Distrubution list
         final_dist
@@ -126,7 +127,7 @@ def find_dist(speed_lists, final_dist):
         if len(value['dst_ports']) > 1:
             ports = 'many'
         else:
-            ports = str(value['dst_ports'])
+            ports = 'one'
 
         # Establish pariode of scan
         scan_periode1 = value['scan_periode-1']

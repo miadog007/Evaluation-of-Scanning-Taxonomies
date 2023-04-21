@@ -95,9 +95,10 @@ def udp_speed(udp_compare_flows, udp_slow, udp_medium, udp_rapid):
 
 def find_dist(speed_lists, final_dist):
     '''
-    Function to compare destination IPs to find sitrubution
+    Function to compare destination IPs to find sitrubution.
+    Speeds are based on Nmap: https://nmap.org/book/performance-timing-templates.html
     Input:
-        Takes in one speed_list
+        Takes in three speed_lists
         speeed_list
     Returns:
         Final Distrubution list

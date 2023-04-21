@@ -369,6 +369,7 @@ icmp_packets = (sum(val["packet_count"] for val in icmp_dist_slow.values())+
                   sum(val["packet_count"] for val in icmp_dist_medium.values())+
                   sum(val["packet_count"] for val in icmp_dist_rapid.values()))
 
+
 # Printing out result of each category in Barnett & Irwin 2008
 print("---------------------")
 print('PCAP info:')

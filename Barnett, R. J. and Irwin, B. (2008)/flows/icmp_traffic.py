@@ -99,9 +99,10 @@ def icmp_speed(icmp_compare_flows, icmp_slow, icmp_medium, icmp_rapid):
 
 def find_dist(speed_list, final_dist):
     '''
-    Function to compare destination IPs to find sitrubution
+    Function to compare destination IPs to find sitrubution.
+    Speeds are based on Nmap: https://nmap.org/book/performance-timing-templates.html
     Input:
-        Takes in one speed_list
+        Takes in three speed_list
         speeed_list
     Returns:
         Final Distrubution list
