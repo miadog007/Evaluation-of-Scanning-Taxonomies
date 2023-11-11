@@ -1,7 +1,7 @@
 Evaluation of Scanning Taxonomies
 =============
 
-Welcome aboard. This project evaluates Network Scanning Taxonomies for contribution to the greater good. Everyone is welcome to contribute. The project serves as the artifact delivery for the bachelor's thesis "An Evaluation of Scanning Taxonomies Against IBR Traffic". The full research will be available soon.
+Welcome aboard. This project evaluates Network Scanning Taxonomies for contribution to the greater good. Everyone is welcome to contribute. The project serves as the artifact delivery for the bachelor's thesis "An Evaluation of Scanning Taxonomies Against IBR Traffic".
 
 
 Project Description 
